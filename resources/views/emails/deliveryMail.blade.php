@@ -1,6 +1,7 @@
 <div>
     <p>Beste {{$user->name}},</p>
     <p>Jij bent de uitverkorene om vandaag broodjes op te halen.</p>
+    <p><b>Bestelling:</b></p>
     <table>
         @foreach($orders as $order)
             <tr>
