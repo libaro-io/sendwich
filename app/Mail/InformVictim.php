@@ -33,7 +33,7 @@ class InformVictim extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.deliveryMail')->subject('Libaro Sendwich need you')
+        return $this->view('emails.deliveryMail')->subject('Libaro Sendwich needs you')
             ->with([
                     'orders' => $this->orders,
                     'user' => $this->user
