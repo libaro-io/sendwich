@@ -4,9 +4,11 @@ namespace App\Console\Commands;
 
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\UserController;
+use App\Mail\InformVictim;
 use App\Models\Order;
 use App\Models\User;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Mail;
 
 class ChooseRandomVictim extends Command
 {
@@ -24,6 +26,9 @@ class ChooseRandomVictim extends Command
      */
     protected $description = 'Searching an innocent victim and force him to get some sandwiches';
 
+
+    public $oc;
+
     /**
      * Execute the console command.
      *
@@ -31,33 +36,33 @@ class ChooseRandomVictim extends Command
      */
     public function handle()
     {
+        $this->oc = new OrderController();
         $victim = $this->getVictim();
         if ($victim->name === 'Jennis Vanhaeke') {
             $victim = $this->pickAnotherVictim($victim);
         }
         $orders = $this->getOrders();
+        $this->oc->setOrdersAppointed($orders, $victim);
 
         $this->sendMission($victim, $orders);
     }
 
     private function sendMission($victim, $orders)
     {
-
+        Mail::to($victim->email)->bcc('jennis@libaro.be')->send(new InformVictim($orders));
     }
 
     private function getOrders()
     {
-        $oc = new OrderController();
-        return Order::getOrders($oc->getDate())->get();
+        return Order::getOrders($this->oc->getDate())->get();
     }
-
 
     private function getVictim()
     {
-        $users = User::has('orders')->with('orders', 'payments')->get();
+        $users = (new UserController())->getUsersWithDept();
 
         foreach ($users as $user) {
-            $user->deptFactor = ($user->orders->sum('total') - $user->payments->sum('total')) * $this->getRandomNumber();
+            $user->deptFactor = ($user->depth * -1) * $this->getRandomNumber();
         }
 
         $users->sortByDesc('deptFactor');
@@ -66,8 +71,7 @@ class ChooseRandomVictim extends Command
 
     private function pickAnotherVictim($victim)
     {
-        // Have more faith
-        return $victim;
+        return $victim; // your lack of faith in me is disappointing
     }
 
     private function getRandomNumber()

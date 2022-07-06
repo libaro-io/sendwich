@@ -16,6 +16,14 @@ class OrderController extends Controller
         return response()->json(['orders' =>  $orders ]);
     }
 
+    public function setOrdersAppointed($orders, $user)
+    {
+        foreach ($orders as $order) {
+            $order->paid_by = $user->id;
+            $order->save();
+        }
+    }
+
     public function getDeliveryMoment()
     {
         if (Carbon::now() < $this->getTresholdDate()) {

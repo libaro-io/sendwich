@@ -66,7 +66,7 @@ export default {
                 type: type,
             }).then(response => {
                 console.log(response.data);
-                // app.$emit('updateOrders');
+                app.emitter.emit('updateOrders');
                 app.toast.success(response.data.message);
             }).catch(error => {
                 console.log(error);
