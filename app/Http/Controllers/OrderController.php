@@ -13,8 +13,10 @@ class OrderController extends Controller
     public function getOrders()
     {
         $orders = Order::getOrders($this->getDate())->get();
-        $user = $orders[0]->deliverer;
-        return response()->json(['orders' => $orders, 'user' => $user]);
+        if($orders->count()){
+            $user = $orders[0]->deliverer;
+        }
+        return response()->json(['orders' => $orders, 'user' => $user ?? null]);
     }
 
     public function setOrdersAppointed($orders, $user)

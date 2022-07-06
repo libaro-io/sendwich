@@ -35,14 +35,8 @@
 
 <script>
 import axios from "axios";
-import {useToast} from "vue-toastification";
-import "vue-toastification/dist/index.css";
 
 export default {
-    setup() {
-        const toast = useToast();
-        return {toast}
-    },
     name: "Products",
     mounted() {
     },

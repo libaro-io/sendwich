@@ -31,12 +31,10 @@
                     </div>
                 </div>
 
-                <div class="mt-8 shadow sm:rounded-lg px-4 py-5 bg-yellow-50">
+                <div class="mt-8 shadow sm:rounded-lg px-4 py-5 bg-cyan-100" v-if="user">
                     <div>
-                        <h3 v-if="!user" class="text-lg leading-6 text-yellow-600 text-center" >Leverancier: None found</h3>
-                        <h3 v-else class="text-lg leading-6 text-emerald-600 text-center" >{{user.name}}
-                        <span><br> You are the chosen one</span>
-                        </h3>
+                        <h3 class="text-md leading-6 text-cyan-600 text-center" >{{user.name}}</h3>
+                        <h3 class="text-lg leading-6 text-cyan-600 text-center mt-2">You are the chosen one</h3>
                     </div>
                 </div>
             </div>
