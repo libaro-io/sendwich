@@ -1,3 +1,3 @@
 <template>
-    <img src="/images/Libaro-w.png" alt="">
+    <img src="/images/logo_01.png" alt="">
 </template>
