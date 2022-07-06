@@ -22,10 +22,10 @@ class Order extends Model
 
     public static function getOrders($date)
     {
-        return self::where('date', '>=', $date->startOfDay())->where('date', '<=', $date->endOfDay())->with(['user' => function ($query) {
+        return self::where('date', '>=', (clone $date)->startOfDay())->where('date', '<=', ( clone $date)->endOfDay())->with(['user' => function ($query) {
             $query->select('id', 'name');
         }, 'product' => function ($query) {
-            $query->select('id', 'name');
+            $query->select('id', 'name', 'price');
         }]);
     }
 }

@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,4 +22,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::middleware('auth')->group(function () {
     Route::post('/order', OrderController::class . '@order');
+    Route::post('/orders', OrderController::class . '@getOrders');
+    Route::post('/users', UserController::class . '@getUsers');
 });

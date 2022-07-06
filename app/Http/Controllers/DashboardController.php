@@ -31,7 +31,6 @@ class DashboardController extends Controller
                 $product->selected = $product->orders->first()->comment;
             }
         }
-        $orders = $oc->getOrders();
         $deliveryMoment = $oc->getDeliveryMoment();
 
         return Inertia::render('Dashboard',
@@ -40,7 +39,6 @@ class DashboardController extends Controller
                 'company' => $company,
                 'products' => $products,
                 'deliveryMoment' => $deliveryMoment,
-                'orders' => $orders,
             ]);
     }
 }

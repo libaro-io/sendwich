@@ -12,20 +12,13 @@ class OrderController extends Controller
 
     public function getOrders()
     {
-        if (Carbon::now() < $this->getTresholdDate()) {
-            $orders = (new OrderController())->ordersToday();
-        } else {
-            $orders = (new OrderController())->ordersTomorrow();
-        }
-
-        return $orders;
+        $orders = Order::getOrders($this->getDate())->get();
+        return response()->json(['orders' =>  $orders ]);
     }
 
     public function getDeliveryMoment()
     {
-        $now = Carbon::now();
-        $noon = $this>$this->getTresholdDate();
-        if ($now < $noon) {
+        if (Carbon::now() < $this->getTresholdDate()) {
             $deliveryMoment = 'Vandaag';
         } else {
             $deliveryMoment = 'Morgen';
@@ -38,21 +31,21 @@ class OrderController extends Controller
        return Carbon::now()->hour(12)->minute(15);
     }
 
-    public function ordersToday()
+    public function getDate()
     {
-        return Order::getOrders(Carbon::now())->get();
-    }
-
-    public function ordersTomorrow()
-    {
-        return Order::getOrders(Carbon::now()->addDay())->get();
+        if (Carbon::now() < $this->getTresholdDate()) {
+            $date = Carbon::now();
+        } else {
+            $date =Carbon::now()->addDay();
+        }
+        return $date->setHour(12)->setMinutes(15)->setSecond(00);
     }
 
     public function order(Request $request)
     {
         $user = auth()->user();
         $product = Product::find($request->product_id);
-        $order = Order::where('user_id', $user->id)->where('product_id', $product->id)->where('date', '>=', Carbon::now()->startOf('day'))->where('date', '<=', Carbon::now()->endOf('day'))->first();
+        $order = Order::where('user_id', $user->id)->where('product_id', $product->id)->where('date', '>=', $this->getDate()->startOf('day'))->where('date', '<=', $this->getDate()->endOf('day'))->first();
 
         if ($order) {
             if (empty($request->type)) {
