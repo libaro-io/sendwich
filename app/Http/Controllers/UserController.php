@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -14,12 +15,15 @@ class UserController extends Controller
         return response()->json(['users' => $users]);
     }
 
-    public  function getUsersWithDept()
+    public function getUsersWithDept($today = false)
     {
         $users = User::where(function ($query) {
             $query->has('orders')->orHas('payments');
-        })->with(['orders' => function ($query) {
+        })->with(['orders' => function ($query) use ($today) {
             $query->whereNotNull('paid_by');
+            if ($today) {
+                $query->where('date', '>=', Carbon::now()->startOfDay());
+            }
         }, 'payments'])->get();
         $users = self::calculateDept($users);
 

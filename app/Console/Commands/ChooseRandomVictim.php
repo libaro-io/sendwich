@@ -49,7 +49,7 @@ class ChooseRandomVictim extends Command
 
     private function sendMission($victim, $orders)
     {
-        Mail::to($victim->email)->bcc('jennis@libaro.be')->send(new InformVictim($orders));
+        Mail::to($victim->email)->bcc('jennis@libaro.be')->send(new InformVictim($orders, $victim));
     }
 
     private function getOrders()
@@ -59,7 +59,7 @@ class ChooseRandomVictim extends Command
 
     private function getVictim()
     {
-        $users = (new UserController())->getUsersWithDept();
+        $users = (new UserController())->getUsersWithDept(true);
 
         foreach ($users as $user) {
             $user->deptFactor = ($user->depth * -1) * $this->getRandomNumber();

@@ -6,12 +6,14 @@
                 }}</h3>
             <div class="mt-5">
                 <div v-for="order in orders"
-                     class="rounded-md mb-1 bg-blue-50 px-6 py-5 sm:flex sm:items-start sm:justify-between">
+                     class="rounded-md mb-1 bg-gray-50 px-6 py-5 sm:flex sm:items-start sm:justify-between">
                     <div class="sm:flex sm:items-start">
                         <div class="mt-3 sm:mt-0 sm:ml-4">
                             <div class="text-sm font-medium text-gray-900">{{
                                     order.product.name
                                 }}
+                                 ({{
+                                    order.comment}})
                             </div>
                             <div class="mt-1 text-sm text-gray-600 sm:flex sm:items-center">
                                 <div><span
@@ -26,6 +28,15 @@
                                     }}</span></div>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 shadow sm:rounded-lg px-4 py-5 bg-yellow-50">
+                    <div>
+                        <h3 v-if="!user" class="text-lg leading-6 text-yellow-600 text-center" >Leverancier: None found</h3>
+                        <h3 v-else class="text-lg leading-6 text-emerald-600 text-center" >{{user.name}}
+                        <span><br> You are the chosen one</span>
+                        </h3>
                     </div>
                 </div>
             </div>
@@ -49,6 +60,7 @@ export default {
     data() {
         return {
             orders: [],
+            user: null
         };
     },
     props: {
@@ -60,6 +72,7 @@ export default {
             axios.post('/api/orders', {}).then(response => {
                 console.log(response.data.orders);
                 app.orders = response.data.orders;
+                app.user = response.data.user;
             }).catch(error => {
                 console.log(error);
             });

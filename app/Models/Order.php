@@ -15,6 +15,11 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function deliverer()
+    {
+        return $this->belongsTo(User::class, 'paid_by');
+    }
+
     public function product()
     {
         return $this->belongsTo(Product::class);

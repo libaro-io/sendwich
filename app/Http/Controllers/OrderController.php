@@ -13,7 +13,8 @@ class OrderController extends Controller
     public function getOrders()
     {
         $orders = Order::getOrders($this->getDate())->get();
-        return response()->json(['orders' =>  $orders ]);
+        $user = $orders[0]->deliverer;
+        return response()->json(['orders' => $orders, 'user' => $user]);
     }
 
     public function setOrdersAppointed($orders, $user)
@@ -36,7 +37,7 @@ class OrderController extends Controller
 
     public function getTresholdDate()
     {
-       return Carbon::now()->hour(12)->minute(15);
+        return Carbon::now()->hour(12)->minute(15);
     }
 
     public function getDate()
@@ -44,7 +45,7 @@ class OrderController extends Controller
         if (Carbon::now() < $this->getTresholdDate()) {
             $date = Carbon::now();
         } else {
-            $date =Carbon::now()->addDay();
+            $date = Carbon::now()->addDay();
         }
         return $date->setHour(12)->setMinutes(15)->setSecond(00);
     }

@@ -13,14 +13,17 @@ class InformVictim extends Mailable
 
 
     public $orders;
+    public $user;
+
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($orders)
+    public function __construct($orders, $user)
     {
         $this->orders = $orders;
+        $this->user = $user;
     }
 
     /**
@@ -30,6 +33,10 @@ class InformVictim extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.deliveryMail')->with('orders', $this->orders);
+        return $this->view('emails.deliveryMail')
+            ->with([
+                    'orders' => $this->orders,
+                    'user' => $this->user
+                ]);
     }
 }
