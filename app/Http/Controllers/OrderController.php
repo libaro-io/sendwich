@@ -19,6 +19,15 @@ class OrderController extends Controller
         return response()->json(['orders' => $orders, 'user' => $user ?? null]);
     }
 
+    public function getSelectedRunner()
+    {
+        $order = Order::getOrders($this->getDate())->first();
+        if($order){
+            $user = $order->deliverer;
+        }
+        return response()->json(['user' => $user ?? null]);
+    }
+
     public function setOrdersAppointed($orders, $user)
     {
         foreach ($orders as $order) {
