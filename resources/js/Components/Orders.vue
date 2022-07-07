@@ -54,8 +54,7 @@ export default {
     },
     data() {
         return {
-            orders: [],
-            user: null
+            orders: []
         };
     },
     props: {
@@ -67,7 +66,6 @@ export default {
             axios.post('/api/orders', {}).then(response => {
                 console.log(response.data.orders);
                 app.orders = response.data.orders;
-                app.user = response.data.user;
             }).catch(error => {
                 console.log(error);
             });

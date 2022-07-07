@@ -1,6 +1,6 @@
 <script setup>
 import mitt from 'mitt'
-import Orders from "@/Components/Orders.vue";
+import UsersWithOrders from "@/Components/UsersWithOrders.vue";
 import SelectedRunner from "@/Components/SelectedRunner.vue";
 import {Link} from '@inertiajs/inertia-vue3';
 
@@ -16,7 +16,7 @@ const props = defineProps({
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <Orders :delivery-moment="deliveryMoment"></Orders>
+                        <UsersWithOrders :delivery-moment="deliveryMoment"></UsersWithOrders>
                     </div>
                     <div>
                         <SelectedRunner class="fill-current text-gray-500" />
