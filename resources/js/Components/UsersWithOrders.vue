@@ -29,10 +29,10 @@ export default {
     components: {},
     mounted() {
         setInterval(() => {
-            this.getUsersWithOrders();
+            this.getUsersWithOrders(this.company);
         }, 60 * 1000);
-        this.getUsersWithOrders();
-        this.emitter.on("updateOrders", this.getUsersWithOrders)
+        this.getUsersWithOrders(this.company);
+        this.emitter.on("updateOrders", this.getUsersWithOrders(this.company));
     },
     data() {
         return {
@@ -41,14 +41,16 @@ export default {
     },
     props: {
         deliveryMoment: String,
+        company: Object,
     },
     methods: {
-        getUsersWithOrders() {
+        getUsersWithOrders(company) {
             const app = this;
-            axios.post('/api/orders', {}).then(response => {
+            let company_token = company.token
+            axios.post('/api/orders?company_token='+ company_token, {}).then(response => {
                 // console.log(response.data.orders);
                 app.users = response.data.orders.map(x => x.user.name).filter((v,i,s) => s.indexOf(v) === i);
-
+                // console.log(app.users);
             }).catch(error => {
                 console.log(error);
             });

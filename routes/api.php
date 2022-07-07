@@ -22,9 +22,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::middleware('auth')->group(function () {
     Route::post('/order', [OrderController::class,  'order']);
-    Route::post('/orders', [OrderController::class,  'getOrders']);
     Route::post('/users', [UserController::class,  'getUsers']);
-    Route::post('/selected-runner', [OrderController::class,  'getSelectedRunner']);
 });
-Route::post('/public/orders', [OrderController::class,  'getPublicOrders']);
-Route::post('/public/selected-runner', [OrderController::class,  'getPublicSelectedRunner']);
+Route::post('/orders', [OrderController::class,  'getOrders']);
+Route::post('/selected-runner', [OrderController::class,  'getSelectedRunner']);

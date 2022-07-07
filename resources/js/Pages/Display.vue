@@ -6,6 +6,7 @@ import {Link} from '@inertiajs/inertia-vue3';
 
 const props = defineProps({
     deliveryMoment: String,
+    company: Object
 });
 
 </script>
@@ -16,10 +17,10 @@ const props = defineProps({
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <UsersWithOrders :delivery-moment="deliveryMoment"></UsersWithOrders>
+                        <UsersWithOrders :delivery-moment="deliveryMoment" :company="company"></UsersWithOrders>
                     </div>
                     <div>
-                        <SelectedRunner class="fill-current text-gray-500" />
+                        <SelectedRunner :company="company" class="fill-current text-gray-500" />
                     </div>
                 </div>
             </div>

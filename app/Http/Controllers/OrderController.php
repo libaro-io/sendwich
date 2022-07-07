@@ -26,7 +26,7 @@ class OrderController extends Controller
         return response()->json(['orders' => $orders, 'user' => $user ?? null]);
     }
 
-    public function getSelectedRunner()
+    public function getSelectedRunner(Request $request)
     {
         if(Auth::check()){
             $company = Auth::user()->company;

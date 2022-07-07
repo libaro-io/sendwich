@@ -15,10 +15,10 @@ export default {
     components: {},
     mounted() {
         setInterval(() => {
-            this.getSelectedRunner();
+            this.getSelectedRunner(this.company);
         }, 60 * 1000);
-        this.getSelectedRunner();
-        this.emitter.on("updateSelectedRunner", this.getSelectedRunner())
+        this.getSelectedRunner(this.company);
+        this.emitter.on("updateSelectedRunner", this.getSelectedRunner(this.company))
     },
     data() {
         return {
@@ -26,11 +26,13 @@ export default {
         };
     },
     props: {
+        company: Object,
     },
     methods: {
-        getSelectedRunner() {
+        getSelectedRunner(company) {
             const app = this;
-            axios.post('/api/selected-runner', {}).then(response => {
+            let company_token = company.token
+            axios.post('/api/selected-runner?company_token='+ company_token, {}).then(response => {
                 // console.log(response.data.orders);
                 app.user = response.data.user;
             }).catch(error => {

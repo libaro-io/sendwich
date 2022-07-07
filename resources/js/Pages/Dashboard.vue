@@ -11,6 +11,7 @@ const props = defineProps({
     products: Array,
     users: Array,
     deliveryMoment: String,
+    company: Object,
 });
 
 </script>
