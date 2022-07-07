@@ -4,6 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use \App\Http\Controllers\DashboardController;
+use \App\Http\Controllers\DisplayController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,5 +20,6 @@ use \App\Http\Controllers\DashboardController;
 Route::redirect('/', '/dashboard');
 
 Route::get('/dashboard',[DashboardController::class, 'dashboard'])->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/display/{company_id}',[DisplayController::class, 'showDisplay'])->middleware(['verified'])->name('displays.show');
 
 require __DIR__.'/auth.php';
