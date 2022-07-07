@@ -2,17 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Company;
 use App\Models\Order;
 use App\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
 
-    public function getOrders()
+    public function getOrders(Request $request)
     {
-        $orders = Order::getOrders($this->getDate())->get();
+        if(Auth::check()){
+            $company = Auth::user()->company;
+        }else{
+            $company = Company::query()->where('token', $request->input('company_token'))->firstOrFail();
+        }
+        $orders = Order::getOrders($company, $this->getDate())->get();
         if($orders->count()){
             $user = $orders[0]->deliverer;
         }
@@ -21,7 +28,12 @@ class OrderController extends Controller
 
     public function getSelectedRunner()
     {
-        $order = Order::getOrders($this->getDate())->first();
+        if(Auth::check()){
+            $company = Auth::user()->company;
+        }else{
+            $company = Company::query()->where('token', $request->input('company_token'))->firstOrFail();
+        }
+        $order = Order::getOrders($company, $this->getDate())->first();
         if($order){
             $user = $order->deliverer;
         }
@@ -39,9 +51,9 @@ class OrderController extends Controller
     public function getDeliveryMoment()
     {
         if (Carbon::now() < $this->getTresholdDate()) {
-            $deliveryMoment = 'Vandaag';
+            $deliveryMoment = 'today';
         } else {
-            $deliveryMoment = 'Morgen';
+            $deliveryMoment = 'tomorrow';
         }
         return $deliveryMoment;
     }

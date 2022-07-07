@@ -25,12 +25,15 @@ class Order extends Model
         return $this->belongsTo(Product::class);
     }
 
-    public static function getOrders($date)
+    public static function getOrders(Company $company, $date)
     {
-        return self::where('date', '>=', (clone $date)->startOfDay())->where('date', '<=', ( clone $date)->endOfDay())->with(['user' => function ($query) {
-            $query->select('id', 'name');
-        }, 'product' => function ($query) {
-            $query->select('id', 'name', 'price');
-        }]);
+        return self::query()->where('company_id', $company->id)
+            ->where('date', '>=', (clone $date)->startOfDay())
+            ->where('date', '<=', (clone $date)->endOfDay())
+            ->with(['user' => function ($query) {
+                $query->select('id', 'name');
+            }, 'product' => function ($query) {
+                $query->select('id', 'name', 'price');
+            }]);
     }
 }
