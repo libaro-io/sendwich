@@ -20,6 +20,9 @@ use \App\Http\Controllers\DisplayController;
 Route::redirect('/', '/dashboard');
 
 Route::get('/dashboard',[DashboardController::class, 'dashboard'])->middleware(['auth', 'verified'])->name('dashboard');
-Route::get('/display/{company_id}',[DisplayController::class, 'showDisplay'])->name('displays.show');
+Route::get('/display',[DisplayController::class, 'showDisplayPrivate'])->middleware(['auth', 'verified'])->name('displays.private.show');
+
+/*public routes*/
+Route::get('/display/{company_token}',[DisplayController::class, 'showDisplayPublic'])->name('displays.public.show');
 
 require __DIR__.'/auth.php';

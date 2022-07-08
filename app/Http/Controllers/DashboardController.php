@@ -11,12 +11,12 @@ class DashboardController extends Controller
 {
     public function dashboard()
     {
-        $oc = new OrderController();
+        $orderController = new OrderController();
         $user = auth()->user();
         $company = $user->company;
 
-        $products = $company->products()->with('orders', function ($query) use ($oc) {
-            if(now() < $oc->getTresholdDate()) {
+        $products = $company->products()->with('orders', function ($query) use ($orderController) {
+            if(now() < $orderController->getTresholdDate()) {
                 $query->where('date', '>=', Carbon::now()->startOf('day'));
                 $query->where('date', '<=', Carbon::now()->endOf('day'));
             } else {
@@ -31,7 +31,7 @@ class DashboardController extends Controller
                 $product->selected = $product->orders->first()->comment;
             }
         }
-        $deliveryMoment = $oc->getDeliveryMoment();
+        $deliveryMoment = $orderController->getDeliveryMoment();
 
         return Inertia::render('Dashboard',
             [
