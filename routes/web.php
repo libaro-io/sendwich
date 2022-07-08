@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\InvitesController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -19,10 +20,14 @@ use \App\Http\Controllers\DisplayController;
 
 Route::redirect('/', '/dashboard');
 
-Route::get('/dashboard',[DashboardController::class, 'dashboard'])->middleware(['auth', 'verified'])->name('dashboard');
-Route::get('/display',[DisplayController::class, 'showDisplayPrivate'])->middleware(['auth', 'verified'])->name('displays.private.show');
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+    Route::get('/display', [DisplayController::class, 'showDisplayPrivate'])->name('displays.private.show');
+
+    Route::get('/invites', [InvitesController::class, 'index'])->name('invites.show');
+});
 
 /*public routes*/
-Route::get('/display/{company_token}',[DisplayController::class, 'showDisplayPublic'])->name('displays.public.show');
+Route::get('/display/{company_token}', [DisplayController::class, 'showDisplayPublic'])->name('displays.public.show');
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
