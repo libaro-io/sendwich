@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\ChooseRunner;
 use App\Models\Company;
 use App\Models\Order;
 use App\Models\Product;
@@ -11,7 +12,6 @@ use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
-
     public function getOrders(Request $request)
     {
         if(Auth::check()){
@@ -35,17 +35,21 @@ class OrderController extends Controller
         }
         $order = Order::getOrders($company, $this->getDate())->first();
         if($order){
-            $user = $order->deliverer;
+            $runner = $order->deliverer;
         }
-        return response()->json(['user' => $user ?? null]);
+        return response()->json(['runner' => $runner ?? null]);
     }
 
-    public function setOrdersAppointed($orders, $user)
+    public function getSimulatedRunner(Request $request)
     {
-        foreach ($orders as $order) {
-            $order->paid_by = $user->id;
-            $order->save();
+        if(Auth::check()){
+            $company = Auth::user()->company;
+        }else{
+            $company = Company::query()->where('token', $request->input('company_token'))->firstOrFail();
         }
+        $action = new ChooseRunner($company);
+        $runner = $action->getSimulatedRunner();
+        return response()->json(['runner' => $runner ?? null]);
     }
 
     public function getDeliveryMoment()
