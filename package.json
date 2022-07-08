@@ -27,7 +27,7 @@
         "@headlessui/vue": "^1.6.5",
         "@heroicons/vue": "^1.0.6",
         "mitt": "^3.0.0",
-        "moment": "^2.29.3",
+        "moment": "^2.29.4",
         "vue-toastification": "^2.0.0-rc.5"
     }
 }
