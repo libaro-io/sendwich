@@ -19,12 +19,24 @@
                             </div>
                         </div>
                     </div>
+                    <div>
+                        <p
+                            v-for="option in product.options"
+                            :key="option.id"
+                        >
+                            <Checkbox
+                                @update:checked="(e) => addOrRemoveOption(e, option)"
+                                :checked="option.is_enabled_by_default"
+                            />
+                            {{ option.name }} €{{ option.price }}
+                        </p>
+                    </div>
                     <div class="mt-4 sm:mt-0 sm:ml-6 sm:flex-shrink-0">
-                        <button v-for="type in ['wit', 'bruin']" type="button"
-                                @click="order(type, product)"
-                                :class="product.selected === type  ? 'bg-green-300 text-white' : 'bg-white'"
-                                class="inline-flex items-center px-4 py-2 shadow-sm font-medium rounded-md text-gray-700 hover:bg-green-100 sm:text-sm mr-1">
-                            {{ type }}
+                        <button
+                            class="bg-white inline-flex items-center px-4 py-2 shadow-sm font-medium rounded-md text-gray-700 hover:bg-green-100 sm:text-sm mr-1"
+                            @click="addProduct(product)"
+                        >
+                            Bestel
                         </button>
                     </div>
                 </div>
@@ -35,41 +47,59 @@
 
 <script>
 import axios from "axios";
+import Checkbox from '@/Components/Checkbox.vue';
+import { useToast } from "vue-toastification";
+
+const toast = useToast();
 
 export default {
     name: "Products",
-    mounted() {
-    },
-    data() {
-        return {};
+    components: {
+        Checkbox,
     },
     props: {
         deliveryMoment: String,
         products: Array,
     },
+    data() {
+        return {
+            selectedOptions: [],
+        };
+    },
     methods: {
-        order(type, product) {
-            const app = this;
-            if (product.selected === type) {
-                type = '';
-            }
-            product.selected = type;
-
-            axios.post('/api/order', {
+        addProduct (product) {
+            axios.post('/api/order/add-product', {
                 product_id: product.id,
-                type: type,
+                options: this.getSelectedOptionIdsForProduct(product.id),
             }).then(response => {
-                console.log(response.data);
-                app.emitter.emit('updateOrders');
-                app.toast.success(response.data.message);
+                toast.success(response.data.message);
+                this.emitter.emit('updateOrders');
             }).catch(error => {
-                console.log(error);
+                console.error(error);
             });
-        }
+        },
+
+        getSelectedOptionIdsForProduct(productId) {
+            return this.selectedOptions.filter(o => o.product_id === productId).map(o => o.id);
+        },
+
+        addOrRemoveOption(shouldAdd, option) {
+            if (shouldAdd) {
+                this.addOption(option);
+            } else {
+                this.removeOption(option);
+            }
+        },
+
+        addOption(option) {
+            this.selectedOptions.push(option);
+        },
+
+        removeOption(option) {
+            const index = this.selectedOptions.indexOf(option);
+
+            this.selectedOptions.splice(index, 1);
+        },
     }
 }
 </script>
-
-<style scoped>
-
-</style>

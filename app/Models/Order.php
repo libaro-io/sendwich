@@ -4,23 +4,41 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
+/**
+ * @property int $id
+ * @property int $user_id
+ * @property int $company_id
+ * @property int $product_id
+ * @property int $quantity
+ * @property int|null $paid_by
+ * @property float $total
+ * @property string $comment
+ * @property string $date
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ *
+ * @property User $user
+ * @property User|null $deliverer
+ * @property Product $product
+ */
 class Order extends Model
 {
     use HasFactory;
 
-
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function deliverer()
+    public function deliverer(): BelongsTo
     {
         return $this->belongsTo(User::class, 'paid_by');
     }
 
-    public function product()
+    public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
     }
