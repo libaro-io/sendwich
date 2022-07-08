@@ -24,5 +24,5 @@ Route::middleware('auth')->group(function () {
     Route::post('/order', [OrderController::class,  'order']);
     Route::post('/users', [UserController::class,  'getUsers']);
 });
-Route::post('/orders', [OrderController::class,  'getOrders']);
+Route::post('/orders', [OrderController::class, 'index']);
 Route::post('/selected-runner', [OrderController::class,  'getSelectedRunner']);
