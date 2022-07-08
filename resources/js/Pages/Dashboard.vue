@@ -3,6 +3,7 @@ import mitt from 'mitt'
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
 import {Head} from '@inertiajs/inertia-vue3';
 import Orders from "@/Components/Orders.vue";
+import SelectedRunner from "@/Components/SelectedRunner.vue";
 import Products from "@/Components/Products.vue";
 import DeptList from "@/Components/DeptList.vue";
 
@@ -10,6 +11,7 @@ const props = defineProps({
     products: Array,
     users: Array,
     deliveryMoment: String,
+    company: Object,
 });
 
 </script>
@@ -22,6 +24,7 @@ const props = defineProps({
                     <Products :products="products" :deliveryMoment="deliveryMoment"/>
                     <div>
                         <Orders :delivery-moment="deliveryMoment"></Orders>
+                        <SelectedRunner class="mt-8" />
                         <DeptList class="mt-4"></DeptList>
                     </div>
                 </div>

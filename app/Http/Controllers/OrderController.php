@@ -2,37 +2,62 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\ChooseRunner;
+use App\Models\Company;
 use App\Models\Order;
 use App\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
-
-    public function getOrders()
+    public function getOrders(Request $request)
     {
-        $orders = Order::getOrders($this->getDate())->get();
+        if(Auth::check()){
+            $company = Auth::user()->company;
+        }else{
+            $company = Company::query()->where('token', $request->input('company_token'))->firstOrFail();
+        }
+        $orders = Order::getOrders($company, $this->getDate())->get();
         if($orders->count()){
             $user = $orders[0]->deliverer;
         }
         return response()->json(['orders' => $orders, 'user' => $user ?? null]);
     }
 
-    public function setOrdersAppointed($orders, $user)
+    public function getSelectedRunner(Request $request)
     {
-        foreach ($orders as $order) {
-            $order->paid_by = $user->id;
-            $order->save();
+        if(Auth::check()){
+            $company = Auth::user()->company;
+        }else{
+            $company = Company::query()->where('token', $request->input('company_token'))->firstOrFail();
         }
+        $order = Order::getOrders($company, $this->getDate())->first();
+        if($order){
+            $runner = $order->deliverer;
+        }
+        return response()->json(['runner' => $runner ?? null]);
+    }
+
+    public function getSimulatedRunner(Request $request)
+    {
+        if(Auth::check()){
+            $company = Auth::user()->company;
+        }else{
+            $company = Company::query()->where('token', $request->input('company_token'))->firstOrFail();
+        }
+        $action = new ChooseRunner($company);
+        $runner = $action->getSimulatedRunner();
+        return response()->json(['runner' => $runner ?? null]);
     }
 
     public function getDeliveryMoment()
     {
         if (Carbon::now() < $this->getTresholdDate()) {
-            $deliveryMoment = 'Vandaag';
+            $deliveryMoment = 'today';
         } else {
-            $deliveryMoment = 'Morgen';
+            $deliveryMoment = 'tomorrow';
         }
         return $deliveryMoment;
     }

@@ -60,6 +60,8 @@ return [
 
     'asset_url' => env('ASSET_URL'),
 
+    'choose_runner_at' => env('CHOOSE_RUNNER_AT', '12:15'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone
