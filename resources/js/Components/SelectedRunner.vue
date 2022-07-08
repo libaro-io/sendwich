@@ -22,13 +22,9 @@ export default {
     mounted() {
         setInterval(() => {
             this.getSelectedRunner(this.company);
-            if(name == null){
-                this.getsimulatedRunner(this.company);
-            }
         }, 60 * 1000);
         this.getSelectedRunner(this.company);
-        this.getsimulatedRunner(this.company);
-        this.emitter.on("updateSelectedRunner", this.getSelectedRunner(this.company))
+        this.emitter.on("updateSelectedRunner", this.getSelectedRunner)
     },
     data() {
         return {
@@ -41,19 +37,22 @@ export default {
     },
     methods: {
         getSelectedRunner(company) {
+            console.log("getSelectedRunner", company);
             const app = this;
             let company_token = company.token
-            axios.post('/api/selected-runner?company_token='+ company_token, {}).then(response => {
-                // console.log(response.data.orders);
+            axios.post('/api/selected-runner?company_token=' + company_token, {}).then(response => {
                 app.runner = response.data.runner;
+                if (!app.runner) {
+                    app.getSimulatedRunner(this.company);
+                }
             }).catch(error => {
                 console.log(error);
             });
         },
-        getsimulatedRunner(company) {
+        getSimulatedRunner(company) {
             const app = this;
             let company_token = company.token
-            axios.post('/api/simulated-runner?company_token='+ company_token, {}).then(response => {
+            axios.post('/api/simulated-runner?company_token=' + company_token, {}).then(response => {
                 // console.log(response.data.orders);
                 app.simulatedRunner = response.data.runner;
             }).catch(error => {

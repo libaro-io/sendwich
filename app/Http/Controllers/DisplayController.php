@@ -11,8 +11,8 @@ class DisplayController extends Controller
     public function showDisplayPublic($company_token)
     {
         $company = Company::query()->where('token', '=', $company_token)->firstOrFail();
-        $oc = new OrderController();
-        $deliveryMoment = $oc->getDeliveryMoment();
+        $orderController = new OrderController();
+        $deliveryMoment = $orderController->getDeliveryMoment();
 
         return Inertia::render('Display',
             [
