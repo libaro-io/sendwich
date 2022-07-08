@@ -46,8 +46,11 @@ final class ChooseRunner
 
     private function getVictim()
     {
-        $users = (new UserController($this->company))->getUsersWithDept(true);
-        $users= $users->sortBy('dept');
+        $deptAction = new UsersWithDept();
+        $deptAction->setCompany($this->company);
+        $deptAction->setWithOrdersForToday(true);
+        $users = $deptAction->execute();
+
         return $users->first();
     }
 
