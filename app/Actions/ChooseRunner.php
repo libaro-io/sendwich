@@ -47,12 +47,7 @@ final class ChooseRunner
     private function getVictim()
     {
         $users = (new UserController($this->company))->getUsersWithDept(true);
-
-        foreach ($users as $user) {
-            $user->deptFactor = ($user->depth * -1) * $this->getRandomNumber();
-        }
-
-        $users->sortByDesc('deptFactor');
+        $users= $users->sortBy('dept');
         return $users->first();
     }
 
