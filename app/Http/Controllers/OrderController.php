@@ -11,6 +11,12 @@ use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
+    private Company $company;
+
+    public function __construct(Company $company)
+    {
+        $this->company = $company;
+    }
 
     public function getOrders(Request $request)
     {
@@ -38,14 +44,6 @@ class OrderController extends Controller
             $user = $order->deliverer;
         }
         return response()->json(['user' => $user ?? null]);
-    }
-
-    public function setOrdersAppointed($orders, $user)
-    {
-        foreach ($orders as $order) {
-            $order->paid_by = $user->id;
-            $order->save();
-        }
     }
 
     public function getDeliveryMoment()
