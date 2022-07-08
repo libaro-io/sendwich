@@ -12,12 +12,12 @@ use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
-    public function getOrders(Request $request)
+    public function index(Request $request)
     {
         if(Auth::check()){
             $company = Auth::user()->company;
         }else{
-            $company = Company::query()->where('token', $request->input('company_token'))->firstOrFail();
+            $company = Company::query()->where('token', '=', $request->input('company_token'))->firstOrFail();
         }
         $orders = Order::getOrders($company, $this->getDate())->get();
         if($orders->count()){
@@ -31,13 +31,15 @@ class OrderController extends Controller
         if(Auth::check()){
             $company = Auth::user()->company;
         }else{
-            $company = Company::query()->where('token', $request->input('company_token'))->firstOrFail();
+            $company = Company::query()->where('token','=', $request->input('company_token'))->firstOrFail();
         }
         $order = Order::getOrders($company, $this->getDate())->first();
         if($order){
-            $runner = $order->deliverer;
+            $user = $order->deliverer;
+        }else{
+            $user = null;
         }
-        return response()->json(['runner' => $runner ?? null]);
+        return response()->json(['user' => $user]);
     }
 
     public function getSimulatedRunner(Request $request)
