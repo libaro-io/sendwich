@@ -24,7 +24,7 @@ const props = defineProps({
                     <Products :products="products" :deliveryMoment="deliveryMoment"/>
                     <div>
                         <Orders :delivery-moment="deliveryMoment"></Orders>
-                        <SelectedRunner class="mt-8" />
+                        <SelectedRunner :company="company" class="mt-8" />
                         <DeptList class="mt-4"></DeptList>
                     </div>
                 </div>
