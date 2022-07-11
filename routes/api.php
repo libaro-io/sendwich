@@ -23,7 +23,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::middleware('auth')->group(function () {
     Route::post('/order/add-product', [OrderController::class,  'addProduct']);
     Route::post('/order/remove-product', [OrderController::class,  'removeProduct']);
-    Route::post('/users', [UserController::class,  'getUsers']);
+    Route::post('/users', [UserController::class,  'index']);
 });
 Route::post('/orders', [OrderController::class, 'index']);
 Route::post('/selected-runner', [OrderController::class,  'getSelectedRunner']);
