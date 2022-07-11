@@ -7,6 +7,17 @@ import { InertiaProgress } from '@inertiajs/progress';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
 import mitt from 'mitt'
+import Toast, { POSITION } from "vue-toastification";
+import "vue-toastification/dist/index.css";
+
+/* import the fontawesome core */
+import { library } from '@fortawesome/fontawesome-svg-core';
+
+/* import specific icons */
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+
+/* add icons to the library */
+library.add(faTrash);
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 const emitter = mitt()
@@ -17,7 +28,11 @@ const Inert = createInertiaApp({
     setup({ el, app, props, plugin }) {
         const VueApp = createApp({ render: () => h(app, props) })
             .use(plugin)
-            .use(ZiggyVue, Ziggy);
+            .use(ZiggyVue, Ziggy)
+            .use(Toast, {
+                position: POSITION.BOTTOM_LEFT,
+            });
+
         VueApp.config.globalProperties.emitter = emitter;
         VueApp.mount(el);
     },

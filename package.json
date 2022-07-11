@@ -21,10 +21,13 @@
         "vue": "^3.2.31"
     },
     "dependencies": {
+        "@fortawesome/fontawesome-svg-core": "^6.1.1",
+        "@fortawesome/free-solid-svg-icons": "^6.1.1",
+        "@fortawesome/vue-fontawesome": "^3.0.1",
         "@headlessui/vue": "^1.6.5",
         "@heroicons/vue": "^1.0.6",
         "mitt": "^3.0.0",
-        "moment": "^2.29.3",
+        "moment": "^2.29.4",
         "vue-toastification": "^2.0.0-rc.5"
     }
 }
