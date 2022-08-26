@@ -9,6 +9,9 @@ use Inertia\Response as InertiaResponse;
 
 class DashboardController extends Controller
 {
+    /**
+     * @return InertiaResponse
+     */
     public function dashboard(): InertiaResponse
     {
         $orderController = new OrderController();
