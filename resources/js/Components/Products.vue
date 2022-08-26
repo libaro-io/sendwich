@@ -22,8 +22,7 @@
                     <div>
                         <p
                             v-for="option in product.options"
-                            :key="option.id"
-                        >
+                            :key="option.id">
                             <Checkbox
                                 @update:checked="(e) => addOrRemoveOption(e, option)"
                                 :checked="option.is_enabled_by_default"
