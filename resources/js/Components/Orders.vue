@@ -3,7 +3,7 @@
         <div class="px-4 py-5 sm:p-6">
             <div class="flex items-center justify-between mb-5">
                 <h3 class="text-lg leading-6 font-medium text-gray-900 capitalize ">Bestellingen voor {{ deliveryMoment }}</h3>
-                <button v-if="manualAssign"
+                <button v-if="orders.length !== 0"
                         @click="assignToMe()"
                         type="button"
                         class="inline-flex items-center rounded-md border border-transparent bg-indigo-100 px-4 py-2 text-sm font-medium text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
@@ -79,7 +79,6 @@ export default {
     data() {
         return {
             orders: [],
-            manualAssign: false,
         };
     },
     props: {
@@ -101,17 +100,10 @@ export default {
             const app = this;
             axios.post('/api/orders', {}).then(response => {
                 app.orders = response.data.orders;
-                this.checkManualAssign();
             }).catch(error => {
                 console.log(error);
             });
         },
-
-         checkManualAssign(){
-             if (this.orders.length !== 0){
-                 this.manualAssign = true
-             }
-         },
 
         isMyOrder(order) {
             return order.user_id === this.$page.props.user.id;
