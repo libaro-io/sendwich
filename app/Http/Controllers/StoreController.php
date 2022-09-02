@@ -7,16 +7,29 @@ use Inertia\Inertia;
 
 class StoreController extends Controller
 {
-    public function detail($store_id)
+    /**
+     * @return \Inertia\Response
+     */
+    public function index()
     {
         $user = auth()->user();
         $company = $user->company;
-        $store = $company->stores()->where('id', $store_id)->with('products')->first();
 
+        return Inertia::render('Store/Index',
+            [
+                'stores' => $company->stores,
+                'company' => $company,
+            ]);
+    }
+
+    public function show($store_id)
+    {
+        $user = auth()->user();
+        $company = $user->company;
 
         return Inertia::render('Store/Detail',
             [
-                'store' => $store,
+                'store' => $company->stores()->where('id', $store_id)->with('products')->first(),
             ]);
     }
 }

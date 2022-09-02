@@ -2,7 +2,8 @@
 import mitt from 'mitt'
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
 import {Head} from '@inertiajs/inertia-vue3';
-import Stores from "@/Components/Stores.vue";
+import List from "@/Components/List.vue";
+import ListItem from "@/Components/ListItem.vue";
 
 const props = defineProps({
     stores: Object,
@@ -11,14 +12,14 @@ const props = defineProps({
 
 </script>
 <template>
-    <Head title="Settings"/>
+    <Head title="Stores"/>
     <BreezeAuthenticatedLayout>
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="grid grid-cols-2 gap-4">
-                    <Stores :stores="stores"/>
-                    <div>
-                    </div>
+                <div class="grid grid-cols-1 gap-4">
+                    <List title="Stores">
+                        <ListItem v-for="store in stores" :item="store" :editable="true"></ListItem>
+                    </List>
                 </div>
             </div>
         </div>
