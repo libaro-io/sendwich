@@ -12,6 +12,7 @@ use App\Models\Order;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
+use phpDocumentor\Reflection\Types\Boolean;
 
 final class ChooseRunner
 {
@@ -19,7 +20,12 @@ final class ChooseRunner
     private $user;
     private $addTomorrow;
 
-    public function __construct(Company $company, $user = null, $addTomorrow = false)
+    /**
+     * @param Company $company
+     * @param $user
+     * @param $addTomorrow
+     */
+    public function __construct(Company $company, ?User $user = null, bool $addTomorrow = false)
     {
         $this->setCompany($company);
         $this->setUser($user);
@@ -84,7 +90,7 @@ final class ChooseRunner
      * @param $user
      * @return $this
      */
-    private function setUser($user)
+    private function setUser(User $user)
     {
         $this->user = $user;
 
