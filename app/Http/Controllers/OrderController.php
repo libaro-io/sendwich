@@ -152,6 +152,17 @@ class OrderController extends Controller
         ]);
     }
 
+    public function assignToMe(){
+        $user = Auth::user();
+        $action = new ChooseRunner($user->company, $user, true);
+        $action->execute();
+
+        return response()->json([
+           'success' => true,
+            'message' => 'You have been assigned'
+        ]);
+    }
+
     private function getProductOrderForUser(User $user, Product $product): ?Order
     {
         /** @var Order|null $order */
