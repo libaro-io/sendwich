@@ -4,41 +4,8 @@
             <h3 class="text-lg leading-6 font-medium text-gray-900">Bon'app</h3>
             <div class="mt-5">
                 <div v-for="product in products"
-                     class="rounded-md mb-1 bg-gray-50 px-6 py-5 sm:flex sm:items-start sm:justify-between">
-                    <div class="sm:flex sm:items-start">
-                        <div class="mt-3 sm:mt-0 sm:ml-4">
-                            <div class="text-sm font-medium text-gray-900">{{ product.name }}</div>
-                            <div class="mt-1 text-sm text-gray-600 sm:flex sm:items-center">
-                                <div><span
-                                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">€ {{
-                                        product.price
-                                    }}</span></div>
-                                <span class="hidden sm:mx-2 sm:inline"
-                                      aria-hidden="true"> &middot; </span>
-                                <div class="mt-1 sm:mt-0">{{ deliveryMoment }}</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <p
-                            v-for="option in product.options"
-                            :key="option.id"
-                        >
-                            <Checkbox
-                                @update:checked="(e) => addOrRemoveOption(e, option)"
-                                :checked="option.is_enabled_by_default"
-                            />
-                            {{ option.name }} €{{ option.price }}
-                        </p>
-                    </div>
-                    <div class="mt-4 sm:mt-0 sm:ml-6 sm:flex-shrink-0">
-                        <button
-                            class="btn btn-sm btn-primary"
-                            @click="addProduct(product)"
-                        >
-                            Bestel
-                        </button>
-                    </div>
+                     class="gap-4">
+                    <product-card :product="product"></product-card>
                 </div>
             </div>
         </div>
@@ -49,12 +16,17 @@
 import axios from "axios";
 import Checkbox from '@/Components/Checkbox.vue';
 import { useToast } from "vue-toastification";
+import ProductCard from "@/Components/Products/productCard.vue";
+
+
+
 
 const toast = useToast();
 
 export default {
     name: "Products",
     components: {
+        ProductCard,
         Checkbox,
     },
     props: {
