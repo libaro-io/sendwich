@@ -43,6 +43,12 @@ class Order extends Model
         return $this->belongsTo(Product::class);
     }
 
+    /**
+     * @param Company $company
+     * @param $date
+     * @param $addTomorrow
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
     public static function getOrders(Company $company, $date, $addTomorrow = false)
     {
         $from = (clone $date)->startOfDay();
@@ -53,8 +59,7 @@ class Order extends Model
 
         return self::query()
             ->where('company_id', $company->id)
-            ->where('date', '>=', $from)
-            ->where('date', '<=', $to)
+            ->whereBetween('date',[$from, $to])
             ->whereNull('paid_by')
             ->with(['user' => function ($query) {
                 $query->select('id', 'name');

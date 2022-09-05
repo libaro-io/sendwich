@@ -152,7 +152,8 @@ class OrderController extends Controller
         ]);
     }
 
-    public function assignToMe(){
+    public function assignToMe(): JsonResponse
+    {
         $user = Auth::user();
         $action = new ChooseRunner($user->company, $user, true);
         $action->execute();

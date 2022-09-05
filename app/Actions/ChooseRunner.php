@@ -12,12 +12,11 @@ use App\Models\Order;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
-use phpDocumentor\Reflection\Types\Boolean;
 
 final class ChooseRunner
 {
     private Company $company;
-    private $user;
+    private ?User $user;
     private $addTomorrow;
 
     /**
@@ -32,7 +31,7 @@ final class ChooseRunner
         $this->addTomorrow = $addTomorrow;
     }
 
-    public function execute()
+    public function execute(): this
     {
         if($this->user != null){
             $victim = $this->user;
