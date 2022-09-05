@@ -26,6 +26,7 @@ Route::get('/display', [DisplayController::class, 'showDisplayPrivate'])->middle
 
 Route::get('/stores', [StoreController::class, 'index'])->middleware(['auth', 'verified'])->name('store.index');
 Route::get('/store/{id}', [StoreController::class, 'show'])->middleware(['auth', 'verified'])->name('store.show');
+Route::post('store/{id}', [StoreController::class, 'update'])->middleware(['auth', 'verified'])->name('store.update');
 
 /*public routes*/
 Route::get('/display/{company_token}', [DisplayController::class, 'showDisplayPublic'])->name('displays.public.show');
