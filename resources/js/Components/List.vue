@@ -1,10 +1,8 @@
 <template>
-    <div class="bg-white shadow sm:rounded-lg">
-        <div class="px-4 py-5 sm:p-6">
-            <h3 class="text-lg leading-6 font-medium text-gray-900">{{ title }}</h3>
-            <div class="mt-5">
-               <slot></slot>
-            </div>
+    <div class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+            <h3 class="card title">{{ title }}</h3>
+            <slot></slot>
         </div>
     </div>
 </template>

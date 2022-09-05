@@ -18,7 +18,7 @@ const props = defineProps({
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="grid grid-cols-1 gap-4">
                     <List title="Stores">
-                        <ListItem v-for="store in stores" :item="store" :editable="true"></ListItem>
+                        <ListItem v-for="store in stores" :item="store" type="store" :editable="true"></ListItem>
                     </List>
                 </div>
             </div>
