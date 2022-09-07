@@ -33,7 +33,7 @@
                     </div>
                     <div class="mt-4 sm:mt-0 sm:ml-6 sm:flex-shrink-0">
                         <button
-                            class="bg-white inline-flex items-center px-4 py-2 shadow-sm font-medium rounded-md text-gray-700 hover:bg-green-100 sm:text-sm mr-1"
+                            class="btn btn-sm btn-primary"
                             @click="addProduct(product)"
                         >
                             Bestel

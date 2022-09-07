@@ -9,22 +9,36 @@ use App\Http\Controllers\UserController;
 use App\Mail\InformVictim;
 use App\Models\Company;
 use App\Models\Order;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 
 final class ChooseRunner
 {
     private Company $company;
+    private ?User $user;
+    private $addTomorrow;
 
-    public function __construct(Company $company)
+    /**
+     * @param Company $company
+     * @param $user
+     * @param $addTomorrow
+     */
+    public function __construct(Company $company, ?User $user = null, bool $addTomorrow = false)
     {
         $this->setCompany($company);
+        $this->setUser($user);
+        $this->addTomorrow = $addTomorrow;
     }
 
-    public function execute()
+    public function execute(): this
     {
-        $victim = $this->getVictim();
-        $orders = Order::getOrders($this->company, Carbon::now())->get();
+        if($this->user != null){
+            $victim = $this->user;
+        }else{
+            $victim = $this->getVictim();
+        }
+        $orders = Order::getOrders($this->company, Carbon::now(), $this->addTomorrow)->get();
         $this->setOrdersAppointed($orders, $victim);
 
         $this->sendMission($victim, $orders);
@@ -67,6 +81,17 @@ final class ChooseRunner
     private function setCompany($company)
     {
         $this->company = $company;
+
+        return $this;
+    }
+
+    /**
+     * @param $user
+     * @return $this
+     */
+    private function setUser(User $user)
+    {
+        $this->user = $user;
 
         return $this;
     }

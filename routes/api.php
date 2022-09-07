@@ -26,5 +26,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/users', [UserController::class,  'index']);
 });
 Route::post('/orders', [OrderController::class, 'index']);
+Route::post('/assign-to-me', [OrderController::class, 'assignToMe']);
 Route::post('/selected-runner', [OrderController::class,  'getSelectedRunner']);
 Route::post('/simulated-runner', [OrderController::class,  'getSimulatedRunner']);

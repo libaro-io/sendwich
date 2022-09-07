@@ -1,7 +1,16 @@
 <template>
     <div class="bg-white shadow sm:rounded-lg">
         <div class="px-4 py-5 sm:p-6">
-            <h3 class="text-lg leading-6 font-medium text-gray-900 capitalize mb-5">Bestellingen voor {{ deliveryMoment }}</h3>
+            <div class="flex items-center justify-between mb-5">
+                <h3 class="text-lg leading-6 font-medium text-gray-900 capitalize ">Bestellingen voor {{ deliveryMoment }}</h3>
+                <button v-if="orders.length !== 0"
+                        @click="assignToMe()"
+                        type="button"
+                        class="inline-flex items-center rounded-md border border-transparent bg-indigo-100 px-4 py-2 text-sm font-medium text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                    Assign to me
+                </button>
+            </div>
+
             <div class="mb-5">
                 <div v-for="order in orders"
                      class="rounded-md mb-1 bg-gray-50 px-6 py-5 sm:flex sm:items-start sm:justify-between">
@@ -110,6 +119,16 @@ export default {
                 console.error(error);
             });
         },
+
+        assignToMe(){
+            axios.post('/api/assign-to-me')
+                .then(response => {
+                toast.success(response.data.message);
+                this.emitter.emit('updateOrders');
+            }).catch(error => {
+                console.error(error);
+            });
+        }
     }
 }
 </script>

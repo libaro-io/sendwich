@@ -43,11 +43,24 @@ class Order extends Model
         return $this->belongsTo(Product::class);
     }
 
-    public static function getOrders(Company $company, $date)
+    /**
+     * @param Company $company
+     * @param $date
+     * @param $addTomorrow
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function getOrders(Company $company, $date, $addTomorrow = false)
     {
-        return self::query()->where('company_id', $company->id)
-            ->where('date', '>=', (clone $date)->startOfDay())
-            ->where('date', '<=', (clone $date)->endOfDay())
+        $from = (clone $date)->startOfDay();
+        $to = (clone $date)->endOfDay();
+        if($addTomorrow){
+            $to->addDay();
+        }
+
+        return self::query()
+            ->where('company_id', $company->id)
+            ->whereBetween('date',[$from, $to])
+            ->whereNull('paid_by')
             ->with(['user' => function ($query) {
                 $query->select('id', 'name');
             }, 'product' => function ($query) {
