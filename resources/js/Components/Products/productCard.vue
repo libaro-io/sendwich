@@ -16,7 +16,7 @@
     </div>
     <div class="flex flex-col lg:flex-row justify-end items-center">
         <button
-            class="btn btn-sm btn-success m-1"
+            class="btn btn-sm btn-success mr-4"
             @click="addProduct(product)"
         >
             Bestel
