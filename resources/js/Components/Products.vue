@@ -3,9 +3,10 @@
         <div class="px-4 py-5 sm:p-6">
             <h3 class="text-lg leading-6 font-medium text-gray-900">Bon'app</h3>
             <div class="mt-5">
-                <div v-for="product in products"
+                <div v-for="(product , index) in products"
+                     :key="index"
                      class="gap-4">
-                    <product-card :product="product"></product-card>
+                    <product-card :product="product" @ordered="addProduct"></product-card>
                 </div>
             </div>
         </div>
@@ -39,7 +40,7 @@ export default {
         };
     },
     methods: {
-        addProduct (product) {
+        addProduct(product) {
             axios.post('/api/order/add-product', {
                 product_id: product.id,
                 options: this.getSelectedOptionIdsForProduct(product.id),
