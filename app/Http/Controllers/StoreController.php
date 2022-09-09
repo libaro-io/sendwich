@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateProduct;
 use App\Models\Product;
+use App\Models\Store;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -39,14 +40,42 @@ class StoreController extends Controller
             ]);
     }
 
+
+    /**
+     * @param UpdateProduct $request
+     * @param Product $product
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function update(UpdateProduct $request, Product $product)
     {
-        $user = auth()->user();
-        $company = $user->company;
-        $product = $company->products()->where('id', $request->input('id'))->firstOrFail();
+        $data = $request->input('product');
+        $product->update([
+            'name' => $data['name'],
+            'description' => $data['description'],
+            'price' => $data['price'],
+        ]);
 
-        $product->update($request->all());
+        return response()->json([
+            'message' => 'Product updated',
+        ]);
+    }
 
+    public function store(UpdateProduct $request)
+    {
+        $company = auth()->user()->company;
+        $data = $request->input('product');
+        $store = Store::find($request->input('store_id'));
+        Product::create([
+            'name' => $data['name'],
+            'description' => $data['description'],
+            'price' => $data['price'],
+            'company_id' => $company->id,
+            'store_id' => $store->id
+        ]);
 
+        return response()->json([
+            'message' => 'Product saved',
+            'products' => $store->products
+        ]);
     }
 }

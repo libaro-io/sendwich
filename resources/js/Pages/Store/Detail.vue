@@ -2,22 +2,48 @@
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
 import {Head} from '@inertiajs/inertia-vue3';
 import axios from "axios";
+import {useToast} from "vue-toastification";
+import {reactive} from "vue";
+
+const toast = useToast();
 
 const props = defineProps({
     store: Object,
 });
+// let products =ref( props.store.products);
+const resetNewProduct = () => {
+    newProduct = {
+        name: '',
+        description: '',
+        price: 0,
+    };
+}
 
 const save = (product) => {
-    axios.post('/api/store' + product.id, {
+    axios.post('/api/store/' + product.id, {
         product: product,
     }).then(response => {
         toast.success(response.data.message);
-        this.emitter.emit('updateProducts');
     }).catch(error => {
         console.error(error);
     });
 }
 
+const saveNew = (product) => {
+    axios.put('/api/store', {
+        product: product,
+        store_id: props.store.id
+    }).then(response => {
+        props.store.products = response.data.products;
+        toast.success(response.data.message);
+        resetNewProduct()
+    }).catch(error => {
+        console.error(error);
+    });
+}
+
+let newProduct= reactive();
+resetNewProduct();
 </script>
 <template>
     <Head title="Stores"/>
@@ -40,13 +66,13 @@ const save = (product) => {
                                 </thead>
                                 <tbody>
                                 <tr v-for="product in store.products">
-                                    <th><input type="text" :value="product.name" class="input w-full max-w-xs"/></th>
-                                    <td><input type="text" :value="product.description" class="input w-full max-w-xs"/>
+                                    <th><input type="text" v-model="product.name" class="input w-full max-w-xs"/></th>
+                                    <td><input type="text" v-model="product.description" class="input w-full max-w-xs"/>
                                     </td>
                                     <td>
                                         <div class="form-control">
                                             <label class="input-group">
-                                                <input type="number" :value="product.price"
+                                                <input type="number" v-model="product.price"
                                                        class="input input-bordered"/>
                                                 <span>EUR</span>
                                             </label>
@@ -54,6 +80,26 @@ const save = (product) => {
                                     </td>
                                     <td>
                                         <button class="btn btn-primary" @click="save(product)">Save</button>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th><input type="text" placeholder="Name for new product" v-model="newProduct.name"
+                                               class="input w-full max-w-xs"/></th>
+                                    <td><input type="text" placeholder="Description for new product"
+                                               v-model="newProduct.description" class="input w-full max-w-xs"/>
+                                    </td>
+                                    <td>
+                                        <div class="form-control">
+                                            <label class="input-group">
+                                                <input type="number" v-model="newProduct.price"
+                                                       placeholder="0.00" class="input input-bordered"/>
+                                                <span>EUR</span>
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-secondary" @click="saveNew(newProduct)">New</button>
                                     </td>
                                 </tr>
                                 </tbody>
