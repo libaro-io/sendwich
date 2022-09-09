@@ -26,8 +26,10 @@ class Product extends Model
 
     protected $fillable = [
         'name',
+        'description',
         'price',
         'company_id',
+        'store_id',
     ];
 
     public function orders(): HasMany

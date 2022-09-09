@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\StoreController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,3 +30,6 @@ Route::post('/orders', [OrderController::class, 'index']);
 Route::post('/assign-to-me', [OrderController::class, 'assignToMe']);
 Route::post('/selected-runner', [OrderController::class,  'getSelectedRunner']);
 Route::post('/simulated-runner', [OrderController::class,  'getSimulatedRunner']);
+
+Route::post('store/{product}', [StoreController::class, 'update'])->middleware(['auth', 'verified'])->name('store.update');
+Route::put('store', [StoreController::class, 'store'])->middleware(['auth', 'verified'])->name('store.add');
