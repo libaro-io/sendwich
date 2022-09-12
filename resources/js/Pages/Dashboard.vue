@@ -26,12 +26,11 @@ const props = defineProps({
                     <div class="col-span-2 md:col-span-1 grid-cols-3">
                         <div class="grid grid-cols-3 gap-4">
                             <SelectedRunner :company="company" class="col-span-3 " />
-                            <Orders :delivery-moment="deliveryMoment" class="col-span-2"></Orders>
-                            <DeptList class="col-span-1"></DeptList>
+                            <Orders :delivery-moment="deliveryMoment" class="col-span-3"></Orders>
+                            <DeptList class="col-span-3"></DeptList>
                         </div>
                     </div>
                     <Products :products="products" :deliveryMoment="deliveryMoment" class="col-span-2 md:col-span-1"/>
-
                 </div>
             </div>
         </div>
