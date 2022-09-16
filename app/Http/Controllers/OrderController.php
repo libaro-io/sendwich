@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse
     {
         if(Auth::check()){
             $company = Auth::user()->company;
@@ -32,7 +32,11 @@ class OrderController extends Controller
         return response()->json(['orders' => $orders, 'user' => $user ?? null]);
     }
 
-    public function getDoneOrders(Request $request)
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getDoneOrders(Request $request): JsonResponse
     {
         if(Auth::check()){
             $company = Auth::user()->company;
