@@ -15,8 +15,6 @@ const props = defineProps({
     company: Object,
 });
 
-
-
 </script>
 <template>
     <Head title="Dashboard"/>
