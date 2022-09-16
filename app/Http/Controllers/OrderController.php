@@ -32,6 +32,23 @@ class OrderController extends Controller
         return response()->json(['orders' => $orders, 'user' => $user ?? null]);
     }
 
+    public function getDoneOrders(Request $request)
+    {
+        if(Auth::check()){
+            $company = Auth::user()->company;
+        }else{
+            $company = Company::query()->where('token', '=', $request->input('company_token'))->firstOrFail();
+        }
+        $formattedOrders = collect();
+        $orders = Order::getOrders($company, $this->getDate(), false, true)
+            ->get()
+            ->groupBy('paid_by');
+        foreach($orders as $userId => $orderGroup){
+                $formattedOrders[$orderGroup->first()->deliverer->name] = $orderGroup;
+        }
+        return response()->json(['orders' => $formattedOrders, 'user' => $user ?? null]);
+    }
+
     public function getSelectedRunner(Request $request)
     {
         if(Auth::check()){

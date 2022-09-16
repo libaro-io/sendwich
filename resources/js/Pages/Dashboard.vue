@@ -6,6 +6,7 @@ import Orders from "@/Components/Orders.vue";
 import SelectedRunner from "@/Components/SelectedRunner.vue";
 import Products from "@/Components/Products.vue";
 import DeptList from "@/Components/DeptList.vue";
+import DoneOrders from "@/Components/DoneOrders.vue";
 
 const props = defineProps({
     products: Array,
@@ -27,6 +28,7 @@ const props = defineProps({
                         <div class="grid grid-cols-3 gap-4">
                             <SelectedRunner :company="company" class="col-span-3 " />
                             <Orders :delivery-moment="deliveryMoment" class="col-span-3"></Orders>
+                            <done-orders></done-orders>
                             <DeptList class="col-span-3"></DeptList>
                         </div>
                     </div>
