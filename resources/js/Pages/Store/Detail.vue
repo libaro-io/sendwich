@@ -20,7 +20,7 @@ const resetNewProduct = () => {
 }
 
 const save = (product) => {
-    axios.post('/api/store/' + product.id, {
+    axios.post('/api/store/product/' + product.id, {
         product: product,
     }).then(response => {
         toast.success(response.data.message);
@@ -29,8 +29,18 @@ const save = (product) => {
     });
 }
 
+const remove = (product) => {
+    axios.delete('/api/store/product/' + product.id).then(response => {
+        console.log(response.data);
+        props.store.products = response.data.products;
+        toast.success(response.data.message);
+    }).catch(error => {
+        console.error(error);
+    });
+}
+
 const saveNew = (product) => {
-    axios.put('/api/store', {
+    axios.put('/api/store/product', {
         product: product,
         store_id: props.store.id
     }).then(response => {
@@ -42,7 +52,7 @@ const saveNew = (product) => {
     });
 }
 
-let newProduct= reactive();
+let newProduct = reactive();
 resetNewProduct();
 </script>
 <template>
@@ -80,6 +90,8 @@ resetNewProduct();
                                     </td>
                                     <td>
                                         <button class="btn btn-primary" @click="save(product)">Save</button>
+
+                                        <button class="btn btn-danger ml-2" @click="remove(product)">Delete</button>
                                     </td>
                                 </tr>
 

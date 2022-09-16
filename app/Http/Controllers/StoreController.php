@@ -78,4 +78,14 @@ class StoreController extends Controller
             'products' => $store->products
         ]);
     }
+
+    public function delete(Product $product)
+    {
+        $store = $product->store;
+        $product->delete();
+        return response()->json([
+            'message' => 'Product deleted',
+            'products' => $store->products
+        ]);
+    }
 }

@@ -22,14 +22,20 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::post('/order/add-product', [OrderController::class,  'addProduct']);
-    Route::post('/order/remove-product', [OrderController::class,  'removeProduct']);
-    Route::post('/users', [UserController::class,  'index']);
+    Route::post('/order/add-product', [OrderController::class, 'addProduct']);
+    Route::post('/order/remove-product', [OrderController::class, 'removeProduct']);
+    Route::post('/users', [UserController::class, 'index']);
 });
 Route::post('/orders', [OrderController::class, 'index']);
 Route::post('/assign-to-me', [OrderController::class, 'assignToMe']);
-Route::post('/selected-runner', [OrderController::class,  'getSelectedRunner']);
-Route::post('/simulated-runner', [OrderController::class,  'getSimulatedRunner']);
+Route::post('/selected-runner', [OrderController::class, 'getSelectedRunner']);
+Route::post('/simulated-runner', [OrderController::class, 'getSimulatedRunner']);
 
-Route::post('store/{product}', [StoreController::class, 'update'])->middleware(['auth', 'verified'])->name('store.update');
-Route::put('store', [StoreController::class, 'store'])->middleware(['auth', 'verified'])->name('store.add');
+Route::group(
+    ['controller' => StoreController::class,
+        'middleware' => ['auth', 'verified']
+    ], function () {
+    Route::post('/store/product/{product}', 'update')->name('store.update');
+    Route::put('/store/product', 'store')->name('store.add');
+    Route::delete('/store/product/{product}', 'delete')->name('store.delete');
+});

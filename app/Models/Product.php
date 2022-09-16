@@ -37,6 +37,11 @@ class Product extends Model
         return $this->hasMany(Order::class);
     }
 
+    public function store(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Store::class);
+    }
+
     public function options(): HasMany
     {
         return $this->hasMany(ProductOption::class);
