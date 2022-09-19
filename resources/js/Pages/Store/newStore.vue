@@ -1,4 +1,5 @@
 <template>
+    <input type="checkbox" id="my-modal-6" class="modal-toggle" />
     <div class="modal modal-bottom sm:modal-middle">
         <div class="modal-box">
             <h3 class="font-bold text-lg">Congratulations random Internet user!</h3>
@@ -12,7 +13,7 @@
 
 <script>
 export default {
-    name: "newStore"
+    name: "NewStore"
 }
 </script>
 

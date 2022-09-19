@@ -83,6 +83,7 @@ class StoreController extends Controller
     {
         $store = $product->store;
         $product->delete();
+
         return response()->json([
             'message' => 'Product deleted',
             'products' => $store->products
