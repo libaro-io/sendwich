@@ -113,6 +113,7 @@ class OrderController extends Controller
 
         $data = $request->validated();
 
+
         /** @var Product|null $product */
         $product = Product::query()->find($data['product_id']);
 
