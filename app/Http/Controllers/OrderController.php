@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse
     {
         if(Auth::check()){
             $company = Auth::user()->company;
@@ -30,6 +30,27 @@ class OrderController extends Controller
             $user = $orders[0]->deliverer;
         }
         return response()->json(['orders' => $orders, 'user' => $user ?? null]);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getDoneOrders(Request $request): JsonResponse
+    {
+        if(Auth::check()){
+            $company = Auth::user()->company;
+        }else{
+            $company = Company::query()->where('token', '=', $request->input('company_token'))->firstOrFail();
+        }
+        $formattedOrders = collect();
+        $orders = Order::getOrders($company, $this->getDate(), false, true)
+            ->get()
+            ->groupBy('paid_by');
+        foreach($orders as $userId => $orderGroup){
+                $formattedOrders[$orderGroup->first()->deliverer->name] = $orderGroup;
+        }
+        return response()->json(['orders' => $formattedOrders, 'user' => $user ?? null]);
     }
 
     public function getSelectedRunner(Request $request)
