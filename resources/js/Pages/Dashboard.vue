@@ -1,6 +1,6 @@
 <script setup>
 import mitt from 'mitt'
-import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
+
 import {Head} from '@inertiajs/inertia-vue3';
 import Orders from "@/Components/Orders.vue";
 import SelectedRunner from "@/Components/SelectedRunner.vue";
@@ -16,9 +16,15 @@ const props = defineProps({
 });
 
 </script>
+<script>
+import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
+export default {
+    export : { BreezeAuthenticatedLayout },
+    layout : BreezeAuthenticatedLayout ,
+}
+</script>
 <template>
     <Head title="Dashboard"/>
-    <BreezeAuthenticatedLayout>
         <div class="py-12">
             <div class="max-w-7xl mx-auto px-4 lg:px-8">
                 <div class="grid grid-cols-2 gap-4">
@@ -34,5 +40,4 @@ const props = defineProps({
                 </div>
             </div>
         </div>
-    </BreezeAuthenticatedLayout>
 </template>

@@ -43,7 +43,7 @@ export default {
         addProduct(product) {
             axios.post('/api/order/add-product', {
                 product_id: product.id,
-                options: this.getSelectedOptionIdsForProduct(product.id),
+                options: this.getSelectedOptionIdsForProduct(product),
             }).then(response => {
                 toast.success(response.data.message);
                 this.emitter.emit('updateOrders');
@@ -52,26 +52,8 @@ export default {
             });
         },
 
-        getSelectedOptionIdsForProduct(productId) {
-            return this.selectedOptions.filter(o => o.product_id === productId).map(o => o.id);
-        },
-
-        addOrRemoveOption(shouldAdd, option) {
-            if (shouldAdd) {
-                this.addOption(option);
-            } else {
-                this.removeOption(option);
-            }
-        },
-
-        addOption(option) {
-            this.selectedOptions.push(option);
-        },
-
-        removeOption(option) {
-            const index = this.selectedOptions.indexOf(option);
-
-            this.selectedOptions.splice(index, 1);
+        getSelectedOptionIdsForProduct(product) {
+            return product.options.filter( option => option.selected === true).map( option=>option.id );
         },
     }
 }

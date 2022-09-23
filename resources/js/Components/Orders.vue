@@ -32,7 +32,7 @@
                                     order.user.name
                                 }}</span></div>
                         </div>
-                        <div class="card-actions justify-end">
+                        <div class="card-actions justify-end w-full">
                             <button
                                 v-if="isMyOrder(order)"
                                 @click="removeProduct(order.product)"
@@ -45,10 +45,10 @@
                 </div>
             </div>
 
-            <h3
+            <h3 class="pl-4"
                 v-if="totalPrice !== 0"
-            >
-                €{{ totalPrice }}
+            > Totaal :
+                €{{ totalPrice.toFixed(2) }}
             </h3>
         </div>
 

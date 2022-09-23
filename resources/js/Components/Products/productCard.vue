@@ -62,6 +62,7 @@ export default {
     methods:{
         toggleOption(option){
             option.selected = !option.selected;
+
         },
         order(){
             this.$emit('ordered',this.product);
