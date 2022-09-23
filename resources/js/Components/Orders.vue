@@ -121,8 +121,7 @@ export default {
         },
 
         assignToMe(){
-            axios.post('/api/assign-to-me')
-                .then(response => {
+            axios.post('/api/assign-to-me').then(response => {
                 toast.success(response.data.message);
                 this.emitter.emit('updateOrders');
             }).catch(error => {
