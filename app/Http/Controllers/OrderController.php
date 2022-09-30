@@ -190,9 +190,10 @@ class OrderController extends Controller
             ->groupBy([function($order) {
                 return Carbon::parse($order->date)->format('Ymd');
             },'paid_by'])
-            ->sortKeysDesc();
+            ->sortKeysDesc()
+            ->toArray();
         return response()->json([
-            'orders' => $orders
+            'orders' => array_values($orders)
         ]);
     }
 }
