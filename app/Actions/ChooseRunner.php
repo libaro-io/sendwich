@@ -40,7 +40,6 @@ final class ChooseRunner
         }
         $orders = Order::getOrders($this->company, Carbon::now(), $this->addTomorrow)->get();
         $this->setOrdersAppointed($orders, $victim);
-
         $this->sendMission($victim, $orders);
         return $victim;
     }
@@ -89,7 +88,7 @@ final class ChooseRunner
      * @param $user
      * @return $this
      */
-    private function setUser(User $user)
+    private function setUser(?User $user)
     {
         $this->user = $user;
 
