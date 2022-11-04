@@ -177,6 +177,9 @@ class OrderController extends Controller
         return $order;
     }
 
+    /**
+     * @return JsonResponse
+     */
     public function getAllOrdersByDateAndUser(): JsonResponse
     {
         $orders = Order::query()
@@ -186,14 +189,15 @@ class OrderController extends Controller
                 'product'
                 ]
             )
+            ->orderBy('date','DESC')
             ->get()
             ->groupBy([function($order) {
                 return Carbon::parse($order->date)->format('Ymd');
             },'paid_by'])
-            ->sortKeysDesc()
-            ->toArray();
-        return response()->json([
-            'orders' => array_values($orders)
-        ]);
+            ->map(function ($value, $key){
+                return ['date'=> $key, 'data'=>$value];
+            })
+            ->values();
+        return response()->json($orders);
     }
 }
