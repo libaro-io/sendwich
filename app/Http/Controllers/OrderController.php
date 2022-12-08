@@ -113,6 +113,7 @@ class OrderController extends Controller
 
         $data = $request->validated();
 
+
         /** @var Product|null $product */
         $product = Product::query()->find($data['product_id']);
 
@@ -196,5 +197,29 @@ class OrderController extends Controller
             ->first();
 
         return $order;
+    }
+
+    /**
+     * @return JsonResponse
+     */
+    public function getAllOrdersByDateAndUser(): JsonResponse
+    {
+        $orders = Order::query()
+            ->with([
+                'deliverer',
+                'user',
+                'product'
+                ]
+            )
+            ->orderBy('date','DESC')
+            ->get()
+            ->groupBy([function($order) {
+                return Carbon::parse($order->date)->format('Ymd');
+            },'paid_by'])
+            ->map(function ($value, $key){
+                return ['date'=> $key, 'data'=>$value];
+            })
+            ->values();
+        return response()->json($orders);
     }
 }

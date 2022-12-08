@@ -2,10 +2,10 @@
     <div class="bg-white shadow sm:rounded-lg">
         <div class="px-4 py-5 sm:p-6">
             <h3 class="text-lg leading-6 font-medium text-gray-900">Bon'app</h3>
-            <div class="mt-5">
+            <div class="mt-5 flex flex-col gap-2">
                 <div v-for="(product , index) in products"
                      :key="index"
-                     class="gap-4">
+                     class="card card-compact bg-gray-50 shadow">
                     <product-card :product="product" @ordered="addProduct"></product-card>
                 </div>
             </div>
@@ -43,7 +43,7 @@ export default {
         addProduct(product) {
             axios.post('/api/order/add-product', {
                 product_id: product.id,
-                options: this.getSelectedOptionIdsForProduct(product.id),
+                options: this.getSelectedOptionIdsForProduct(product),
             }).then(response => {
                 toast.success(response.data.message);
                 this.emitter.emit('updateOrders');
@@ -52,26 +52,8 @@ export default {
             });
         },
 
-        getSelectedOptionIdsForProduct(productId) {
-            return this.selectedOptions.filter(o => o.product_id === productId).map(o => o.id);
-        },
-
-        addOrRemoveOption(shouldAdd, option) {
-            if (shouldAdd) {
-                this.addOption(option);
-            } else {
-                this.removeOption(option);
-            }
-        },
-
-        addOption(option) {
-            this.selectedOptions.push(option);
-        },
-
-        removeOption(option) {
-            const index = this.selectedOptions.indexOf(option);
-
-            this.selectedOptions.splice(index, 1);
+        getSelectedOptionIdsForProduct(product) {
+            return product.options.filter( option => option.selected === true).map( option=>option.id );
         },
     }
 }
