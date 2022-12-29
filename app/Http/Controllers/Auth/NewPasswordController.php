@@ -10,14 +10,32 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\ValidationException;
+use Inertia\Inertia;
 
 class NewPasswordController extends Controller
 {
+
+
+    public function create(Request $request, string $token)
+    {
+        $request->validate([
+            'email' => ['required', 'email'],
+        ]);
+
+        $email = $request->get('email');
+
+        return Inertia::render('Auth/ResetPassword',
+            [
+                'email' => $email,
+                'token' => $token
+            ]);
+    }
+
+
     /**
      * Handle an incoming new password request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
+     * @param \Illuminate\Http\Request $request
      *
      * @throws \Illuminate\Validation\ValidationException
      */
@@ -50,6 +68,8 @@ class NewPasswordController extends Controller
             ]);
         }
 
-        return response()->json(['status' => __($status)]);
+        return Inertia::render('Auth/Login', [
+            'status' => __($status),
+        ]);
     }
 }
