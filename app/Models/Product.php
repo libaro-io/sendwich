@@ -26,13 +26,20 @@ class Product extends Model
 
     protected $fillable = [
         'name',
+        'description',
         'price',
         'company_id',
+        'store_id',
     ];
 
     public function orders(): HasMany
     {
         return $this->hasMany(Order::class);
+    }
+
+    public function store(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Store::class);
     }
 
     public function options(): HasMany
