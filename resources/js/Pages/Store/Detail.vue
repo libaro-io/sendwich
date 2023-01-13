@@ -2,10 +2,13 @@
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
 import {Head} from '@inertiajs/inertia-vue3';
 import axios from "axios";
+<<<<<<< HEAD
 import {useToast} from "vue-toastification";
 import {reactive} from "vue";
 
 const toast = useToast();
+=======
+>>>>>>> 533e070 (push)
 
 const props = defineProps({
     store: Object,
@@ -20,15 +23,24 @@ const resetNewProduct = () => {
 }
 
 const save = (product) => {
+<<<<<<< HEAD
     axios.post('/api/store/product/' + product.id, {
         product: product,
     }).then(response => {
         toast.success(response.data.message);
+=======
+    axios.post('/api/store' + product.id, {
+        product: product,
+    }).then(response => {
+        toast.success(response.data.message);
+        this.emitter.emit('updateProducts');
+>>>>>>> 533e070 (push)
     }).catch(error => {
         console.error(error);
     });
 }
 
+<<<<<<< HEAD
 const remove = (product) => {
     axios.delete('/api/store/product/' + product.id).then(response => {
         console.log(response.data);
@@ -54,6 +66,8 @@ const saveNew = (product) => {
 
 let newProduct = reactive();
 resetNewProduct();
+=======
+>>>>>>> 533e070 (push)
 </script>
 <template>
     <Head title="Stores"/>
@@ -76,13 +90,22 @@ resetNewProduct();
                                 </thead>
                                 <tbody>
                                 <tr v-for="product in store.products">
+<<<<<<< HEAD
                                     <th><input type="text" v-model="product.name" class="input w-full max-w-xs"/></th>
                                     <td><input type="text" v-model="product.description" class="input w-full max-w-xs"/>
+=======
+                                    <th><input type="text" :value="product.name" class="input w-full max-w-xs"/></th>
+                                    <td><input type="text" :value="product.description" class="input w-full max-w-xs"/>
+>>>>>>> 533e070 (push)
                                     </td>
                                     <td>
                                         <div class="form-control">
                                             <label class="input-group">
+<<<<<<< HEAD
                                                 <input type="number" v-model="product.price"
+=======
+                                                <input type="number" :value="product.price"
+>>>>>>> 533e070 (push)
                                                        class="input input-bordered"/>
                                                 <span>EUR</span>
                                             </label>
@@ -90,6 +113,7 @@ resetNewProduct();
                                     </td>
                                     <td>
                                         <button class="btn btn-primary" @click="save(product)">Save</button>
+<<<<<<< HEAD
 
                                         <button class="btn btn-danger ml-2" @click="remove(product)">Delete</button>
                                     </td>
@@ -112,6 +136,8 @@ resetNewProduct();
                                     </td>
                                     <td>
                                         <button class="btn btn-secondary" @click="saveNew(newProduct)">New</button>
+=======
+>>>>>>> 533e070 (push)
                                     </td>
                                 </tr>
                                 </tbody>

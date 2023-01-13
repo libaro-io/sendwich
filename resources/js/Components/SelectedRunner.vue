@@ -1,11 +1,11 @@
 <template>
-    <div class="shadow sm:rounded-lg px-4 py-5 bg-cyan-100" v-if="runner">
+    <div class="shadow sm:rounded-lg px-4 py-5 bg-black-transparent" v-if="runner">
         <div>
             <h3 class="text-xl leading-6 text-cyan-600 text-center">{{ runner.name }}</h3>
             <h3 class="text-md leading-6 text-cyan-600 text-center mt-2">You are the chosen one</h3>
         </div>
     </div>
-    <div class="shadow sm:rounded-lg px-4 py-5 bg-cyan-100" v-else-if="simulatedRunner">
+    <div class="shadow sm:rounded-lg px-4 py-5 bg-black-transparent" v-else-if="simulatedRunner">
         <div>
             <h3 class="text-xl leading-6 text-cyan-600 text-center">{{ simulatedRunner.name }}</h3>
             <h3 class="text-md leading-6 text-cyan-600 text-center mt-2">Is in lead to be selected as runner</h3>

@@ -19,8 +19,8 @@ const showingNavigationDropdown = ref(false);
 </style>
 <template>
     <div>
-        <div class="min-h-screen bg-gray-100">
-            <nav class="bg-nav shadow-md">
+        <div class="min-h-screen bg-rainbow">
+            <nav class="nav ">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="flex justify-between h-16">
                         <div class="flex">
@@ -41,6 +41,9 @@ const showingNavigationDropdown = ref(false);
                                 </BreezeNavLink>
                                 <BreezeNavLink :href="route('displays.private.show')" :active="route().current('displays.private.show')">
                                     Display
+                                </BreezeNavLink>
+                                <BreezeNavLink :href="route('history')" :active="route().current('history')">
+                                    History
                                 </BreezeNavLink>
                             </div>
                         </div>

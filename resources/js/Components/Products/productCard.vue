@@ -1,6 +1,6 @@
 <template>
-<div class="flex justify-between bg-gray-50 py-4 my-4 rounded rounded-md align-middle">
-    <div class="sm:flex ml-4 sm:items-start ">
+<div class="card-body flex justify-between align-middle">
+    <div class="sm:flex sm:items-start ">
         <div class="mt-3 sm:mt-0 ">
             <div class="text-sm font-medium text-gray-900">{{ product.name }}</div>
             <div class="mt-1 text-sm text-gray-600 sm:flex sm:items-center ">
@@ -11,10 +11,10 @@
             </div>
         </div>
     </div>
-    <div class="flex flex-col lg:flex-row justify-end items-center">
+    <div class="card-actions justify-end">
         <label
             :for="'option-modal-'+product.id"
-            class="btn btn-sm btn-success mr-4 modal-button"
+            class="btn btn-sm btn-success modal-button"
         >
             Order
         </label>
@@ -27,7 +27,7 @@
                     </span>
                 </h3>
                 <div v-if="options.length >=0">
-                    <p class="py-4">Choose your options</p>
+                    <p v-if="options.length" class="py-4">Choose your options</p>
                     <div class="flex flex-wrap gap-2">
                         <div v-for="option in options" class="flex">
                             <div class="btn btn-sm" :class="option.selected? 'btn-success':'btn-outline'" @click="toggleOption(option)">{{ option.name }}</div>
@@ -62,6 +62,7 @@ export default {
     methods:{
         toggleOption(option){
             option.selected = !option.selected;
+
         },
         order(){
             this.$emit('ordered',this.product);

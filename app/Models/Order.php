@@ -49,22 +49,29 @@ class Order extends Model
      * @param $addTomorrow
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public static function getOrders(Company $company, $date, $addTomorrow = false)
+    public static function getOrders(Company $company, $date, $addTomorrow = false, $doneOrders = false)
     {
         $from = (clone $date)->startOfDay();
         $to = (clone $date)->endOfDay();
-        if($addTomorrow){
+        if ($addTomorrow) {
             $to->addDay();
         }
 
-        return self::query()
+        $query = self::query()
             ->where('company_id', $company->id)
-            ->whereBetween('date',[$from, $to])
-            ->whereNull('paid_by')
+            ->whereBetween('date', [$from, $to])
             ->with(['user' => function ($query) {
                 $query->select('id', 'name');
             }, 'product' => function ($query) {
                 $query->select('id', 'name', 'price');
             }]);
+
+        if ($doneOrders) {
+            $query->whereNotNull('paid_by');
+        }else{
+            $query->whereNull('paid_by');
+        }
+
+        return $query;
     }
 }

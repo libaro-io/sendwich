@@ -17,7 +17,7 @@ final class ChooseRunner
 {
     private Company $company;
     private ?User $user;
-    private $addTomorrow;
+    private bool $addTomorrow;
 
     /**
      * @param Company $company
@@ -31,17 +31,18 @@ final class ChooseRunner
         $this->addTomorrow = $addTomorrow;
     }
 
-    public function execute(): this
+    public function execute(): User
     {
-        if($this->user != null){
+        if ($this->user != null) {
             $victim = $this->user;
-        }else{
+        } else {
             $victim = $this->getVictim();
         }
         $orders = Order::getOrders($this->company, Carbon::now(), $this->addTomorrow)->get();
-        $this->setOrdersAppointed($orders, $victim);
-
-        $this->sendMission($victim, $orders);
+        if ($orders->count() > 0) {
+            $this->setOrdersAppointed($orders, $victim);
+            $this->sendMission($victim, $orders);
+        }
         return $victim;
     }
 
@@ -89,7 +90,7 @@ final class ChooseRunner
      * @param $user
      * @return $this
      */
-    private function setUser(User $user)
+    private function setUser(?User $user)
     {
         $this->user = $user;
 
@@ -98,6 +99,6 @@ final class ChooseRunner
 
     private function sendMission($victim, $orders)
     {
-        Mail::to($victim->email)->bcc('jennis@libaro.be')->send(new InformVictim($orders, $victim));
+        Mail::to($victim->email)->send(new InformVictim($orders, $victim));
     }
 }
