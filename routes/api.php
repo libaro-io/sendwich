@@ -6,16 +6,6 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\StoreController;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
@@ -37,7 +27,10 @@ Route::group(
     ['controller' => StoreController::class,
         'middleware' => ['auth', 'verified']
     ], function () {
-    Route::post('/store/product/{product}', 'update')->name('store.update');
-    Route::put('/store/product', 'store')->name('store.add');
-    Route::delete('/store/product/{product}', 'delete')->name('store.delete');
+
+    Route::put('/store/add', 'addStore')->name('store.add');
+
+    Route::post('/store/product/{product}', 'update')->name('store.product.update');
+    Route::put('/store/product', 'store')->name('store.product.add');
+    Route::delete('/store/product/{product}', 'delete')->name('store.product.delete');
 });

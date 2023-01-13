@@ -8,11 +8,7 @@
 </template>
 
 <script>
-import axios from "axios";
 import Checkbox from '@/Components/Checkbox.vue';
-import {useToast} from "vue-toastification";
-
-const toast = useToast();
 
 export default {
     name: "List",
@@ -30,18 +26,6 @@ export default {
         };
     },
     methods: {
-        add() {
-            axios.post('/api/store/add', {
-                store: this.store,
-            }).then(response => {
-                toast.success(response.data.message);
-                this.emitter.emit('updateStores');
-            }).catch(error => {
-                console.error(error);
-            });
-        },
-
-
     }
 }
 </script>

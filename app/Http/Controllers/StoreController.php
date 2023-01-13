@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateStore;
 use App\Http\Requests\UpdateProduct;
 use App\Models\Product;
 use App\Models\Store;
@@ -77,6 +78,14 @@ class StoreController extends Controller
             'message' => 'Product saved',
             'products' => $store->products
         ]);
+    }
+
+    public function addStore(CreateStore $request)
+    {
+        $storeData = $request->get('store');
+        $storeData['company_id'] = auth()->user()->company_id;
+        $store = Store::query()->create($storeData);
+        return $this->show($store->id);
     }
 
     public function delete(Product $product)
