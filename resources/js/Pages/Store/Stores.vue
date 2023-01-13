@@ -11,12 +11,9 @@ const props = defineProps({
     company: Object,
 });
 
-let newStore = ref(false)
+let newStore = ref(false);
 
-const toggleModal = () => {
-    newStore = !newStore;
-    console.log(newStore)
-}
+
 </script>
 <template>
     <Head title="Stores"/>
@@ -26,7 +23,8 @@ const toggleModal = () => {
                 <div class="grid grid-cols-1 gap-4">
                     <List title="Stores">
                         <div class="">
-                            <label for="create-store-modal" class="btn btn-success modal-button">Create new Store</label>
+                            <label for="create-store-modal" class="btn btn-success modal-button">Create new
+                                Store</label>
                         </div>
                         <ListItem v-for="store in stores" :item="store" type="store" :editable="true"></ListItem>
                     </List>

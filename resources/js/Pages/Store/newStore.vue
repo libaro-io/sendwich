@@ -64,7 +64,6 @@
 
 
 <script setup>
-import {Head} from '@inertiajs/inertia-vue3';
 import axios from "axios";
 import {reactive} from "vue";
 import {useToast} from "vue-toastification";
@@ -82,6 +81,7 @@ let newStore = reactive({
 });
 
 const submit = () => {
+    if(newStore.name){
         axios.put('/api/store/add', {
             store: newStore,
         }).then(response => {
@@ -90,6 +90,10 @@ const submit = () => {
         }).catch(error => {
             console.error(error);
         });
+    }else{
+        toast.success('Fill in a name');
+    }
+
 };
 </script>
 <style scoped>
