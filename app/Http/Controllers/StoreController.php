@@ -18,7 +18,7 @@ class StoreController extends Controller
         $user = auth()->user();
         $company = $user->company;
 
-        return Inertia::render('Store/Index',
+        return Inertia::render('Store/Stores',
             [
                 'stores' => $company->stores,
                 'company' => $company,
@@ -34,7 +34,7 @@ class StoreController extends Controller
         $user = auth()->user();
         $company = $user->company;
 
-        return Inertia::render('Store/Detail',
+        return Inertia::render('Store/Products',
             [
                 'store' => $company->stores()->where('id', $store_id)->with('products')->first(),
             ]);
