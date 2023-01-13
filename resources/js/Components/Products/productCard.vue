@@ -27,7 +27,7 @@
                     </span>
                 </h3>
                 <div v-if="options.length >=0">
-                    <p class="py-4">Choose your options</p>
+                    <p v-if="options.length" class="py-4">Choose your options</p>
                     <div class="flex flex-wrap gap-2">
                         <div v-for="option in options" class="flex">
                             <div class="btn btn-sm" :class="option.selected? 'btn-success':'btn-outline'" @click="toggleOption(option)">{{ option.name }}</div>
