@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\HistoryController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OrderController;
@@ -21,7 +22,9 @@ Route::post('/done-orders', [OrderController::class, 'getDoneOrders']);
 Route::post('/assign-to-me', [OrderController::class, 'assignToMe']);
 Route::post('/selected-runner', [OrderController::class,  'getSelectedRunner']);
 Route::post('/simulated-runner', [OrderController::class,  'getSimulatedRunner']);
+
 Route::post('/getAllOrdersByDateAndUser', [OrderController::class,  'getAllOrdersByDateAndUser']);
+Route::post('/updateOldOrder', [HistoryController::class,  'updateOrder']);
 
 Route::group(
     ['controller' => StoreController::class,

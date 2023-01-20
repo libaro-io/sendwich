@@ -20,25 +20,8 @@ class DashboardController extends Controller
         $user = auth()->user();
         $company = $user->company;
 
-        $products = $company
-            ->products()
-            ->with('options')
-            ->with('orders', function ($query) use ($orderController) {
-                if(now() < $orderController->getTresholdDate()) {
-                    $query->where('date', '>=', Carbon::now()->startOf('day'));
-                    $query->where('date', '<=', Carbon::now()->endOf('day'));
-                } else {
-                    $query->where('date', '>=', Carbon::now()->addDay()->startOf('day'));
-                    $query->where('date', '<=', Carbon::now()->addDay()->endOf('day'));
-                }
-                $query->where('user_id', '=', auth()->user()->id);
-            })->get();
 
-        foreach ($products as $product) {
-            if ($product->orders->count() > 0) {
-                $product->selected = $product->orders->first()->comment;
-            }
-        }
+        $products = $company->getProducts();
 
         $deliveryMoment = $orderController->getDeliveryMoment();
 
