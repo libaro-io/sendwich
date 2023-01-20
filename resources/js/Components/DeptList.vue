@@ -1,7 +1,7 @@
 <template>
     <div class="bg-white shadow sm:rounded-lg">
         <div class="px-4 py-5 sm:p-6">
-            <h3 class="text-lg leading-6 font-medium text-gray-900">The Blacklist</h3>
+            <h2>The Deptlist</h2>
             <table class="mt-5 table w-full">
                 <tbody>
                     <tr v-for="user in users" class="text-sm">

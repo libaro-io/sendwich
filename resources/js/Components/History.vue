@@ -1,13 +1,13 @@
 <template>
     <div class="bg-white shadow sm:rounded-lg">
         <div class="px-4 py-5 sm:p-6">
-            <h2 class="text-3xl leading-6 font-medium text-gray-900 mb-5 font-bold">History</h2>
+            <h1>History</h1>
             <article v-for="group in orders" class="mb-4">
-                <h3 class="mb-2 font-bold">{{currentDateTime(group.date)}}</h3>
+                <h2>{{currentDateTime(group.date)}}</h2>
                 <div v-for="(orderGroup, user_id) in group.data" class="">
                     <div class="ml-4">
-                        <h4 v-if="orderGroup[0].deliverer !== null" class="font-medium mb-2">{{orderGroup[0].deliverer.name}}</h4>
-                        <h4 v-else class="font-medium mb-2">no runner was assigned</h4>
+                        <h3 v-if="orderGroup[0].deliverer !== null">{{orderGroup[0].deliverer.name}}</h3>
+                        <h3 v-else >no runner was assigned</h3>
                         <div class="overflow-x-auto mb-5">
                             <table class="table w-full">
                                 <!-- head -->

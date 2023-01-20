@@ -2,7 +2,7 @@
     <div class="bg-white shadow sm:rounded-lg col-span-3">
         <div class="px-4 py-5 sm:p-6">
             <div class="flex items-center justify-between mb-5">
-                <h3 class="text-lg leading-6 font-medium text-gray-900 capitalize ">Orders already assigned</h3>
+                <h2>Orders already assigned</h2>
             </div>
             <div class="mb-5">
                 <div v-if="orders.length !== 0" v-for="(orderGroup, runner) in orders"

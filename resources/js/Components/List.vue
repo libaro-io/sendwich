@@ -1,7 +1,7 @@
 <template>
     <div class="card bg-white shadow-xl">
         <div class="card-body">
-            <h3 class="card title">{{ title }}</h3>
+            <h1>{{ title }}</h1>
             <slot></slot>
         </div>
     </div>

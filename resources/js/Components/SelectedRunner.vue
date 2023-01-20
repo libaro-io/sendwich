@@ -1,14 +1,14 @@
 <template>
     <div class="shadow sm:rounded-lg px-4 py-5 bg-white-50" v-if="runner">
         <div>
-            <h3 class="text-xl leading-6 text-cyan-600 text-center">{{ runner.name }}</h3>
-            <h3 class="text-md leading-6 text-cyan-600 text-center mt-2">You are the chosen one</h3>
+            <h2 class="text-center">{{ runner.name }}</h2>
+            <h1 class="text-center">You are the chosen one</h1>
         </div>
     </div>
     <div class="shadow sm:rounded-lg px-4 py-5 bg-white-fix" v-else-if="simulatedRunner">
         <div>
-            <h3 class="text-xl leading-6 text-cyan-600 text-center">{{ simulatedRunner.name }}</h3>
-            <h3 class="text-md leading-6 text-cyan-600 text-center mt-2">Is in lead to be selected as runner</h3>
+            <h2 class="text-center">{{ simulatedRunner.name }}</h2>
+            <h1 class="text-center">Is in lead to be selected as runner</h1>
         </div>
     </div>
 </template>
