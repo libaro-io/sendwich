@@ -84,9 +84,9 @@ class OrderController extends Controller
     public function getDeliveryMoment()
     {
         if (Carbon::now() < $this->getTresholdDate()) {
-            $deliveryMoment = 'vandaag';
+            $deliveryMoment = 'today';
         } else {
-            $deliveryMoment = 'morgen';
+            $deliveryMoment = 'tomorrow';
         }
         return $deliveryMoment;
     }

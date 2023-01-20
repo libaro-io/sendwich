@@ -2,7 +2,7 @@
     <div class="bg-white shadow sm:rounded-lg">
         <div class="px-4 py-5 sm:p-6">
             <div class="flex items-center justify-between mb-5">
-                <h2>Bestellingen voor {{ deliveryMoment }}</h2>
+                <h2>Orders for {{ deliveryMoment }}</h2>
                 <button v-if="orders.length !== 0"
                         @click="assignToMe()"
                         type="button"
