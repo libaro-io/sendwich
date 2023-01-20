@@ -31,7 +31,7 @@ export default {
                     <div class="col-span-2 md:col-span-1 grid-cols-3">
                         <div class="grid grid-cols-3 gap-4">
                             <SelectedRunner :company="company" class="col-span-3 " />
-                            <Orders v-if="orders" :delivery-moment="deliveryMoment" class="col-span-3"></Orders>
+                            <Orders :delivery-moment="deliveryMoment" class="col-span-3"></Orders>
                             <done-orders></done-orders>
                             <DeptList class="col-span-3"></DeptList>
                         </div>
