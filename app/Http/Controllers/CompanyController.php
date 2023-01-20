@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\InvitedUser;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -27,6 +28,15 @@ class CompanyController extends Controller
             'email'=>'required|email|unique:users',
         ]);
 
-        dd('passed');
+        $user = auth()->user();
+        $company = $user->company;
+
+        $data = array_merge($data , ['invited_by' => $user->id ,'company_id' => $company->id]);
+
+        InvitedUser::create($data);
+
+        //send inviation link to user
+
+
     }
 }
