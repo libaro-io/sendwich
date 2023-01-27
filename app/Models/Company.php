@@ -38,7 +38,6 @@ class Company extends Model
 
     public function getProducts(Carbon $tresHoldDate = null)
     {
-
         if ($tresHoldDate === null) {
             $tresHoldDate = (new OrderController())->getTresholdDate();
         }
@@ -53,13 +52,15 @@ class Company extends Model
                     $query->where('date', '<=', Carbon::now()->addDay()->endOf('day'));
                 }
                 $query->where('user_id', '=', auth()->user()->id);
-            })->get();
-
-        foreach ($products as $product) {
-            if ($product->orders->count() > 0) {
-                $product->selected = $product->orders->first()->comment;
-            }
-        }
+            })
+            ->with('store')
+            ->get()
+            ->map(function ($product) {
+                if ($product->orders->count() > 0) {
+                    $product->selected = $product->orders->first()->comment;
+                }
+                return $product;
+            });
 
         return $products;
     }

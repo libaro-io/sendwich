@@ -42,3 +42,7 @@ h2 {
 h3 {
     @apply text-lg leading-6 font-medium text-gray-800 mb-5;
 }
+
+.btn-success{
+    @apply text-white font-bold;
+}

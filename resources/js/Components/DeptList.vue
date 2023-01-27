@@ -19,7 +19,7 @@
                         </div>
                     </td>
                     <td>
-                        <span :class="user.dept > 0 ? 'badge-success' : 'badge-warning'"
+                        <span :class="user.dept > 0 ? 'badge-success text-white font-bold' : 'badge-warning font-bold'"
                               class="badge text-sm">€ {{ user.dept }}</span>
                     </td>
                 </tr>

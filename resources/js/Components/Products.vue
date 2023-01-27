@@ -1,7 +1,7 @@
 <template>
     <div class="bg-white shadow sm:rounded-lg">
         <div class="px-4 py-5 sm:p-6">
-            <h2>Bon'app</h2>
+            <h2>Menu</h2>
             <div class="mt-5 flex flex-col gap-2">
                 <div v-for="(product , index) in products"
                      :key="index"
