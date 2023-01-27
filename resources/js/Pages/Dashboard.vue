@@ -3,7 +3,6 @@ import mitt from 'mitt'
 
 import {Head} from '@inertiajs/inertia-vue3';
 import Orders from "@/Components/Orders.vue";
-import SelectedRunner from "@/Components/SelectedRunner.vue";
 import Products from "@/Components/Products.vue";
 import DeptList from "@/Components/DeptList.vue";
 import DoneOrders from "@/Components/DoneOrders.vue";
@@ -30,10 +29,9 @@ export default {
                 <div class="grid grid-cols-2 gap-4">
                     <div class="col-span-2 md:col-span-1 grid-cols-3">
                         <div class="grid grid-cols-3 gap-4">
-                            <SelectedRunner :company="company" class="col-span-3 " />
                             <Orders :delivery-moment="deliveryMoment" class="col-span-3"></Orders>
                             <done-orders></done-orders>
-                            <DeptList class="col-span-3"></DeptList>
+                            <DeptList :company="company" class="col-span-3"></DeptList>
                         </div>
                     </div>
                     <Products :products="products" :deliveryMoment="deliveryMoment" class="col-span-2 md:col-span-1"/>
