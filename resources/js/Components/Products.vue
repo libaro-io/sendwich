@@ -31,7 +31,6 @@ export default {
         Checkbox,
     },
     props: {
-        deliveryMoment: String,
         products: Array,
     },
     data() {

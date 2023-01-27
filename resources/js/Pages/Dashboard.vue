@@ -34,7 +34,7 @@ export default {
                             <DeptList :company="company" class="col-span-3"></DeptList>
                         </div>
                     </div>
-                    <Products :products="products" :deliveryMoment="deliveryMoment" class="col-span-2 md:col-span-1"/>
+                    <Products :products="products" class="col-span-2 md:col-span-1"/>
                 </div>
             </div>
         </div>
