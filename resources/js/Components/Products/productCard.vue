@@ -7,7 +7,7 @@
                 <p class="text-primary font-bold">{{ product.store.name }}</p>
             </div>
         </div>
-        <div class="card-actions justify-end">
+        <div class="card-actions justify-end mt-2">
             <label
                 :for="'option-modal-'+product.id"
                 class="btn btn-sm btn-success modal-button">
