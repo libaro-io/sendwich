@@ -5,6 +5,7 @@ namespace App\Actions;
 use App\Models\Company;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 
 class UsersWithDept
 {
@@ -48,21 +49,22 @@ class UsersWithDept
             $user->payments_sum = $user->payments->sum('total');
             $user->dept = round($user->payments_sum - $user->orders_dept, 2);
         }
-        $this->users->sortByDesc('dept');
-        return $this->users;
+
+        $usersSorted = $this->users->sortBy('dept');
+        return new Collection($usersSorted->values()->all());
     }
 
-    public function setWithOrdersForToday($withOrdersForToday)
+    public function setWithOrdersForToday($withOrdersForToday): void
     {
         $this->withOrdersForToday = $withOrdersForToday;
     }
 
-    public function setCompany(Company $company)
+    public function setCompany(Company $company): void
     {
         $this->company = $company;
     }
 
-    public function setDate($date)
+    public function setDate($date): void
     {
         $this->date = $date;
     }
