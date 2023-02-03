@@ -31,7 +31,7 @@ final class ChooseRunner
         $this->addTomorrow = $addTomorrow;
     }
 
-    public function execute(): User
+    public function execute(): ?User
     {
         if ($this->user != null) {
             $victim = $this->user;
