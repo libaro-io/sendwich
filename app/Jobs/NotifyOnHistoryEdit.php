@@ -20,7 +20,7 @@ class NotifyOnHistoryEdit implements ShouldQueue
 
     protected Order $order;
     protected string $oldProductName;
-    private string $newProductName;
+    protected string $newProductName;
 
     /**
      * Create a new job instance.

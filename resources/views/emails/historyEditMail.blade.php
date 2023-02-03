@@ -1,6 +1,6 @@
 <div>
     <p>Beste {{$order->user->name}},</p>
-    <p>{{$order->deliverer->name}} paste je bestelling aan van {{$order->date}}</p>
+    <p>{{$order->deliverer->name}} paste je bestelling aan van {{\Carbon\Carbon::parse($order->date)->format('d/m/Y')}}</p>
     <table>
         <tr>
             <td><b>Originele bestelling</b></td>
