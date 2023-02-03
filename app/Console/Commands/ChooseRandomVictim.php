@@ -7,7 +7,7 @@ use App\Actions\ChooseRunner as ChooseRandomVictimAlias;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\RunnerController;
 use App\Http\Controllers\UserController;
-use App\Mail\InformVictim;
+use App\Mail\InformVictimMail;
 use App\Models\Company;
 use App\Models\Order;
 use App\Models\User;
