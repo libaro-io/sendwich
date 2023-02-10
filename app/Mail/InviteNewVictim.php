@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\Company;
 use App\Models\InvitedUser;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -20,11 +21,14 @@ class InviteNewVictim extends Mailable
 
     public InvitedUser $invitee;
     public string $signedUrl;
+    public Company $company;
 
-    public function __construct($invitee , $signedUrl)
+    public function __construct(InvitedUser $invitee , $signedUrl)
     {
         $this->invitee = $invitee;
         $this->signedUrl = $signedUrl;
+        $this->company = Company::query()->findOrFail($invitee->company_id)->first();
+
     }
 
     /**

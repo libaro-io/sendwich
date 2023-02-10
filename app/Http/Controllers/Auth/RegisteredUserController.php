@@ -48,9 +48,14 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
+        $invitee = InvitedUser::query()->findOrFail($request->get('id'));
+        if($invitee->email !== $request->get('email')){
+            abort(403);
+        }
+
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
+            'name' => $invitee->name,
+            'email' => $invitee->email,
             'password' => Hash::make($request->password),
         ]);
 
@@ -61,6 +66,8 @@ class RegisteredUserController extends Controller
                 $user->save();
             }
         }
+
+        $invitee->delete();
 
         event(new Registered($user));
 

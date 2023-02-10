@@ -19,8 +19,10 @@ const form = useForm({
 })
 
 const invite = ()=> {
-    form.post(route('invite'));
-    toggle.value = false;
+    form.post(route('invite'),{
+        onSuccess: () => toggle.value = false,
+    });
+
 }
 
 </script>
