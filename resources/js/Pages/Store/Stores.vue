@@ -13,7 +13,6 @@ const props = defineProps({
 
 let newStore = ref(false);
 
-
 </script>
 <template>
     <Head title="Stores"/>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\HistoryController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -17,6 +18,8 @@ Route::get('/history',[HistoryController::class, 'showHistory'])->middleware(['a
 
 Route::get('/stores', [StoreController::class, 'index'])->middleware(['auth', 'verified'])->name('store.index');
 Route::get('/store/{id}', [StoreController::class, 'show'])->middleware(['auth', 'verified'])->name('store.show');
+Route::get('/company',  [CompanyController::class , 'show'])->name('company.show');
+Route::post('/user/invite',  [CompanyController::class , 'inviteUser'])->name('invite');
 
 /*public routes*/
 Route::get('/display/{company_token}',[DisplayController::class, 'showDisplayPublic'])->name('displays.public.show');

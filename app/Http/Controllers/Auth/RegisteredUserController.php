@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Company;
+use App\Models\InvitedUser;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
@@ -66,5 +67,35 @@ class RegisteredUserController extends Controller
         Auth::login($user);
 
         return redirect(RouteServiceProvider::HOME);
+    }
+
+    /**
+     * Display the registration view.
+     *
+     * @return \Inertia\Response
+     */
+    public function createPassword($companyLink , $invitee)
+    {
+
+        $company = Company::where('link', $companyLink)->first();
+        return Inertia::render('Auth/Register',
+            [
+                'companyLink' => $companyLink ?? null,
+                'companyName' => $company ? $company->name : '',
+            ]);
+    }
+
+    public function signup($id){
+        $invitee = InvitedUser::query()->findOrFail($id);
+        $company = Company::query()->findOrFail($invitee->company_id);
+
+        return Inertia::render('Auth/CreatePassword',
+            [
+                'companyLink' => $company->link ?? null,
+                'companyName' => $company ? $company->name : '',
+                'name' => $invitee->name,
+                'email' => $invitee->email,
+                'id' => $invitee->id,
+            ]);
     }
 }
