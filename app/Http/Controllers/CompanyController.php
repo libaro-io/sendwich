@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\InformVictim;
+use App\Mail\InviteNewVictim;
 use App\Models\InvitedUser;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
 
 class CompanyController extends Controller
@@ -33,10 +38,13 @@ class CompanyController extends Controller
 
         $data = array_merge($data , ['invited_by' => $user->id ,'company_id' => $company->id]);
 
-        InvitedUser::create($data);
+        $pendingInvite = InvitedUser::create($data);
 
-        //send inviation link to user
+        $signupUrl = URL::temporarySignedRoute('signup',now()->addWeeks(3) ,['id' => $pendingInvite->id]);
 
+        Mail::to($pendingInvite->email)->send(new InviteNewVictim($pendingInvite,$signupUrl));
+
+        return redirect()->back();
 
     }
 }

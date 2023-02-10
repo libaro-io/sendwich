@@ -9,5 +9,7 @@ class InvitedUser extends Model
 {
     use HasFactory;
 
+    protected $table = 'user_invites';
     protected $guarded = ['id'];
+
 }

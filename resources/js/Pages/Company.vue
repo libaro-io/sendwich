@@ -2,6 +2,7 @@
 
 import Authenticated from "@/Layouts/Authenticated.vue";
 import { useForm } from '@inertiajs/inertia-vue3';
+import { ref } from 'vue';
 
 
 const props = defineProps({
@@ -10,12 +11,17 @@ const props = defineProps({
     users : Array,
 });
 
+const toggle = ref(false);
+
 const form = useForm({
     name: null,
     email: null,
 })
 
-const invite = ()=> form.post(route('invite'));
+const invite = ()=> {
+    form.post(route('invite'));
+    toggle.value = false;
+}
 
 </script>
 <template>
@@ -37,7 +43,7 @@ const invite = ()=> form.post(route('invite'));
                                             >
                                                 Invite new user
                                             </label>
-                                            <input type="checkbox" id="create-modal" class="modal-toggle" />
+                                            <input type="checkbox" id="create-modal" class="modal-toggle" v-model="toggle"/>
                                             <label for="create-modal" class="modal modal-bottom sm:modal-middle cursor-pointer">
                                                 <label class="modal-box relative" for="">
                                                     <form @submit.prevent="invite">
@@ -76,7 +82,6 @@ const invite = ()=> form.post(route('invite'));
                                                 </tr>
                                                 </thead>
                                                 <tbody>
-                                                <!-- row 1 -->
                                                 <tr v-for="user in users">
                                                     <td>{{user.name}}</td>
                                                     <td>
