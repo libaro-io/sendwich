@@ -9,7 +9,9 @@
                         {{ user.name }}
                     </td>
                     <td>
-                        <div class="tooltip tooltip-primary" :data-tip="simulated ? 'Simulated runner' : 'Selected runner'" v-if="runner && user.id === runner.id">
+                        <div class="tooltip tooltip-primary"
+                             :data-tip="simulated ? 'Simulated runner' : 'Selected runner'"
+                             v-if="runner && user.id === runner.id">
                             <svg :class="simulated ? 'text-gray-400' : 'text-green-600'"
                                  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                                  stroke="currentColor" class="w-6 h-6 cursor-pointer">
@@ -19,8 +21,26 @@
                         </div>
                     </td>
                     <td>
-                        <span :class="user.dept > 0 ? 'badge-success text-white font-bold' : 'badge-warning font-bold'"
-                              class="badge text-sm">€ {{ user.dept }}</span>
+                        <template v-if="user.id ===  $page.props.auth.user.id">
+                            <label v-if="user.dept > 0" for="modal-payback"
+                                   class="btn-success text-white font-bold btn btn-sm modal-button">
+                                Claim
+                                <span class="badge bg-white text-success font-bold border-0 ml-3">&euro; {{ user.dept }}</span>
+                            </label>
+                            <label v-else-if="user.dept === 0" class="btn-info text-white font-bold btn btn-sm">
+                                All good
+                                <span class="badge bg-white text-info font-bold border-0 ml-3">&euro; {{ user.dept }}</span>
+                            </label>
+                            <label v-else for="modal-payback" class="btn-warning font-bold btn btn-sm modal-button">
+                                Pay back
+                                <span class="badge bg-white text-gray-900 font-bold border-0 ml-3">&euro; {{ user.dept }}</span>
+                            </label>
+                            <PayBack :user="user" :users="users"></PayBack>
+                        </template>
+                        <template v-else>
+                            <span :class="user.dept > 0 ? 'badge-success text-white font-bold' : 'badge-warning font-bold'"
+                                class="badge justify-end">€ {{ user.dept }}</span>
+                        </template>
                     </td>
                 </tr>
                 </tbody>
@@ -31,11 +51,12 @@
 
 <script>
 import axios from "axios";
+import PayBack from "@/Components/PayBack.vue";
 
 export default {
     name: "DeptList",
+    components: {PayBack},
     mounted() {
-
         //get users
         setInterval(() => {
             this.getUsers();
@@ -51,7 +72,8 @@ export default {
         return {
             users: Array,
             runner: null,
-            simulated: false
+            simulated: false,
+            selectedUser: null
         };
     },
     props: {
@@ -59,6 +81,9 @@ export default {
         company: Object,
     },
     methods: {
+        setSelectedUser(user){
+            this.selectedUser = user;
+        },
         getUsers() {
             const app = this;
             axios.post('/api/users', {}).then(response => {

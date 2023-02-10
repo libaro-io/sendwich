@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\HistoryController;
+use App\Http\Controllers\PayoutController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OrderController;
@@ -25,6 +26,8 @@ Route::post('/simulated-runner', [OrderController::class,  'getSimulatedRunner']
 
 Route::post('/getAllOrdersByDateAndUser', [OrderController::class,  'getAllOrdersByDateAndUser']);
 Route::post('/updateOldOrder', [HistoryController::class,  'updateOrder']);
+
+Route::post('/payouts/handle', [PayoutController::class, 'payout']);
 
 Route::group(
     ['controller' => StoreController::class,

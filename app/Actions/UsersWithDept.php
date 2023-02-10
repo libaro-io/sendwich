@@ -14,6 +14,7 @@ class UsersWithDept
     protected $withOrdersForToday;
     protected $date;
     protected $users;
+    protected User $user;
 
     public function __construct()
     {
@@ -25,7 +26,7 @@ class UsersWithDept
     public function execute()
     {
         $company = $this->getCompany();
-        $this->users = User::query()->where('company_id', '=', $company->id)->where(function ($query) {
+        $query = User::query()->where('company_id', '=', $company->id)->where(function ($query) {
             $query->has('orders')->orHas('payments');
         })->with(['orders' => function ($query) {
             $query->whereNotNull('paid_by');
@@ -37,8 +38,13 @@ class UsersWithDept
                 $q->whereHas('orders', function ($q2) {
                     $q2->where('date', '>=', Carbon::now()->startOfDay());
                 });
-            })->get();
+            });
 
+        if ($this->user !== null) {
+            $query->where('users.id', $this->user->id);
+        }
+
+        $this->users = $query->get();
         return $this->calculateDept();
     }
 
@@ -57,6 +63,11 @@ class UsersWithDept
     public function setWithOrdersForToday($withOrdersForToday): void
     {
         $this->withOrdersForToday = $withOrdersForToday;
+    }
+
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
     }
 
     public function setCompany(Company $company): void
