@@ -8,7 +8,7 @@
         </tr>
         <tr>
             <td><b>Aangepaste bestelling</b></td>
-            <td{{$newProductName}}></td>
+            <td>{{$newProductName}}</td>
         </tr>
     </table>
 </div>
