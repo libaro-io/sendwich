@@ -89,6 +89,25 @@ export default {
                 this.counter++;
             }
         },
+        // buildPayBackList() {
+        //     this.calculatedDept = Math.abs(this.user.dept);
+        //     this.counter = (this.user.dept > 0) ? 0 : this.users.length - 1;
+        //
+        //     while (this.calculatedDept > 0) {
+        //         const user = this.users[this.counter];
+        //         if ((this.user.dept > 0 && user.dept < 0) || (this.user.dept < 0 && user.dept > 0)) {
+        //             const paybackUserDept = Math.abs(user.dept);
+        //             this.payBackList.push(user);
+        //             if (this.calculatedDept > paybackUserDept) {
+        //                 user.paysBack = paybackUserDept;
+        //             } else {
+        //                 user.paysBack = this.calculatedDept;
+        //             }
+        //             this.calculatedDept -= user.paysBack;
+        //         }
+        //         this.counter += (this.user.dept > 0) ? 1 : -1;
+        //     }
+        // }
         handlePayouts() {
             const app = this;
             axios.post('/api/payouts/handle', {
