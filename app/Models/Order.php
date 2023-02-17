@@ -29,8 +29,14 @@ class Order extends Model
     use HasFactory;
 
     protected $fillable = [
-      'product_id',
-      'total'
+        'product_id',
+        'total',
+        'user_id',
+        'paid_by',
+        'company_id',
+        'quantity',
+        'total',
+        'date'
     ];
 
     public function user(): BelongsTo
@@ -73,7 +79,7 @@ class Order extends Model
 
         if ($doneOrders) {
             $query->whereNotNull('paid_by');
-        }else{
+        } else {
             $query->whereNull('paid_by');
         }
 

@@ -22,24 +22,29 @@ class PayoutController extends Controller
 
 
             foreach ($payouts as $payout) {
-
                 if ($userWithBalance->dept > 0) {
-                    $user_id = $payout['id'];
-                    $paid_by = $userWithBalance->id;
-                } else {
                     $user_id = $userWithBalance->id;
                     $paid_by = $payout['id'];
+                } else {
+                    $user_id = $payout['id'];
+                    $paid_by = $userWithBalance->id;
                 }
                 Order::query()->create([
                     'user_id' => $user_id,
                     'paid_by' => $paid_by,
                     'company_id' => $user->company->id,
-                    'product_id' => null,
+                    'product_id' => 65,
                     'quantity' => 1,
-                    'total' => $payout['paysBack']
+                    'total' => $payout['paysBack'],
+                    'date' => now()
                 ]);
             }
         }
+
+        return response()->json([
+            'success' => true,
+            'message' => '',
+        ]);
 
 
     }

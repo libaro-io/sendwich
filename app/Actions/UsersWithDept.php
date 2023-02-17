@@ -14,13 +14,14 @@ class UsersWithDept
     protected $withOrdersForToday;
     protected $date;
     protected $users;
-    protected User $user;
+    protected $user;
 
     public function __construct()
     {
         $this->isToday = false;
         $this->withOrdersForToday = false;
         $this->date = null;
+        $this->user = null;
     }
 
     public function execute()

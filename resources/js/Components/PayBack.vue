@@ -66,7 +66,6 @@ export default {
                     } else {
                         user.paysBack = this.calculatedDept
                     }
-                    console.log(this.calculatedDept, user.paysBack)
                     this.calculatedDept -= user.paysBack;
                 }
                 this.counter--;
@@ -74,45 +73,22 @@ export default {
         },
         buildPayBackList() {
             this.calculatedDept = this.user.dept;
-            while (this.calculatedDept > 0) {
-                const user = this.users[this.counter];
+            for (let i = this.counter; i < this.users.length && this.calculatedDept > 0; i++) {
+                const user = this.users[i];
                 if (user.dept < 0) {
-                    const paybackUserDept = user.dept *-1
+                    const paybackUserDept = -user.dept;
                     this.payBackList.push(user);
-                    if (this.calculatedDept > paybackUserDept) {
-                        user.paysBack = paybackUserDept;
-                    } else {
-                        user.paysBack = this.calculatedDept
-                    }
+                    user.paysBack = Math.min(paybackUserDept, this.calculatedDept);
                     this.calculatedDept -= user.paysBack;
                 }
-                this.counter++;
             }
         },
-        // buildPayBackList() {
-        //     this.calculatedDept = Math.abs(this.user.dept);
-        //     this.counter = (this.user.dept > 0) ? 0 : this.users.length - 1;
-        //
-        //     while (this.calculatedDept > 0) {
-        //         const user = this.users[this.counter];
-        //         if ((this.user.dept > 0 && user.dept < 0) || (this.user.dept < 0 && user.dept > 0)) {
-        //             const paybackUserDept = Math.abs(user.dept);
-        //             this.payBackList.push(user);
-        //             if (this.calculatedDept > paybackUserDept) {
-        //                 user.paysBack = paybackUserDept;
-        //             } else {
-        //                 user.paysBack = this.calculatedDept;
-        //             }
-        //             this.calculatedDept -= user.paysBack;
-        //         }
-        //         this.counter += (this.user.dept > 0) ? 1 : -1;
-        //     }
-        // }
         handlePayouts() {
             const app = this;
             axios.post('/api/payouts/handle', {
                 'payouts' : this.payBackList
             }).then(response => {
+
             }).catch(error => {
                 console.log(error);
             });
