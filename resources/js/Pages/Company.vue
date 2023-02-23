@@ -1,8 +1,8 @@
 <script setup>
 
 import Authenticated from "@/Layouts/Authenticated.vue";
-import { useForm } from '@inertiajs/inertia-vue3';
-import { ref } from 'vue';
+import {useForm, usePage} from '@inertiajs/inertia-vue3';
+import {onMounted, ref, watch } from 'vue';
 
 
 const props = defineProps({
@@ -12,11 +12,13 @@ const props = defineProps({
 });
 
 const toggle = ref(false);
+const deptstoggle = ref(false);
 
 const form = useForm({
     name: null,
     email: null,
 })
+
 
 const invite = ()=> {
     form.post(route('invite'),{
@@ -24,6 +26,22 @@ const invite = ()=> {
     });
 
 }
+
+const deleteForm = useForm({});
+
+const deleteUser = (userId)=> {
+    deleteForm.delete(route('users.destroy',userId));
+}
+
+const page = usePage();
+
+onMounted(()=>{
+    watch( page.props , function (flash){
+        if(flash){
+            deptstoggle.value = true;
+        }
+    });
+})
 
 </script>
 <template>
@@ -39,6 +57,13 @@ const invite = ()=> {
                                     <section class="ml-4">
                                         <div class="flex justify-between items-center">
                                             <h3 class="text-xl mb-3 pl-2 align-middle">{{ users.length }} Users</h3>
+                                            <div v-if="$page.props.flash.success">
+                                                {{ $page.props.flash.success}}
+                                            </div>
+                                            <div v-if="$page.props.flash.error">
+                                                {{ $page.props.flash.error}}
+                                            </div>
+
                                             <label
                                                 for="create-modal"
                                                 class="btn btn-success modal-button mb-3"
@@ -73,6 +98,34 @@ const invite = ()=> {
                                                     </form>
                                                 </label>
                                             </label>
+                                            <input type="checkbox" id="delete-error-modal" class="modal-toggle" v-model="deptstoggle"/>
+                                            <label for="delete-error-modal" class="modal modal-bottom sm:modal-middle cursor-pointer">
+                                                <label class="modal-box relative" for="">
+                                                    <form @submit.prevent="invite">
+                                                        <h3 class="text-lg font-bold mb-4">Invite new user</h3>
+                                                        <div class="grid-cols-1 space-y-4">
+                                                            <input type="text"
+                                                                   v-model="form.name"
+                                                                   placeholder="name"
+                                                                   class="input input-bordered input-sm w-full max-w-xs"
+                                                            />
+                                                            <div v-if="form.errors.name">{{ form.errors.name }}</div>
+                                                            <input type="email"
+                                                                   v-model="form.email"
+                                                                   placeholder="email"
+                                                                   class="input input-bordered input-sm w-full max-w-xs"
+                                                            />
+                                                            <div v-if="form.errors.email">{{ form.errors.email }}</div>
+                                                        </div>
+                                                        <div class="flex justify-end mt-4">
+                                                            <button type="submit"
+                                                                    class="btn btn-success"
+                                                                    :disabled="form.processing"
+                                                            >Send Invitation</button>
+                                                        </div>
+                                                    </form>
+                                                </label>
+                                            </label>
                                         </div>
                                         <div class="overflow-x-auto mb-5">
                                             <table class="table w-full">
@@ -81,6 +134,7 @@ const invite = ()=> {
                                                 <tr>
                                                     <th>Name</th>
                                                     <th>Email</th>
+                                                    <th>Actions</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -88,6 +142,13 @@ const invite = ()=> {
                                                     <td>{{user.name}}</td>
                                                     <td>
                                                         {{user.email}}
+                                                    </td>
+                                                    <td>
+                                                        <form @submit.prevent="deleteUser(user.id)">
+                                                            <button type="submit" class="btn btn-sm btn-outline">
+                                                                Delete
+                                                            </button >
+                                                        </form>
                                                     </td>
                                                 </tr>
                                                 </tbody>

@@ -79,4 +79,9 @@ class UsersWithDept
             return null;
         }
     }
+
+    public static function calculateUserDept(User $user):float
+    {
+        return round( $user->orders->sum('total') - $user->payments->sum('total'),2);
+    }
 }
