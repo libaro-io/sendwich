@@ -1,5 +1,5 @@
 <template>
-    <input type="checkbox" id="modal-payback" class="modal-toggle"/>
+    <input type="checkbox" id="modal-payback" class="modal-toggle" v-bind:checked="isModalOpen"/>
     <div class="modal modal-bottom sm:modal-middle">
         <div class="modal-box">
             <h3 v-if="user" class="font-bold text-lg">You current balance is € {{ user.dept }}</h3>
@@ -7,7 +7,7 @@
                 <thead>
                 <tr>
                     <td>Runner</td>
-                    <td>{{user.dept > 0 ? 'Pays you' : 'You pay' }}</td>
+                    <td>{{ user.dept > 0 ? 'Pays you' : 'You pay' }}</td>
                 </tr>
                 </thead>
                 <tbody>
@@ -31,13 +31,16 @@
 
 <script>
 import axios from "axios";
+import {useToast} from "vue-toastification";
 
+
+const toast = useToast();
 export default {
     name: "PayBack",
     mounted() {
-        if(this.user.dept >0){
+        if (this.user.dept > 0) {
             this.buildPayBackList();
-        }else{
+        } else {
             this.buildGiveBackList();
         }
     },
@@ -45,7 +48,8 @@ export default {
         return {
             payBackList: [],
             counter: 0,
-            calculatedDept: 0
+            calculatedDept: 0,
+            isModalOpen: false
         };
     },
     props: {
@@ -53,9 +57,9 @@ export default {
         users: Array,
     },
     methods: {
-        buildGiveBackList(){
-            this.calculatedDept = this.user.dept *-1;
-            this.counter = this.users.length -1;
+        buildGiveBackList() {
+            this.calculatedDept = this.user.dept * -1;
+            this.counter = this.users.length - 1;
             while (this.calculatedDept > 0) {
                 const user = this.users[this.counter];
                 if (user.dept > 0) {
@@ -86,9 +90,10 @@ export default {
         handlePayouts() {
             const app = this;
             axios.post('/api/payouts/handle', {
-                'payouts' : this.payBackList
+                'payouts': this.payBackList
             }).then(response => {
-
+                document.getElementById('modal-payback').checked = false;
+                toast.success(response.data.message);
             }).catch(error => {
                 console.log(error);
             });

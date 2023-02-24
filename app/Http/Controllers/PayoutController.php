@@ -3,8 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Actions\UsersWithDept;
+use App\Mail\InformPaymentPaidMail;
+use App\Mail\InformPaymentReceivedMail;
+use App\Mail\InformVictimMail;
 use App\Models\Order;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class PayoutController extends Controller
 {
@@ -38,14 +43,22 @@ class PayoutController extends Controller
                     'total' => $payout['paysBack'],
                     'date' => now()
                 ]);
+                $this->notifyUsers($paid_by, $user_id, $payout['paysBack']);
             }
         }
 
         return response()->json([
             'success' => true,
-            'message' => '',
+            'message' => 'Your balance has been restored',
         ]);
+    }
 
+    private function notifyUsers(int $paid_by, int $user_id, float $balance)
+    {
+        $receiver = User::find($user_id);
+        $payer = User::find($paid_by);
 
+        Mail::to($receiver->email)->cc($payer->email)->send(new InformPaymentReceivedMail($receiver, $payer, $balance));
+//        Mail::to($payer->email)->send(new InformPaymentPaidMail($receiver, $payer, $balance));
     }
 }
