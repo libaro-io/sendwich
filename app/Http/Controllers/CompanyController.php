@@ -16,7 +16,7 @@ class CompanyController extends Controller
     public function show(){
         $user = auth()->user() ;
         $company = $user->company;
-        $users = $company->users;
+        $users = $company->users->append('depts');
 
         return Inertia::render('Company',
             [

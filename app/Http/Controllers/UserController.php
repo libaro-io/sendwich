@@ -23,7 +23,7 @@ class UserController extends Controller
     public function destroy($id){
         $user = User::findOrFail($id);
 
-        if( UsersWithDept::calculateUserDept($user) > 0.25 ){
+        if( abs( (float) $user->depts) > 0.25 ){
             return Redirect::back()->with(['error'=>'User cannot be deleted !']);
         }
 

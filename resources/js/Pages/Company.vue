@@ -30,17 +30,13 @@ const invite = ()=> {
 const deleteForm = useForm({});
 
 const deleteUser = (userId)=> {
-    deleteForm.delete(route('users.destroy',userId));
+    deleteForm.delete(route('users.destroy',userId),{preserveScroll:true});
 }
 
 const page = usePage();
 
 onMounted(()=>{
-    watch( page.props , function (flash){
-        if(flash){
-            deptstoggle.value = true;
-        }
-    });
+
 })
 
 </script>
@@ -57,13 +53,6 @@ onMounted(()=>{
                                     <section class="ml-4">
                                         <div class="flex justify-between items-center">
                                             <h3 class="text-xl mb-3 pl-2 align-middle">{{ users.length }} Users</h3>
-                                            <div v-if="$page.props.flash.success">
-                                                {{ $page.props.flash.success}}
-                                            </div>
-                                            <div v-if="$page.props.flash.error">
-                                                {{ $page.props.flash.error}}
-                                            </div>
-
                                             <label
                                                 for="create-modal"
                                                 class="btn btn-success modal-button mb-3"
@@ -134,6 +123,7 @@ onMounted(()=>{
                                                 <tr>
                                                     <th>Name</th>
                                                     <th>Email</th>
+                                                    <th>Depts</th>
                                                     <th>Actions</th>
                                                 </tr>
                                                 </thead>
@@ -142,6 +132,9 @@ onMounted(()=>{
                                                     <td>{{user.name}}</td>
                                                     <td>
                                                         {{user.email}}
+                                                    </td>
+                                                    <td>
+                                                        &euro; {{user.depts}}
                                                     </td>
                                                     <td>
                                                         <form @submit.prevent="deleteUser(user.id)">

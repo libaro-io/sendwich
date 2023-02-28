@@ -65,7 +65,6 @@ class User extends Authenticatable
         return $this->belongsTo(Company::class);
     }
 
-
     public function orders(): HasMany
     {
         return $this->hasMany(Order::class);
@@ -74,5 +73,16 @@ class User extends Authenticatable
     public function payments(): HasMany
     {
         return $this->hasMany(Order::class, 'paid_by');
+    }
+
+    /**
+     * Get the user's depts
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getDeptsAttribute()
+    {
+        return round( $this->orders->sum('total') - $this->payments->sum('total'),2);
     }
 }
