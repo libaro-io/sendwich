@@ -57,7 +57,16 @@ export default {
         };
     },
     methods: {
+
         addProduct(product) {
+            this.$inertia.post('/api/order/add-product', {
+                product_id: product.id,
+                options: this.getSelectedOptionIdsForProduct(product),
+            },{
+                onSuccess: toast.success('Pisto is besteld!'),
+            });
+
+        /*addProduct(product) {
             axios.post('/api/order/add-product', {
                 product_id: product.id,
                 options: this.getSelectedOptionIdsForProduct(product),
@@ -66,7 +75,7 @@ export default {
                 this.emitter.emit('updateOrders');
             }).catch(error => {
                 console.error(error);
-            });
+            });*/
         },
 
         getSelectedOptionIdsForProduct(product) {

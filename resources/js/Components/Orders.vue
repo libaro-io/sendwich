@@ -71,16 +71,17 @@ export default {
         setInterval(() => {
             this.getOrders();
         }, 60 * 1000);
-        this.getOrders();
-        this.emitter.on("updateOrders", this.getOrders)
+       /* this.getOrders();*/
+        /*this.emitter.on("updateOrders", this.getOrders)*/
     },
     data() {
         return {
-            orders: [],
+            /*orders: [],*/
         };
     },
     props: {
         deliveryMoment: String,
+        orders: Array,
     },
     computed: {
         totalPrice() {
@@ -94,14 +95,14 @@ export default {
         },
     },
     methods: {
-        getOrders() {
+        /*getOrders() {
             const app = this;
             axios.post('/api/orders', {}).then(response => {
                 app.orders = response.data.orders;
             }).catch(error => {
                 console.log(error);
             });
-        },
+        },*/
 
         isMyOrder(order) {
             return order.user_id === this.$page.props.user.id;

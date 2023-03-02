@@ -106,7 +106,7 @@ class OrderController extends Controller
         return $date->setHour(12)->setMinutes(15)->setSecond(00);
     }
 
-    public function addProduct(AddRequest $request): JsonResponse
+    public function addProduct(AddRequest $request): \Illuminate\Http\RedirectResponse
     {
         /** @var User $user */
         $user = auth()->user();
@@ -150,10 +150,12 @@ class OrderController extends Controller
         $order->comment = $options->pluck('name')->join(', ');
         $order->save();
 
-        return response()->json([
+        return redirect()->back();
+
+        /*return response()->json([
             'success' => true,
             'message' => $message,
-        ]);
+        ]);*/
     }
 
     public function removeProduct(RemoveRequest $request): JsonResponse
