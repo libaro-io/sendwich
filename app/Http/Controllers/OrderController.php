@@ -150,7 +150,7 @@ class OrderController extends Controller
         $order->comment = $options->pluck('name')->join(', ');
         $order->save();
 
-        return redirect()->back();
+        return redirect()->back()->with(['success'=> $message]);
 
         /*return response()->json([
             'success' => true,
