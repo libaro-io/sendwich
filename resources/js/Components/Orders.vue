@@ -69,7 +69,7 @@ export default {
     },
     mounted() {
         setInterval(() => {
-            this.getOrders();
+            // this.getOrders();
         }, 60 * 1000);
        /* this.getOrders();*/
         /*this.emitter.on("updateOrders", this.getOrders)*/

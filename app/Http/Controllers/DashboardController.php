@@ -26,7 +26,7 @@ class DashboardController extends Controller
 
         $deliveryMoment = $orderController->getDeliveryMoment();
 
-        $orders = Order::getOrders($company, $this->getDate())->get();
+        $orders = Order::getOrders($company, $this->getDate());//->get();
 
         return Inertia::render('Dashboard',
             [
@@ -34,7 +34,7 @@ class DashboardController extends Controller
                 'company' => $company,
                 'products' => $products,
                 'deliveryMoment' => $deliveryMoment,
-                'orders' => $orders,
+                'orders' => fn() => $orders->get(),
             ]);
     }
 

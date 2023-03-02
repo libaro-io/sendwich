@@ -64,6 +64,7 @@ export default {
                 options: this.getSelectedOptionIdsForProduct(product),
             },{
                 onSuccess: toast.success('Pisto is besteld!'),
+                only:['orders','flash']
             });
 
         /*addProduct(product) {
