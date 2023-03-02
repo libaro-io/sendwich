@@ -13,6 +13,7 @@ const props = defineProps({
     deliveryMoment: String,
     company: Object,
     orders: Array,
+    filters:Object,
 });
 
 </script>
@@ -35,7 +36,7 @@ export default {
                             <DeptList :company="company" class="col-span-3"></DeptList>
                         </div>
                     </div>
-                    <Products :products="products" class="col-span-2 md:col-span-1"/>
+                    <Products :products="products" :filters="filters" class="col-span-2 md:col-span-1"/>
                 </div>
             </div>
         </div>

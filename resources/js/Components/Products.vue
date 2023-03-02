@@ -7,7 +7,7 @@
                        v-model="search"/>
             </div>
             <div class="mt-5 flex flex-col gap-2">
-                <div v-for="(product , index) in searchedProducts"
+                <div v-for="(product , index) in products"
                      :key="index"
                      class="card card-compact bg-gray-50 shadow">
                     <product-card :product="product" @ordered="addProduct"></product-card>
@@ -22,6 +22,7 @@ import axios from "axios";
 import Checkbox from '@/Components/Checkbox.vue';
 import {useToast} from "vue-toastification";
 import ProductCard from "@/Components/Products/productCard.vue";
+import {debounce} from "lodash";
 
 
 const toast = useToast();
@@ -34,12 +35,13 @@ export default {
     },
     props: {
         products: Array,
+        filters : Object,
     },
     mounted() {
         this.searchedProducts = this.products
     },
     watch: {
-        search(query, oldQuery) {
+        /*search(query, oldQuery) {
             console.log(query)
             query = query.toLowerCase();
             this.searchedProducts = this.products.filter(product => {
@@ -47,13 +49,20 @@ export default {
                 const storeName = product.name.toLowerCase();
                 return (productName.includes(query) || storeName.includes(query))
             })
-        }
+        }*/
+        search: debounce(function(value){
+            this.$inertia.get('/dashboard',{ search : value},
+                {
+                    preserveState:true,
+                    replace :true,
+                })
+        },300)
     },
     data() {
         return {
             selectedOptions: [],
-            search: '',
-            searchedProducts: null
+            search: this.filters.search,
+            searchedProducts: null,
         };
     },
     methods: {

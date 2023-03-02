@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 
@@ -13,7 +14,7 @@ class DashboardController extends Controller
     /**
      * @return InertiaResponse
      */
-    public function dashboard(): InertiaResponse
+    public function dashboard(Request $request): InertiaResponse
     {
         $orderController = new OrderController();
 
@@ -23,6 +24,12 @@ class DashboardController extends Controller
 
 
         $products = $company->getProducts();
+
+        $search = $request->input('search');
+
+        if($search){
+            $products = $products->filter( fn ($product) => str_contains($product->name ,$search) );
+        }
 
         $deliveryMoment = $orderController->getDeliveryMoment();
 
@@ -35,6 +42,7 @@ class DashboardController extends Controller
                 'products' => $products,
                 'deliveryMoment' => $deliveryMoment,
                 'orders' => fn() => $orders->get(),
+                'filters' => $request->only(['search']),
             ]);
     }
 
