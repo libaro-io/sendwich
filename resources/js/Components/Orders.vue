@@ -3,12 +3,15 @@
         <div class="px-4 py-5 sm:p-6">
             <div class="flex items-center justify-between mb-5">
                 <h2>Orders for {{ deliveryMoment }}</h2>
-                <button v-if="orders.length !== 0"
-                        @click="assignToMe()"
-                        type="button"
-                        class="btn btn-sm btn-primary">
-                    Assign to me
-                </button>
+                <Link href="/api/assign-to-me"
+                      v-if="orders.length !== 0"
+                      method="post"
+                      as="button"
+                      type="button"
+                      class="btn btn-sm btn-primary"
+                      :only="['orders','totalPrice','flash']"
+                >Assign to me</Link>
+
             </div>
             <div class="mb-5 flex flex-col gap-2">
                 <div v-for="order in orders"
@@ -33,13 +36,16 @@
                                 }}</span></div>
                         </div>
                         <div class="card-actions justify-end w-full">
-                            <button
-                                v-if="isMyOrder(order)"
-                                @click="removeProduct(order.product)"
-                                class="text-error hover:text-red-600"
+                            <Link href="/api/order/remove-product"
+                                  method="post"
+                                  as="button"
+                                  type="button"
+                                  class="text-error hover:text-red-600"
+                                  :data="{ product_id: order.product_id, }"
+                                  :only="['orders','flash']"
                             >
                                 <FontAwesomeIcon icon="fas-fa fa-trash" />
-                            </button>
+                            </Link>
                         </div>
                     </div>
                 </div>
@@ -56,81 +62,28 @@
 </template>
 
 <script>
-import axios from "axios";
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { useToast } from "vue-toastification";
-
-const toast = useToast();
+import { Link } from "@inertiajs/inertia-vue3"
 
 export default {
     name: "Orders",
     components: {
-        FontAwesomeIcon,
+        FontAwesomeIcon,Link
     },
     mounted() {
         setInterval(() => {
-            // this.getOrders();
+            this.$inertia.get('/dashboard',{},{
+                preserveState: false,
+                preserveScroll: false,
+                only :['orders']
+            })
         }, 60 * 1000);
-       /* this.getOrders();*/
-        /*this.emitter.on("updateOrders", this.getOrders)*/
-    },
-    data() {
-        return {
-            /*orders: [],*/
-        };
     },
     props: {
         deliveryMoment: String,
         orders: Array,
+        totalPrice: Number,
     },
-    computed: {
-        totalPrice() {
-            if (this.orders.length === 0) {
-                return 0;
-            }
-
-            return this.orders.map(c => c.total).reduce((carry, total) => {
-                return carry + total;
-            });
-        },
-    },
-    methods: {
-        /*getOrders() {
-            const app = this;
-            axios.post('/api/orders', {}).then(response => {
-                app.orders = response.data.orders;
-            }).catch(error => {
-                console.log(error);
-            });
-        },*/
-
-        isMyOrder(order) {
-            return order.user_id === this.$page.props.user.id;
-        },
-
-        removeProduct (product) {
-            axios.post('/api/order/remove-product', {
-                product_id: product.id,
-            }).then(response => {
-                toast.success(response.data.message);
-                this.emitter.emit('updateOrders');
-            }).catch(error => {
-                console.error(error);
-            });
-        },
-
-        assignToMe(){
-            axios.post('/api/assign-to-me').then(response => {
-                toast.success(response.data.message);
-                this.emitter.emit('updateOrders');
-            }).catch(error => {
-                console.error(error);
-            });
-        }
-    }
 }
 </script>
 
-<style scoped>
-
-</style>

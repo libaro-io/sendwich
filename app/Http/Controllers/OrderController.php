@@ -15,6 +15,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 
 class OrderController extends Controller
 {
@@ -106,6 +107,10 @@ class OrderController extends Controller
         return $date->setHour(12)->setMinutes(15)->setSecond(00);
     }
 
+    /**
+     * @param AddRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function addProduct(AddRequest $request): \Illuminate\Http\RedirectResponse
     {
         /** @var User $user */
@@ -151,14 +156,13 @@ class OrderController extends Controller
         $order->save();
 
         return redirect()->back()->with(['success'=> $message]);
-
-        /*return response()->json([
-            'success' => true,
-            'message' => $message,
-        ]);*/
     }
 
-    public function removeProduct(RemoveRequest $request): JsonResponse
+    /**
+     * @param RemoveRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function removeProduct(RemoveRequest $request): \Illuminate\Http\RedirectResponse
     {
         /** @var User $user */
         $user = auth()->user();
@@ -170,22 +174,20 @@ class OrderController extends Controller
 
         $this->getProductOrderForUser($user, $product)?->delete();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Uw bestelling is verwijderd',
-        ]);
+        return redirect()->back()->with(['success' => 'Uw bestelling is verwijderd']);
     }
 
-    public function assignToMe(): JsonResponse
+    /**
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function assignToMe(): \Illuminate\Http\RedirectResponse
     {
         $user = Auth::user();
         $action = new ChooseRunner($user->company, $user, true);
         $action->execute();
 
-        return response()->json([
-           'success' => true,
-            'message' => 'You have been assigned'
-        ]);
+        return redirect()->back()->with(['success'=>'You have been assigned']);
+
     }
 
     private function getProductOrderForUser(User $user, Product $product): ?Order
