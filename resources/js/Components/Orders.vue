@@ -63,7 +63,10 @@
 
 <script>
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { useToast } from "vue-toastification";
 import { Link } from "@inertiajs/inertia-vue3"
+
+const toast = useToast();
 
 export default {
     name: "Orders",
