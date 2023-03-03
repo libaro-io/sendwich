@@ -41,15 +41,6 @@ export default {
         this.searchedProducts = this.products
     },
     watch: {
-        /*search(query, oldQuery) {
-            console.log(query)
-            query = query.toLowerCase();
-            this.searchedProducts = this.products.filter(product => {
-                const productName = product.name.toLowerCase();
-                const storeName = product.name.toLowerCase();
-                return (productName.includes(query) || storeName.includes(query))
-            })
-        }*/
         search: debounce(function(value){
             this.$inertia.get('/dashboard',{ search : value},
                 {
@@ -72,20 +63,8 @@ export default {
                 product_id: product.id,
                 options: this.getSelectedOptionIdsForProduct(product),
             },{
-                //onSuccess: toast.success('Pisto is besteld!'),
-                only:['orders','flash']
+                only:['orders','totalPrice','flash']
             });
-
-        /*addProduct(product) {
-            axios.post('/api/order/add-product', {
-                product_id: product.id,
-                options: this.getSelectedOptionIdsForProduct(product),
-            }).then(response => {
-                toast.success(response.data.message);
-                this.emitter.emit('updateOrders');
-            }).catch(error => {
-                console.error(error);
-            });*/
         },
 
         getSelectedOptionIdsForProduct(product) {

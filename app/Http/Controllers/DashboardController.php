@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 
@@ -21,28 +22,25 @@ class DashboardController extends Controller
         /** @var User $user */
         $user = auth()->user();
         $company = $user->company;
-
-
-        $products = $company->getProducts();
-
         $search = $request->input('search');
-
-        if($search){
-            $products = $products->filter( fn ($product) => str_contains($product->name ,$search) );
-        }
-
         $deliveryMoment = $orderController->getDeliveryMoment();
 
-        $orders = Order::getOrders($company, $this->getDate());//->get();
+        $products = $company
+            ->products()
+            ->with(['orders', 'options', 'store'])
+            ->when($search, fn($query) => $query->where('name', 'like', '%' . Str::lower($search) . '%'));
+
+        $orders = Order::getOrders($company, $this->getDate());
 
         return Inertia::render('Dashboard',
             [
                 'user' => $user,
                 'company' => $company,
-                'products' => $products,
+                'products' => fn() => $products->get(),
                 'deliveryMoment' => $deliveryMoment,
                 'orders' => fn() => $orders->get(),
                 'filters' => $request->only(['search']),
+                'totalPrice' => $orders->sum('total'),
             ]);
     }
 
