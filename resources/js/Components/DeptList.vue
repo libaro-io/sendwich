@@ -57,10 +57,9 @@ export default {
     name: "DeptList",
     components: {PayBack},
     mounted() {
-        //get users
-        setInterval(() => {
+        console.log('mounted deptlist')
+        this.request = setInterval(() => {
             this.getUsers();
-            // this.getSelectedRunner(this.company);
         }, 60 * 1000);
         this.getUsers();
         this.getSelectedRunner(this.company);
@@ -68,12 +67,17 @@ export default {
         this.emitter.on("updateOrders", this.getUsers)
         this.emitter.on("updateSelectedRunner", this.getSelectedRunner)
     },
+    unmounted() {
+        console.log('umounted orders')
+        clearInterval(this.request)
+    },
     data() {
         return {
             users: Array,
             runner: null,
             simulated: false,
-            selectedUser: null
+            selectedUser: null,
+            request: null,
         };
     },
     props: {
