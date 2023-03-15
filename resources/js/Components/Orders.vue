@@ -73,14 +73,24 @@ export default {
     components: {
         FontAwesomeIcon,Link
     },
+    data() {
+        return {
+            request: null,
+        };
+    },
     mounted() {
-        setInterval(() => {
+        console.log('mounted orders')
+        this.request = setInterval(() => {
             this.$inertia.get('/dashboard',{},{
                 preserveState: false,
                 preserveScroll: false,
                 only :['orders']
             })
         }, 60 * 1000);
+    },
+    unmounted() {
+        console.log('umounted orders')
+        clearInterval(this.request)
     },
     props: {
         deliveryMoment: String,

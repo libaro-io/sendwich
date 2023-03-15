@@ -28,15 +28,20 @@ export default {
     name: "Orders",
     components: {},
     mounted() {
-        setInterval(() => {
+        this.request = setInterval(() => {
             this.getUsersWithOrders(this.company);
         }, 60 * 1000);
         this.getUsersWithOrders(this.company);
         this.emitter.on("updateOrders", this.getUsersWithOrders(this.company));
     },
+    unmounted() {
+        console.log('umounted orders')
+        clearInterval(this.request)
+    },
     data() {
         return {
-            users: []
+            users: [],
+            request: null
         };
     },
     props: {
@@ -47,10 +52,8 @@ export default {
         getUsersWithOrders(company) {
             const app = this;
             let company_token = company.token
-            axios.post('/api/orders?company_token='+ company_token, {}).then(response => {
-                // console.log(response.data.orders);
-                app.users = response.data.orders.map(x => x.user.name).filter((v,i,s) => s.indexOf(v) === i);
-                // console.log(app.users);
+            axios.post('/api/orders?company_token=' + company_token, {}).then(response => {
+                app.users = response.data.orders.map(x => x.user.name).filter((v, i, s) => s.indexOf(v) === i);
             }).catch(error => {
                 console.log(error);
             });
