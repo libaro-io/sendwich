@@ -6,7 +6,7 @@
                 <tbody>
                 <tr v-for="(user, index) in users" class="text-sm">
                     <td class="text-sm">
-                        {{ user.name }}
+                        {{ shortenName(user.name, 0,15) }}
                     </td>
                     <td>
                         <div class="tooltip tooltip-primary"
@@ -22,23 +22,14 @@
                     </td>
                     <td>
                         <template v-if="user.id ===  $page.props.auth.user.id">
-                            <label v-if="user.dept > 0" for="modal-payback"
-                                   class="btn-success text-white font-bold btn btn-sm modal-button">
-                                Claim
-                                <span class="badge bg-white text-success font-bold border-0 ml-3">&euro; {{ user.dept }}</span>
-                            </label>
-                            <label v-else-if="user.dept === 0" class="btn-info text-white font-bold btn btn-sm">
-                                All good
-                                <span class="badge bg-white text-info font-bold border-0 ml-3">&euro; {{ user.dept }}</span>
-                            </label>
-                            <label v-else for="modal-payback" class="btn-warning font-bold btn btn-sm modal-button">
-                                Pay back
-                                <span class="badge bg-white text-gray-900 font-bold border-0 ml-3">&euro; {{ user.dept }}</span>
-                            </label>
+                            <label for="modal-payback"
+                                   :class="user.dept > 0 ? 'badge-success text-white font-bold' : 'badge-warning font-bold'"
+                                   class="badge justify-end cursor-pointer">€ {{ user.dept }}</label>
                             <PayBack :user="user" :users="users"></PayBack>
                         </template>
                         <template v-else>
-                            <span :class="user.dept > 0 ? 'badge-success text-white font-bold' : 'badge-warning font-bold'"
+                            <span
+                                :class="user.dept > 0 ? 'badge-success text-white font-bold' : 'badge-warning font-bold'"
                                 class="badge justify-end">€ {{ user.dept }}</span>
                         </template>
                     </td>
@@ -57,10 +48,8 @@ export default {
     name: "DeptList",
     components: {PayBack},
     mounted() {
-        //get users
-        setInterval(() => {
+        this.request = setInterval(() => {
             this.getUsers();
-            // this.getSelectedRunner(this.company);
         }, 60 * 1000);
         this.getUsers();
         this.getSelectedRunner(this.company);
@@ -68,12 +57,16 @@ export default {
         this.emitter.on("updateOrders", this.getUsers)
         this.emitter.on("updateSelectedRunner", this.getSelectedRunner)
     },
+    unmounted() {
+        clearInterval(this.request)
+    },
     data() {
         return {
             users: Array,
             runner: null,
             simulated: false,
-            selectedUser: null
+            selectedUser: null,
+            request: null,
         };
     },
     props: {
@@ -81,7 +74,20 @@ export default {
         company: Object,
     },
     methods: {
-        setSelectedUser(user){
+        shortenName(name, start, end) {
+            // find the index of the last space character in the substring
+            let lastSpaceIndex = name.lastIndexOf(" ", end);
+
+            // if the last word is not complete, adjust the end index
+            if (lastSpaceIndex > end - 10) {
+                end = lastSpaceIndex + 1;
+            }
+
+            // get the substring and return it
+            const substring = name.substring(start, end);
+            return substring;
+        },
+        setSelectedUser(user) {
             this.selectedUser = user;
         },
         getUsers() {

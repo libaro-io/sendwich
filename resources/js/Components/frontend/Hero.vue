@@ -13,8 +13,7 @@
         </svg>
         <div class="mx-auto max-w-7xl px-6 pt-10 pb-24 sm:pb-32 lg:flex lg:py-40 lg:px-8">
             <div class="mx-auto max-w-2xl lg:mx-0 lg:max-w-xl lg:flex-shrink-0 lg:pt-8">
-                <img class="h-11" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&amp;shade=600"
-                     alt="Your Company"/>
+
                 <h1 class="mt-10 text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">Deploy to the cloud with
                     confidence</h1>
                 <p class="mt-6 text-lg leading-8 text-gray-600">Anim aute id magna aliqua ad ad non deserunt sunt. Qui
