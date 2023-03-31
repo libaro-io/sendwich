@@ -38,6 +38,7 @@ class UsersWithDept
             ->when($this->withOrdersForToday, function ($q) {
                 $q->whereHas('orders', function ($q2) {
                     $q2->where('date', '>=', Carbon::now()->startOfDay());
+                    $q2->whereNull('paid_by');
                 });
             });
 

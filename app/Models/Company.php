@@ -45,7 +45,7 @@ class Company extends Model
             ->with('store')
             ->get()
             ->map(function ($product) {
-                if ($product->orders) {
+                if ($product->orders->count()) {
                     $product->selected = $product->orders->first()->comment;
                     $product->orderCount = $product->orders->count();
                 }
