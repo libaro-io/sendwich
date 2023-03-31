@@ -3,6 +3,7 @@
 import {Head} from '@inertiajs/inertia-vue3';
 import Hero from "@/Components/frontend/Hero.vue";
 import Navigation from '@/Components/frontend/Navigation.vue';
+import Features from '@/Components/frontend/Features.vue';
 
 const props = defineProps({});
 
@@ -18,4 +19,5 @@ export default {
 <template>
     <Navigation></Navigation>
     <Hero></Hero>
+    <Features></Features>
 </template>
