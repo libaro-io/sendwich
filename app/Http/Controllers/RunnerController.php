@@ -20,12 +20,25 @@ class RunnerController extends Controller
         } else {
             $company = Company::query()->where('token', $request->input('company_token'))->firstOrFail();
         }
-        $order = Order::getOrders($company, $this->getDate())->first();
+        $order = Order::getOrders($this->getDate())->first();
         if ($order) {
             $user = $order->deliverer;
         }
         return response()->json(['user' => $user ?? null]);
     }
 
+    public function getDate()
+    {
+        if (Carbon::now() < $this->getTresholdDate()) {
+            $date = Carbon::now();
+        } else {
+            $date = Carbon::now()->addDay();
+        }
+        return $date->setHour(12)->setMinutes(15)->setSecond(00);
+    }
+    public function getTresholdDate()
+    {
+        return Carbon::now()->hour(12)->minute(15);
+    }
 
 }

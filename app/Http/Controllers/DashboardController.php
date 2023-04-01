@@ -30,7 +30,7 @@ class DashboardController extends Controller
             ->with(['orders', 'options', 'store'])
             ->when($search, fn($query) => $query->where('name', 'like', '%' . Str::lower($search) . '%'));
 
-        $orders = Order::getOrders($company, $this->getDate());
+        $orders = Order::getOrders($this->getDate());
 
         return Inertia::render('Dashboard',
             [

@@ -26,7 +26,7 @@ class OrderController extends Controller
         }else{
             $company = Company::query()->where('token', '=', $request->input('company_token'))->firstOrFail();
         }
-        $orders = Order::getOrders($company, $this->getDate())->get();
+        $orders = Order::getOrders($this->getDate())->get();
         if($orders->count()){
             $user = $orders[0]->deliverer;
         }
@@ -45,7 +45,7 @@ class OrderController extends Controller
             $company = Company::query()->where('token', '=', $request->input('company_token'))->firstOrFail();
         }
         $formattedOrders = collect();
-        $orders = Order::getOrders($company, $this->getDate(), false, true)
+        $orders = Order::getOrders( $this->getDate(), false, true)
             ->get()
             ->groupBy('paid_by');
         foreach($orders as $userId => $orderGroup){
@@ -61,7 +61,7 @@ class OrderController extends Controller
         }else{
             $company = Company::query()->where('token','=', $request->input('company_token'))->firstOrFail();
         }
-        $order = Order::getOrders($company, $this->getDate())->first();
+        $order = Order::getOrders( $this->getDate())->first();
         if($order){
             $user = $order->deliverer;
         }else{

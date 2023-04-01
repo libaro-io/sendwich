@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\BelongsToCompany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -26,7 +27,7 @@ use Illuminate\Support\Carbon;
  */
 class Order extends Model
 {
-    use HasFactory;
+    use HasFactory ,BelongsToCompany;
 
     protected $fillable = [
         'product_id',
@@ -60,7 +61,7 @@ class Order extends Model
      * @param $addTomorrow
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public static function getOrders(Company $company, $date, $addTomorrow = false, $doneOrders = false)
+    public static function getOrders($date, $addTomorrow = false, $doneOrders = false)
     {
         $from = (clone $date)->startOfDay();
         $to = (clone $date)->endOfDay();
@@ -69,7 +70,7 @@ class Order extends Model
         }
 
         $query = self::query()
-            ->where('company_id', $company->id)
+            //->where('company_id', $company->id)
             ->whereBetween('date', [$from, $to])
             ->with(['user' => function ($query) {
                 $query->select('id', 'name');

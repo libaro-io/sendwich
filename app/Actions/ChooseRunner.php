@@ -38,7 +38,7 @@ final class ChooseRunner
         } else {
             $victim = $this->getVictim();
         }
-        $orders = Order::getOrders($this->company, Carbon::now(), $this->addTomorrow)->get();
+        $orders = Order::getOrders(Carbon::now(), $this->addTomorrow)->get();
         if ($orders->count() > 0) {
             $this->setOrdersAppointed($orders, $victim);
             $this->sendMission($victim, $orders);
