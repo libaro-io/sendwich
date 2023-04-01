@@ -63,7 +63,7 @@ export default {
                 product_id: product.id,
                 options: this.getSelectedOptionIdsForProduct(product),
             },{
-                only:['orders','totalPrice','flash']
+                only:['orders','totalPrice','flash','selectedRunner']
             });
         },
 

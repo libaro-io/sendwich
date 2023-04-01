@@ -41,37 +41,18 @@
 </template>
 
 <script>
-import axios from "axios";
+
 import PayBack from "@/Components/PayBack.vue";
 
 export default {
     name: "DeptList",
     components: {PayBack},
-    mounted() {
-        this.request = setInterval(() => {
-            this.getUsers();
-        }, 60 * 1000);
-        this.getUsers();
-        this.getSelectedRunner(this.company);
 
-        this.emitter.on("updateOrders", this.getUsers)
-        this.emitter.on("updateSelectedRunner", this.getSelectedRunner)
-    },
-    unmounted() {
-        clearInterval(this.request)
-    },
-    data() {
-        return {
-            users: Array,
-            runner: null,
-            simulated: false,
-            selectedUser: null,
-            request: null,
-        };
-    },
     props: {
-        deliveryMoment: String,
         company: Object,
+        users: Array,
+        runner:Object,
+        simulated:Boolean,
     },
     methods: {
         shortenName(name, start, end) {
@@ -87,41 +68,6 @@ export default {
             const substring = name.substring(start, end);
             return substring;
         },
-        setSelectedUser(user) {
-            this.selectedUser = user;
-        },
-        getUsers() {
-            const app = this;
-            axios.post('/api/users', {}).then(response => {
-                app.users = response.data.users;
-            }).catch(error => {
-                console.log(error);
-            });
-        },
-        getSelectedRunner(company) {
-            const app = this;
-            let company_token = company.token
-            axios.post('/api/selected-runner?company_token=' + company_token, {}).then(response => {
-                app.runner = response.data.runner;
-                if (!app.runner) {
-                    app.getSimulatedRunner(this.company);
-                } else {
-                    app.simulated = false;
-                }
-            }).catch(error => {
-                console.log(error);
-            });
-        },
-        getSimulatedRunner(company) {
-            const app = this;
-            let company_token = company.token
-            axios.post('/api/simulated-runner?company_token=' + company_token, {}).then(response => {
-                app.runner = response.data.runner;
-                app.simulated = true;
-            }).catch(error => {
-                console.log(error);
-            });
-        }
     }
 }
 </script>
