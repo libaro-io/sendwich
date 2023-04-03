@@ -55,4 +55,12 @@ class Company extends Model
         $productsSorted = $products->sortByDesc('orderCount');
         return new Collection($productsSorted->values()->all());
     }
+
+    public static function getCompany(){
+        if (session()->has('company_id')) {
+            return self::query()->where('id','=',session()->get('company_id'))->first();
+        }
+
+        return null;
+    }
 }

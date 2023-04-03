@@ -6,10 +6,10 @@ use App\Actions\ChooseRunner;
 use App\Actions\UsersWithDept;
 use App\Models\Company;
 use App\Models\Order;
+use App\Models\Product;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
@@ -26,14 +26,11 @@ class DashboardController extends Controller
         $deptAction = new UsersWithDept();
         $orderController = new OrderController();
 
-        /** @var User $user */
-        $user = auth()->user();
-        $company = $user->company;
+        $company = Company::getCompany();
         $search = $request->input('search');
         $deliveryMoment = $orderController->getDeliveryMoment();
 
-        $products = $company
-            ->products()
+        $products = Product::query()
             ->with(['orders', 'options', 'store'])
             ->when($search, fn($query) => $query->where('name', 'like', '%' . Str::lower($search) . '%'));
 
@@ -46,7 +43,7 @@ class DashboardController extends Controller
         $selectedRunner = $order?->deliverer ?? null;
 
         $formattedOrders = collect();
-        $doneOrders = Order::getOrders($company, $this->getDate(), false, true)
+        $doneOrders = Order::getOrders( $this->getDate(), false, true)
             ->get()
             ->groupBy('paid_by');
         foreach($doneOrders as $userId => $orderGroup){
@@ -59,10 +56,8 @@ class DashboardController extends Controller
             $simulated = true;
         }
 
-
         return Inertia::render('Dashboard',
             [
-                'user' => $user,
                 'users' => fn() => $deptAction->execute(),
                 'company' => $company,
                 'selectedRunner' => $selectedRunner,

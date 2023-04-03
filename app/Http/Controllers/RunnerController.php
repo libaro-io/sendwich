@@ -15,11 +15,6 @@ class RunnerController extends Controller
 
     public function getSelectedRunner(Request $request)
     {
-        if (Auth::check()) {
-            $company = Auth::user()->company;
-        } else {
-            $company = Company::query()->where('token', $request->input('company_token'))->firstOrFail();
-        }
         $order = Order::getOrders($this->getDate())->first();
         if ($order) {
             $user = $order->deliverer;
@@ -40,5 +35,4 @@ class RunnerController extends Controller
     {
         return Carbon::now()->hour(12)->minute(15);
     }
-
 }

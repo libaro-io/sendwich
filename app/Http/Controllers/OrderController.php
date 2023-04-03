@@ -133,7 +133,7 @@ class OrderController extends Controller
         if (is_null($order)) {
             $order = new Order();
             $order->user_id = auth()->user()->id;
-            $order->company_id = $user->company->id;
+            //$order->company_id = $user->company->id;
             $order->date = Carbon::now()->isBefore(Carbon::now()->hour(12)->minute(15)) ? Carbon::now()->hour(12)->minute(15) : Carbon::now()->addDay()->hour(12)->minute(15);
 
             $message = 'Bestelling geplaatst!';
