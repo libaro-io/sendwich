@@ -18,7 +18,7 @@ const props = defineProps({
     orders: Array,
     totalPrice: Number,
     filters:Object,
-    formattedOrders : Array,
+    formattedOrders : Object,
 });
 
 let intervalId;

@@ -49,6 +49,7 @@ class DashboardController extends Controller
         $doneOrders = Order::getOrders($company, $this->getDate(), false, true)
             ->get()
             ->groupBy('paid_by');
+
         foreach($doneOrders as $userId => $orderGroup){
             $formattedOrders[$orderGroup->first()->deliverer->name] = $orderGroup;
         }

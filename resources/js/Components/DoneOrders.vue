@@ -39,7 +39,7 @@ export default {
         FontAwesomeIcon,
     },
     props: {
-        orders : Array,
+        orders : Object,
     },
 }
 </script>
