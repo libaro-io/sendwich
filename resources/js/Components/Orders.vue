@@ -42,7 +42,7 @@
                                   type="button"
                                   class="text-error hover:text-red-600"
                                   :data="{ product_id: order.product_id, }"
-                                  :only="['orders','flash','selectedRunner']"
+                                  :only="['orders','flash','selectedRunner','totalPrice']"
                             >
                                 <FontAwesomeIcon icon="fas-fa fa-trash" />
                             </Link>
