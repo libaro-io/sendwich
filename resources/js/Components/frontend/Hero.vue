@@ -1,5 +1,5 @@
 <template>
-    <div class="relative isolate overflow-hidden">
+    <div class="relative isolate overflow-hidden bg-rainbow rounded-xl">
         <svg
             class="absolute inset-0 -z-10 h-full w-full stroke-gray-200 [mask-image:radial-gradient(100%_100%_at_top_right,white,transparent)]"
             aria-hidden="true">
@@ -13,21 +13,15 @@
         </svg>
         <div class="mx-auto max-w-7xl px-6 pt-10 pb-24 sm:pb-32 lg:flex lg:py-40 lg:px-8">
             <div class="mx-auto max-w-2xl lg:mx-0 lg:max-w-xl lg:flex-shrink-0 lg:pt-8">
-
-                <h1 class="mt-10 text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">Share the burden of
+                <h1 class="text-white">Share the burden of
                     getting your lunch with colleagues.</h1>
-                <p class="mt-6 text-lg leading-8 text-gray-600">Stuck in a nightmare where everyone in your office
+                <p class="text-white mt-6">Stuck in a nightmare where everyone in your office
                     getting lunch separately?
                     Stop wasting your precious time today!</p>
-                <p class="mt-6 text-lg leading-8 text-gray-600">Sendwich creates a single order and appoints it to a single
+                <p class="text-white mt-6">Sendwich creates a single order and appoints it to a single
                     person to get it. The poor thing pays up the entire order, but builds up a positive balance.</p>
                 <div class="mt-10 flex items-center gap-x-6">
-                    <a href="#"
-                       class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Create
-                        your account for free</a>
-                    <a href="#"
-                       class="rounded-md bg-blue-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                       Learn more</a>
+                    <a href="#" class="btn">Get started for free</a>
                 </div>
             </div>
             <div
