@@ -6,6 +6,7 @@ import Navigation from '@/Components/frontend/Navigation.vue';
 import Features from '@/Components/frontend/Features.vue';
 import Store from '@/Components/frontend/Store.vue';
 import Footer from "@/Components/frontend/Footer.vue";
+import About from "@/Components/frontend/About.vue";
 
 const props = defineProps({});
 
@@ -21,7 +22,8 @@ export default {
 <template>
     <Navigation></Navigation>
     <Hero></Hero>
-    <Features></Features>
     <Store></Store>
+    <About></About>
+    <Features></Features>
     <Footer></Footer>
 </template>
