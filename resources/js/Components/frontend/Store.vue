@@ -14,9 +14,7 @@
         <div class="mx-auto max-w-7xl px-6 pt-10 pb-24 sm:pb-32 lg:flex flex-col lg:py-20 lg:px-8">
             <div class="lg:flex-shrink-0 lg:mx-0 lg:pt-8 mx-auto text-center">
                 <h2 class="mt-2 text-3xl font-bold tracking-tight text-white sm:text-4xl">Manage stores and products yourself</h2>
-                <p class="text-white mt-6">Stuck in a nightmare where everyone in your office
-                    getting lunch separately?
-                    Stop wasting your precious time today!</p>
+                <p class="text-white mt-6">Recreate the menu's from local stores so your colleagues can order there favorite sandwich.</p>
             </div>
             <div class="flex lg:flex-none flex-col lg:max-w-none lg:mr-0 lg:mt-10 max-w-2xl mt-16 mx-auto sm:mt-24">
                 <div class="max-w-3xl flex-none sm:max-w-5xl lg:max-w-none">
