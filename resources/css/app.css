@@ -58,5 +58,5 @@ h3 {
 
 .btn{
     @apply bg-gradient-to-r from-sky-400 to-cyan-300;
-    color: white;
+    color: #033340;
 }
