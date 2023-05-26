@@ -24,7 +24,7 @@
             </ul>
         </div>
         <div class="navbar-end">
-            <a class="btn btn-info">Get started</a>
+            <a :href="route('company.register')" class="btn btn-info">Get started</a>
         </div>
     </div>
 </template>
