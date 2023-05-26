@@ -54,13 +54,13 @@ const invite = ()=> {
                                                             <input type="text"
                                                                    v-model="form.name"
                                                                    placeholder="name"
-                                                                   class="input input-bordered input-sm w-full max-w-xs"
+                                                                   class="input input-bordered w-full"
                                                             />
                                                             <div v-if="form.errors.name">{{ form.errors.name }}</div>
                                                             <input type="email"
                                                                    v-model="form.email"
                                                                    placeholder="email"
-                                                                   class="input input-bordered input-sm w-full max-w-xs"
+                                                                   class="input input-bordered w-full"
                                                             />
                                                             <div v-if="form.errors.email">{{ form.errors.email }}</div>
                                                         </div>

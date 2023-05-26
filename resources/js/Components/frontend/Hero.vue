@@ -1,5 +1,5 @@
 <template>
-    <div class="relative isolate overflow-hidden bg-rainbow rounded-xl">
+    <div id="start" class="relative isolate overflow-hidden bg-gray-900 rounded-xl">
         <svg
             class="absolute inset-0 -z-10 h-full w-full stroke-gray-200 [mask-image:radial-gradient(100%_100%_at_top_right,white,transparent)]"
             aria-hidden="true">
@@ -13,7 +13,7 @@
         </svg>
         <div class="mx-auto max-w-7xl px-6 pt-10 pb-24 sm:pb-32 lg:flex lg:py-40 lg:px-8">
             <div class="mx-auto max-w-2xl lg:mx-0 lg:max-w-xl lg:flex-shrink-0 lg:pt-8">
-                <h1 class="text-white">Share the burden of
+                <h1 class="text-white dark:text-transparent dark:bg-clip-text dark:bg-gradient-to-r dark:from-purple-400 dark:to-pink-600">Share the burden of
                     getting your lunch with colleagues.</h1>
                 <p class="text-white mt-6">Stuck in a nightmare where everyone in your office
                     getting lunch separately?

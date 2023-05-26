@@ -9,22 +9,18 @@
                               d="M4 6h16M4 12h8m-8 6h16"/>
                     </svg>
                 </label>
-                <ul tabindex="0"
-                    class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
-                    <li><a>Home</a></li>
-                    <li><a>About</a></li>
-                    <li><a>Contact us</a></li>
+                <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52 dark:text-white">
+                    <li><a href="#start">Start</a></li>
+                    <li><a href="#about">About</a></li>
 
                 </ul>
             </div>
-            <a class="btn btn-ghost normal-case text-xl">Sendwich</a>
+            <a class="normal-case text-xl">Sendwich</a>
         </div>
         <div class="navbar-center hidden lg:flex">
-            <ul class="menu menu-horizontal px-1">
-                <li><a>Home</a></li>
-                <li><a>About</a></li>
-                <li><a>Get started</a></li>
-                <li><a>Contact us</a></li>
+            <ul class="menu menu-horizontal px-1 dark:text-white">
+                <li><a href="#start">Home</a></li>
+                <li><a href="#about">About</a></li>
             </ul>
         </div>
         <div class="navbar-end">
