@@ -27,6 +27,7 @@
         </div>
         <div class="navbar-end invisible md:visible">
             <a v-if="$page.props.auth.user" :href="route('dashboard')" class="btn btn-success mr-2">Dashboard</a>
+            <a v-else :href="route('login')" class="btn btn-success mr-2">Login</a>
             <a :href="route('company.register')" class="btn btn-info">Get started</a>
         </div>
     </div>

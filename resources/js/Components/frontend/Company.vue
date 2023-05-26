@@ -10,7 +10,7 @@
                 <div
                     class="mx-auto max-w-2xl pb-24 pt-16 sm:pb-32 sm:pt-20 lg:ml-8 lg:mr-0 lg:w-full lg:max-w-lg lg:flex-none lg:pt-32 xl:w-1/2">
                     <h2 class="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl dark:text-transparent dark:bg-clip-text dark:bg-gradient-to-r dark:from-purple-400 dark:to-pink-600">Manage your company</h2>
-                    <p class="mt-6 text-xl leading-8 text-gray-700 dark:text-white">A simple and inutituve way of managing your friends or colleagues</p>
+                    <p class="mt-6 text-xl leading-8 text-gray-700 dark:text-white">A simple and intuitive way of managing your friends or colleagues</p>
                     <div class="mt-10 max-w-xl text-base leading-7 text-gray-700 lg:max-w-none">
                         <ul role="list" class="mt-8 space-y-8 text-gray-600 dark:text-white">
                             <li class="flex gap-x-3">
