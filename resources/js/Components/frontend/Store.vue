@@ -24,9 +24,6 @@
                              class="w-[76rem] rounded-md shadow-2xl ring-1 ring-gray-900/10"/>
                     </div>
                 </div>
-                <div class="mt-10 flex items-center justify-center gap-x-6">
-                    <a :href="route('company.register')" class="btn btn-info">You really should get started at this point</a>
-                </div>
             </div>
         </div>
     </div>

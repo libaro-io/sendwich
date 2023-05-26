@@ -32,6 +32,9 @@
                                 <p>Add or remove collegues to keep the sheet clean.</p>
                             </li>
                         </ul>
+                        <div class="mt-10 flex items-centergap-x-6">
+                            <a :href="route('company.register')" class="btn btn-info">You really should get started at this point</a>
+                        </div>
                     </div>
                 </div>
             </div>
