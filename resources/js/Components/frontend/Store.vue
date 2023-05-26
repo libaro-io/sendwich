@@ -25,7 +25,7 @@
                     </div>
                 </div>
                 <div class="mt-10 flex items-center justify-center gap-x-6">
-                    <a href="#" class="btn">You really should get started at this point</a>
+                    <a href="#" class="btn btn-info">You really should get started at this point</a>
                 </div>
             </div>
         </div>

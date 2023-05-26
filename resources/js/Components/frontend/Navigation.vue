@@ -24,7 +24,7 @@
             </ul>
         </div>
         <div class="navbar-end">
-            <a class="btn">Get started</a>
+            <a class="btn btn-info">Get started</a>
         </div>
     </div>
 </template>

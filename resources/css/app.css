@@ -55,8 +55,3 @@ h3 {
 .landing p {
     @apply text-lg leading-8 ;
 }
-
-.btn{
-    @apply bg-gradient-to-r from-sky-400 to-cyan-300;
-    color: #033340;
-}

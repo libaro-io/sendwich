@@ -21,7 +21,7 @@
                 <p class="text-white mt-6">Sendwich creates a single order and appoints it to a single
                     person to get it. The poor thing pays up the entire order, but builds up a positive balance.</p>
                 <div class="mt-10 flex items-center gap-x-6">
-                    <a href="#" class="btn">Get started for free</a>
+                    <a href="#" class="btn btn-info">Get started for free</a>
                 </div>
             </div>
             <div
