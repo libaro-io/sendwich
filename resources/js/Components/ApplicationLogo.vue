@@ -1,3 +1,3 @@
 <template>
-    <img src="/images/Libaro-w.png" alt="">
+    <img class="mt-3" src="/images/logo_w.png" alt="">
 </template>

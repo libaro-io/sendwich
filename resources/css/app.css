@@ -31,7 +31,7 @@
     background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
-h1,.card.title {
+h1, .card.title {
     @apply text-2xl leading-6 font-medium font-bold text-primary mb-5;
 }
 
@@ -43,6 +43,15 @@ h3 {
     @apply text-lg leading-6 font-medium text-gray-800 mb-5;
 }
 
-.btn-success{
+.btn-success {
     @apply text-white font-bold;
+}
+
+
+.landing h1 {
+    @apply mt-10 text-4xl font-bold tracking-tight sm:text-6xl;
+}
+
+.landing p {
+    @apply text-lg leading-8 ;
 }

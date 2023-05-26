@@ -24,7 +24,7 @@
         "@fortawesome/fontawesome-svg-core": "^6.1.1",
         "@fortawesome/free-solid-svg-icons": "^6.1.1",
         "@fortawesome/vue-fontawesome": "^3.0.1",
-        "@headlessui/vue": "^1.6.5",
+        "@headlessui/vue": "^1.7.10",
         "@heroicons/vue": "^1.0.6",
         "daisyui": "^2.24.0",
         "mitt": "^3.0.0",
