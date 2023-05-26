@@ -2,17 +2,25 @@
     <div class="bg-white shadow sm:rounded-lg">
         <div class="px-4 py-5 sm:p-6">
             <h2>Menu</h2>
-            <div>
+            <div v-if="products.length">
                 <input type="text" placeholder="Search a product" class="input input-bordered input-info w-full"
                        v-model="search"/>
             </div>
-            <div class="mt-5 flex flex-col gap-2">
+            <div v-if="products.length" class="mt-5 flex flex-col gap-2">
                 <div v-for="(product , index) in products"
                      :key="index"
                      class="card card-compact bg-gray-50 shadow">
                     <product-card :product="product" @ordered="addProduct"></product-card>
                 </div>
             </div>
+            <a v-else class="alert alert-success shadow-md hover:shadow-lg cursor-pointer" :href="route('store.index')">
+                <div>
+                    <div>
+                        <h3 class="font-bold">Noting to feed yourself</h3>
+                        <div class="">Add a store and products to get yourself started</div>
+                    </div>
+                </div>
+            </a>
         </div>
     </div>
 </template>
