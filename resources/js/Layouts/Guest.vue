@@ -4,7 +4,7 @@ import { Link } from '@inertiajs/inertia-vue3';
 </script>
 
 <template>
-    <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-rainbow">
+    <div class="min-h-screen flex flex-col sm:justify-center items-center sm:pt-0 bg-rainbow">
         <div>
             <Link href="/">
                 <BreezeApplicationLogo class="h-20 fill-current text-gray-500" />
