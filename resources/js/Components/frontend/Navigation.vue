@@ -12,8 +12,9 @@
                 <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52 dark:text-white">
                     <li><a class="dark:text-gray-900" href="#start">Start</a></li>
                     <li><a class="dark:text-gray-900" href="#about">About</a></li>
-                    <li><a v-if="$page.props.auth.user" :href="route('dashboard')" class="btn btn-success my-2">Dashboard</a></li>
-                    <li><a :href="route('company.register')" class="btn btn-info">Get started</a></li>
+                    <a v-if="$page.props.auth.user" :href="route('dashboard')" class="btn btn-success my-2">Dashboard</a>
+                    <a v-else :href="route('login')" class="btn btn-success my-2">Login</a>
+                    <a :href="route('company.register')" class="btn btn-info">Get started</a>
 
                 </ul>
             </div>
