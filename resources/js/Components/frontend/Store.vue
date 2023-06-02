@@ -18,10 +18,11 @@
             </div>
             <div class="flex lg:flex-none flex-col lg:max-w-none lg:mr-0 lg:mt-10 max-w-2xl mt-16 mx-auto sm:mt-24">
                 <div class="max-w-3xl flex-none sm:max-w-5xl lg:max-w-none">
-                    <div class="-m-2 rounded-xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4">
+                    <div class="relative group">
+                        <div class="absolute -inset-1 bg-gradient-to-tr from-pink-600 to-purple-600 rounded-3xl blur opacity-75 group-hover:opacity-100 transition duration-200 animate-tilt"></div>
                         <img src="/images/stores.png"
                              alt="App screenshot" width="2432" height="1442"
-                             class="w-[76rem] rounded-md shadow-2xl ring-1 ring-gray-900/10"/>
+                             class="w-[76rem] rounded-3xl relative"/>
                     </div>
                 </div>
             </div>

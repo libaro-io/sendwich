@@ -11,8 +11,8 @@
             </defs>
             <rect width="100%" height="100%" stroke-width="0" fill="url(#0787a7c5-978c-4f66-83c7-11c213f99cb7)"/>
         </svg>
-        <div class="mx-auto max-w-7xl px-6 pt-10 pb-24 sm:pb-32 lg:flex lg:py-40 lg:px-8">
-            <div class="mx-auto max-w-2xl lg:mx-0 lg:max-w-xl lg:flex-shrink-0 lg:pt-8">
+        <div class="mx-auto max-w-7xl px-6 pb-24 sm:pb-32 lg:flex lg:py-40 lg:px-8">
+            <div class="mx-auto max-w-2xl lg:mx-0 lg:max-w-xl lg:flex-shrink-0">
                 <h1 class="text-white dark:text-transparent dark:bg-clip-text dark:bg-gradient-to-r dark:from-purple-400 dark:to-pink-600">Share the burden of
                     getting your lunch with colleagues.</h1>
                 <p class="text-white mt-6">Stuck in a nightmare where everyone in your office
@@ -21,17 +21,20 @@
                 <p class="text-white mt-6">Sendwich creates a single order and appoints it to a single
                     person to get it. The poor thing pays up the entire order, but builds up a positive balance.</p>
                 <div class="mt-10 flex items-center gap-x-6">
-                    <a :href="route('company.register')" class="btn btn-info">Get started for free</a>
+                    <div class="relative group">
+                        <div class="absolute inset-0 bg-gradient-to-tr from-info to-info/90 rounded-3xl blur opacity-75 group-hover:opacity-100 transition duration-200 animate-tilt"></div>
+                    <a :href="route('company.register')" class="btn btn-info hover:bg-info/90 relative">Get started for free</a>
+                    </div>
                 </div>
             </div>
             <div
                 class="mx-auto mt-16 flex max-w-2xl sm:mt-24 lg:ml-10 lg:mt-0 lg:mr-0 lg:max-w-none lg:flex-none xl:ml-32">
                 <div class="max-w-3xl flex-none sm:max-w-5xl lg:max-w-none">
-                    <div
-                        class="-m-2 rounded-xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4">
+                    <div class="relative group">
+                        <div class="absolute -inset-1 bg-gradient-to-tr from-pink-600 to-purple-600 rounded-3xl blur opacity-75 group-hover:opacity-100 transition duration-200 animate-tilt"></div>
                         <img src="/images/preview.png"
                              alt="App screenshot" width="2432" height="1442"
-                             class="w-[76rem] rounded-md shadow-2xl ring-1 ring-gray-900/10"/>
+                             class="w-[76rem] rounded-3xl relative"/>
                     </div>
                 </div>
             </div>

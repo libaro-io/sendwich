@@ -4,7 +4,7 @@
             <img src="/images/logo_w.png" class="w-48" alt="">
         </div>
         <div>
-            <p>Sendwich <br/>Powered by Libaro bv</p>
+            <p>Sendwich <br/>Powered by <a target="_blank" href="https://libaro.be">Libaro bv</a></p>
         </div>
     </footer>
 </template>
