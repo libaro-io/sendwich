@@ -21,15 +21,21 @@
                 <p class="text-white mt-6">Sendwich creates a single order and appoints it to a single
                     person to get it. The poor thing pays up the entire order, but builds up a positive balance.</p>
                 <div class="mt-10 flex items-center gap-x-6">
-                    <a :href="route('company.register')" class="btn btn-info hover:bg-info/90">Get started for free</a>
+                    <div class="relative group">
+                        <div class="absolute inset-0 bg-gradient-to-tr from-info to-info/90 rounded-3xl blur opacity-75 group-hover:opacity-100 transition duration-200 animate-tilt"></div>
+                    <a :href="route('company.register')" class="btn btn-info hover:bg-info/90 relative">Get started for free</a>
+                    </div>
                 </div>
             </div>
             <div
                 class="mx-auto mt-16 flex max-w-2xl sm:mt-24 lg:ml-10 lg:mt-0 lg:mr-0 lg:max-w-none lg:flex-none xl:ml-32">
                 <div class="max-w-3xl flex-none sm:max-w-5xl lg:max-w-none">
+                    <div class="relative group">
+                        <div class="absolute -inset-1 bg-gradient-to-tr from-pink-600 to-purple-600 rounded-3xl blur opacity-75 group-hover:opacity-100 transition duration-200 animate-tilt"></div>
                         <img src="/images/preview.png"
                              alt="App screenshot" width="2432" height="1442"
-                             class="w-[76rem] rounded-3xl"/>
+                             class="w-[76rem] rounded-3xl relative"/>
+                    </div>
                 </div>
             </div>
         </div>

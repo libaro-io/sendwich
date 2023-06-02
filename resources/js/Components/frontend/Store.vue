@@ -18,9 +18,12 @@
             </div>
             <div class="flex lg:flex-none flex-col lg:max-w-none lg:mr-0 lg:mt-10 max-w-2xl mt-16 mx-auto sm:mt-24">
                 <div class="max-w-3xl flex-none sm:max-w-5xl lg:max-w-none">
+                    <div class="relative group">
+                        <div class="absolute -inset-1 bg-gradient-to-tr from-pink-600 to-purple-600 rounded-3xl blur opacity-75 group-hover:opacity-100 transition duration-200 animate-tilt"></div>
                         <img src="/images/stores.png"
                              alt="App screenshot" width="2432" height="1442"
-                             class="w-[76rem] rounded-3xl"/>
+                             class="w-[76rem] rounded-3xl relative"/>
+                    </div>
                 </div>
             </div>
         </div>
