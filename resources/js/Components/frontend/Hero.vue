@@ -11,8 +11,8 @@
             </defs>
             <rect width="100%" height="100%" stroke-width="0" fill="url(#0787a7c5-978c-4f66-83c7-11c213f99cb7)"/>
         </svg>
-        <div class="mx-auto max-w-7xl px-6 pt-10 pb-24 sm:pb-32 lg:flex lg:py-40 lg:px-8">
-            <div class="mx-auto max-w-2xl lg:mx-0 lg:max-w-xl lg:flex-shrink-0 lg:pt-8">
+        <div class="mx-auto max-w-7xl px-6 pb-24 sm:pb-32 lg:flex lg:py-40 lg:px-8">
+            <div class="mx-auto max-w-2xl lg:mx-0 lg:max-w-xl lg:flex-shrink-0">
                 <h1 class="text-white dark:text-transparent dark:bg-clip-text dark:bg-gradient-to-r dark:from-purple-400 dark:to-pink-600">Share the burden of
                     getting your lunch with colleagues.</h1>
                 <p class="text-white mt-6">Stuck in a nightmare where everyone in your office
