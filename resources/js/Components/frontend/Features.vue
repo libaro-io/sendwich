@@ -2,9 +2,7 @@
     <div id="about" class="relative mb-10">
         <div class="mx-auto max-w-7xl lg:flex lg:justify-between lg:px-8 xl:justify-end">
             <div class="m-20">
-                <div class="-m-2 rounded-xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4/10">
-                    <img class="ring-1 ring-gray-900/10 rounded-md shadow-2xl w-[76rem]" src="/images/runners.png" alt="">
-                </div>
+                    <img class="rounded-3xl shadow-2xl w-[76rem]" src="/images/runners.png" alt="">
             </div>
             <div class="px-6 lg:contents">
                 <div

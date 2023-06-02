@@ -10,11 +10,9 @@
                     </svg>
                 </label>
                 <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52 dark:text-white">
-                    <li><a class="dark:text-gray-900" href="#start">Start</a></li>
-                    <li><a class="dark:text-gray-900" href="#about">About</a></li>
                     <a v-if="$page.props.auth.user" :href="route('dashboard')" class="btn btn-success my-2">Dashboard</a>
-                    <a v-else :href="route('login')" class="btn btn-success my-2">Login</a>
-                    <a :href="route('company.register')" class="btn btn-info">Get started</a>
+                    <a v-else :href="route('login')" class="btn btn-success my-2 hover:bg-success/90">Login</a>
+                    <a :href="route('company.register')" class="btn btn-info hover:bg-info/90">Get started</a>
 
                 </ul>
             </div>
@@ -22,14 +20,12 @@
         </div>
         <div class="navbar-center hidden lg:flex">
             <ul class="menu menu-horizontal px-1 dark:text-white">
-                <li><a href="#start">Home</a></li>
-                <li><a href="#about">About</a></li>
             </ul>
         </div>
         <div class="navbar-end invisible md:visible">
             <a v-if="$page.props.auth.user" :href="route('dashboard')" class="btn btn-success mr-2">Dashboard</a>
-            <a v-else :href="route('login')" class="btn btn-success mr-2">Login</a>
-            <a :href="route('company.register')" class="btn btn-info">Get started</a>
+            <a v-else :href="route('login')" class="btn btn-success mr-2 hover:bg-success/90">Login</a>
+            <a :href="route('company.register')" class="btn btn-info hover:bg-info/90">Get started</a>
         </div>
     </div>
 </template>
