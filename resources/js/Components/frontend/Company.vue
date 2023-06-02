@@ -31,7 +31,7 @@
                             </li>
                         </ul>
                         <div class="mt-10 flex items-centergap-x-6">
-                            <a :href="route('company.register')" class="btn btn-info hover:bg-info/90">You really should get started at this point</a>
+                            <a :href="route('company.register')" class="btn btn-info hover:bg-info/90">Get started</a>
                         </div>
                     </div>
                 </div>
