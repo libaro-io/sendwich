@@ -17,7 +17,7 @@
 
                 </ul>
             </div>
-            <a class="normal-case text-xl"><img class="w-48" src="/images/logo_w.png" alt=""></a>
+            <a :href="route('home')" class="normal-case text-xl"><img class="w-48" src="/images/logo_w.png" alt=""></a>
         </div>
         <div class="navbar-center hidden lg:flex">
             <ul class="menu menu-horizontal px-1 dark:text-white">
