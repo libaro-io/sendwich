@@ -95,10 +95,10 @@ const showingNavigationDropdown = ref(false);
                         <BreezeResponsiveNavLink :href="route('history')" :active="route().current('history')">
                             History
                         </BreezeResponsiveNavLink>
-                        <BreezeResponsiveNavLink :href="route('store.index')" :active="route().current('store.index')">
+                        <BreezeResponsiveNavLink v-if="can('edit-store')" :href="route('store.index')" :active="route().current('store.index')">
                             Stores
                         </BreezeResponsiveNavLink>
-                        <BreezeResponsiveNavLink :href="route('company.show')" :active="route().current('company.show')">
+                        <BreezeResponsiveNavLink v-if="can('edit-company')" :href="route('company.show')" :active="route().current('company.show')">
                             Company
                         </BreezeResponsiveNavLink>
                     </div>

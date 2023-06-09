@@ -14,9 +14,13 @@ use Inertia\Inertia;
 class CompanyController extends Controller
 {
     public function show(){
-        $user = auth()->user() ;
+        $user = auth()->user();
         $company = $user->company;
         $users = $company->users;
+        foreach ($users as $user ){
+            $user->canEditStore = $user->hasPermissionTo('edit-store');
+            $user->canEditCompany = $user->hasPermissionTo('edit-company');
+        }
 
         return Inertia::render('Company',
             [
@@ -24,6 +28,20 @@ class CompanyController extends Controller
                 'users' => $users,
                 'company' => $company,
             ]);
+    }
+
+    public function editUserPermission(Request $request)
+    {
+        $user = User::find($request->get('user_id'));
+        $type = $request->get('type');
+
+        if($user->can($type)){
+            $user->revokePermissionTo($type);
+        }else{
+            $user->givePermissionTo($type);
+        }
+
+        return redirect()->back()->with(['success'=> 'Rechten aangepast']);
     }
 
     public function inviteUser(Request $request){

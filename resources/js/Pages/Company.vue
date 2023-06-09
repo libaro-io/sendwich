@@ -3,6 +3,7 @@
 import Authenticated from "@/Layouts/Authenticated.vue";
 import { useForm } from '@inertiajs/inertia-vue3';
 import { ref } from 'vue';
+import { Inertia } from '@inertiajs/inertia';
 
 
 const props = defineProps({
@@ -22,8 +23,18 @@ const invite = ()=> {
     form.post(route('invite'),{
         onSuccess: () => toggle.value = false,
     });
-
 }
+
+const togglePermission= (type, user) =>{
+    Inertia.post(route('permissions'), {
+        user_id: user.id,
+        type: type,
+    },{
+        preserveState:true,
+        replace :true,
+        only:['users']
+    });
+};
 
 </script>
 <template>
@@ -81,6 +92,8 @@ const invite = ()=> {
                                                 <tr>
                                                     <th>Name</th>
                                                     <th>Email</th>
+                                                    <th>Edit stores</th>
+                                                    <th>Edit company</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -88,6 +101,12 @@ const invite = ()=> {
                                                     <td>{{user.name}}</td>
                                                     <td>
                                                         {{user.email}}
+                                                    </td>
+                                                    <td>
+                                                        <input type="checkbox" v-model="user.canEditStore" class="checkbox" @change="togglePermission('edit-store', user)" />
+                                                    </td>
+                                                    <td>
+                                                        <input type="checkbox" v-model="user.canEditCompany" class="checkbox" @change="togglePermission('edit-company', user)" />
                                                     </td>
                                                 </tr>
                                                 </tbody>
