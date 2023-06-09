@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\PayoutController;
 use Illuminate\Http\Request;
@@ -31,7 +32,7 @@ Route::post('/payouts/handle', [PayoutController::class, 'payout']);
 
 Route::group(
     ['controller' => StoreController::class,
-        'middleware' => ['auth', 'verified']
+        'middleware' => ['auth', 'verified', 'can:edit-store']
     ], function () {
 
     Route::put('/store/add', 'addStore')->name('store.add');

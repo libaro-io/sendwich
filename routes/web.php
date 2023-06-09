@@ -23,6 +23,8 @@ Route::get('/store/{id}', [StoreController::class, 'show'])->middleware(['auth',
 //companysettings
 Route::get('/company',  [CompanyController::class , 'show'])->middleware(['auth', 'verified','can:edit-company'])->name('company.show');
 Route::post('/user/invite',  [CompanyController::class , 'inviteUser'])->middleware(['auth', 'verified','can:edit-company'])->name('invite');
+Route::post('/user/permission',  [CompanyController::class , 'editUserPermission'])->middleware(['auth', 'verified','can:edit-company'])->name('permissions');
+
 
 /*public routes*/
 Route::get('/display/{company_token}',[DisplayController::class, 'showDisplayPublic'])->name('displays.public.show');
