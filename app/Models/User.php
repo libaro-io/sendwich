@@ -10,6 +10,8 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Laravel\Sanctum\HasApiTokens;
+use LaravelAndVueJS\Traits\LaravelPermissionToVueJS;
+use Spatie\Permission\Traits\HasPermissions;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
@@ -29,7 +31,7 @@ use Spatie\Permission\Traits\HasRoles;
  */
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, LaravelPermissionToVueJS;
 
     /**
      * The attributes that are mass assignable.

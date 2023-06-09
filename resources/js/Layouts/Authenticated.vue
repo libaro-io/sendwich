@@ -40,13 +40,10 @@ const showingNavigationDropdown = ref(false);
                                 <BreezeNavLink :href="route('history')" :active="route().current('history')">
                                     History
                                 </BreezeNavLink>
-                                <BreezeNavLink :href="route('store.index')" :active="route().current('store.index')">
+                                <BreezeNavLink v-if="can('edit-store')" :href="route('store.index')" :active="route().current('store.index')">
                                     Stores
                                 </BreezeNavLink>
-                                <BreezeNavLink :href="route('displays.private.show')" :active="route().current('displays.private.show')">
-                                    Display
-                                </BreezeNavLink>
-                                <BreezeNavLink :href="route('company.show')" :active="route().current('company.show')">
+                                <BreezeNavLink v-if="can('edit-company')" :href="route('company.show')" :active="route().current('company.show')">
                                     Company
                                 </BreezeNavLink>
                             </div>

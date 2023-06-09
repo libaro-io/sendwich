@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title inertia>{{ config('app.name', 'Laravel') }}</title>
+        <title inertia>{{ config('app.name', 'Sendwich') }}</title>
 
         <!-- Fonts -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
@@ -17,4 +17,10 @@
     <body class="font-sans antialiased">
         @inertia
     </body>
+    <script type="text/javascript">
+        window.Laravel = {
+            csrfToken: "{{ csrf_token() }}",
+            jsPermissions: {!! auth()->check()?auth()->user()->jsPermissions():null !!}
+        }
+    </script>
 </html>

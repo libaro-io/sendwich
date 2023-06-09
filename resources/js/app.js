@@ -16,6 +16,9 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 /* import specific icons */
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
+/* Import permissions */
+import LaravelPermissionToVueJS from 'laravel-permission-to-vuejs'
+
 /* add icons to the library */
 library.add(faTrash);
 
@@ -29,6 +32,7 @@ const Inert = createInertiaApp({
         const VueApp = createApp({ render: () => h(app, props) })
             .use(plugin)
             .use(ZiggyVue, Ziggy)
+            .use(LaravelPermissionToVueJS)
             .use(Toast, {
                 position: POSITION.BOTTOM_LEFT,
             });
