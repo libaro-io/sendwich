@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\AddTemplateToStore;
+use App\Templates\FriesTemplate;
+use App\Templates\PastaTemplate;
+use App\Templates\SandwichTemplate;
 use App\Http\Requests\CreateStore;
 use App\Http\Requests\UpdateProduct;
 use App\Models\Product;
@@ -84,7 +88,21 @@ class StoreController extends Controller
     {
         $storeData = $request->get('store');
         $storeData['company_id'] = auth()->user()->company_id;
-        $store = Store::query()->create($storeData);
+        $store = Store::create($storeData);
+
+        if ($storeData['template'] !== null) {
+            $products = [];
+            if ($storeData['template'] === SandwichTemplate::$name) {
+                $products = SandwichTemplate::$products;
+            } else if ($storeData['template'] === PastaTemplate::$name) {
+                $products = PastaTemplate::$products;
+            } else if ($storeData['template'] === FriesTemplate::$name) {
+                $products = FriesTemplate::$products;
+            }
+
+            $templateAction = new AddTemplateToStore($store, auth()->user()->company, $products);
+            $templateAction->execute();
+        }
         return $this->show($store->id);
     }
 

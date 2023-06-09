@@ -31,7 +31,6 @@ onMounted(()=>{
                 replace :true,
                 only : ['orders','selectedRunner','deliveryMoment','flash']
             })
-        console.log('test');
     }, 6 * 1000);
 })
 onUnmounted(() => clearInterval(intervalId));
