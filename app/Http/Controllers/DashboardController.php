@@ -28,6 +28,7 @@ class DashboardController extends Controller
 
         /** @var User $user */
         $user = auth()->user();
+        $user->load('roles');
         $company = $user->company;
         $search = $request->input('search');
         $deliveryMoment = $orderController->getDeliveryMoment();
@@ -39,7 +40,7 @@ class DashboardController extends Controller
 
         $orders = Order::getOrders($company, $this->getDate());
 
-        $order = ( clone $orders)->first();
+        $order = (clone $orders)->first();
 
         $simulated = false;
 
@@ -50,11 +51,11 @@ class DashboardController extends Controller
             ->get()
             ->groupBy('paid_by');
 
-        foreach($doneOrders as $userId => $orderGroup){
+        foreach ($doneOrders as $userId => $orderGroup) {
             $formattedOrders[$orderGroup->first()->deliverer->name] = $orderGroup;
         }
 
-        if(!$selectedRunner){
+        if (!$selectedRunner) {
             $action = new ChooseRunner($company);
             $selectedRunner = $action->getSimulatedRunner();
             $simulated = true;
@@ -86,6 +87,7 @@ class DashboardController extends Controller
         }
         return $date->setHour(12)->setMinutes(15)->setSecond(00);
     }
+
     public function getTresholdDate()
     {
         return Carbon::now()->hour(12)->minute(15);

@@ -16,10 +16,13 @@ Route::get('/dashboard',[DashboardController::class, 'dashboard'])->middleware([
 Route::get('/display',[DisplayController::class, 'showDisplayPrivate'])->middleware(['auth', 'verified'])->name('displays.private.show');
 Route::get('/history',[HistoryController::class, 'showHistory'])->middleware(['auth', 'verified'])->name('history');
 
-Route::get('/stores', [StoreController::class, 'index'])->middleware(['auth', 'verified'])->name('store.index');
-Route::get('/store/{id}', [StoreController::class, 'show'])->middleware(['auth', 'verified'])->name('store.show');
-Route::get('/company',  [CompanyController::class , 'show'])->name('company.show');
-Route::post('/user/invite',  [CompanyController::class , 'inviteUser'])->name('invite');
+//storesettings
+Route::get('/stores', [StoreController::class, 'index'])->middleware(['auth', 'verified', 'can:edit-store'])->name('store.index');
+Route::get('/store/{id}', [StoreController::class, 'show'])->middleware(['auth', 'verified', 'can:edit-store'])->name('store.show');
+
+//companysettings
+Route::get('/company',  [CompanyController::class , 'show'])->middleware(['auth', 'verified','can:edit-company'])->name('company.show');
+Route::post('/user/invite',  [CompanyController::class , 'inviteUser'])->middleware(['auth', 'verified','can:edit-company'])->name('invite');
 
 /*public routes*/
 Route::get('/display/{company_token}',[DisplayController::class, 'showDisplayPublic'])->name('displays.public.show');
