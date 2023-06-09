@@ -38,28 +38,9 @@ export default {
     components: {
         FontAwesomeIcon,
     },
-    mounted() {
-        this.getOrders();
-        this.emitter.on("updateOrders", this.getOrders)
+    props: {
+        orders : Object,
     },
-    data() {
-        return {
-            orders: [],
-        };
-    },
-    props: {},
-    computed: {},
-    methods: {
-        getOrders() {
-            console.log('Get orders');
-            const app = this;
-            axios.post('/api/done-orders', {}).then(response => {
-                app.orders = response.data.orders;
-            }).catch(error => {
-                console.log(error);
-            });
-        },
-    }
 }
 </script>
 
