@@ -52,6 +52,8 @@ class RegisteredCompanyController extends Controller
         $user->company_id = $company->id;
         $user->save();
 
+        $user->assignRole('company-owner');
+
         return $user;
     }
 }

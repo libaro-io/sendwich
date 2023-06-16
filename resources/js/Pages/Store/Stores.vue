@@ -3,7 +3,7 @@ import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
 import {Head} from '@inertiajs/inertia-vue3';
 import List from "@/Components/List.vue";
 import ListItem from "@/Components/ListItem.vue";
-import NewStore from "@/Pages/Store/newStore.vue";
+import NewStore from "@/Pages/Store/NewStore.vue";
 import {ref} from "vue";
 
 const props = defineProps({

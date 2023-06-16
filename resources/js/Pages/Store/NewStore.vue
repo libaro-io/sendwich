@@ -9,49 +9,60 @@
                         <span class="label-text">Name *</span>
                     </label>
                     <input type="text" required placeholder="Libaro" class="input input-bordered w-full max-w-xs"
-                           v-model="newStore.name"/>
+                           v-model="NewStore.name"/>
                 </div>
                 <div class="form-control">
                     <label class="label">
                         <span class="label-text">Address</span>
                     </label>
                     <input type="text" placeholder="Vaartdijkstraat 19" class="input input-bordered w-full max-w-xs"
-                           v-model="newStore.address"/>
+                           v-model="NewStore.address"/>
                 </div>
                 <div class="form-control">
                     <label class="label">
                         <span class="label-text">ZIP</span>
                     </label>
                     <input type="text" placeholder="8200" class="input input-bordered w-full max-w-xs"
-                           v-model="newStore.zip"/>
+                           v-model="NewStore.zip"/>
                 </div>
                 <div class="form-control">
                     <label class="label">
                         <span class="label-text">City</span>
                     </label>
                     <input type="text" placeholder="Brugge" class="input input-bordered w-full max-w-xs"
-                           v-model="newStore.city"/>
+                           v-model="NewStore.city"/>
                 </div>
                 <div class="form-control">
                     <label class="label">
                         <span class="label-text">Phone</span>
                     </label>
                     <input type="text" placeholder="+32 477 11 22 33" class="input input-bordered w-full max-w-xs"
-                           v-model="newStore.phone"/>
+                           v-model="NewStore.phone"/>
                 </div>
                 <div class="form-control">
                     <label class="label">
                         <span class="label-text">Email</span>
                     </label>
                     <input type="text" placeholder="info@libaro.be" class="input input-bordered w-full max-w-xs"
-                           v-model="newStore.email"/>
+                           v-model="NewStore.email"/>
                 </div>
                 <div class="form-control">
                     <label class="label">
                         <span class="label-text">Website</span>
                     </label>
                     <input type="text" placeholder="https://libaro.be" class="input input-bordered w-full max-w-xs"
-                           v-model="newStore.website"/>
+                           v-model="NewStore.website"/>
+                </div>
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">Get started quickly</span>
+                    </label>
+                    <select v-model="NewStore.template" class="select select-primary w-full max-w-xs">
+                        <option value="">Create an empty store</option>
+                        <option value="sandwich">Add typical sandwiches</option>
+                        <option value="pasta">Add pasta's</option>
+                        <option value="pasta">Add French Fries products</option>
+                    </select>
                 </div>
             </div>
             <div class="modal-action">
@@ -70,7 +81,7 @@ import {useToast} from "vue-toastification";
 
 const toast = useToast();
 
-let newStore = reactive({
+let NewStore = reactive({
     name: '',
     address: '',
     zip: '',
@@ -78,12 +89,13 @@ let newStore = reactive({
     phone: '',
     email: '',
     website: '',
+    template: '',
 });
 
 const submit = () => {
-    if(newStore.name){
+    if(NewStore.name){
         axios.put('/api/store/add', {
-            store: newStore,
+            store: NewStore,
         }).then(response => {
             toast.success(response.data.message);
             this.emitter.emit('updateStores');

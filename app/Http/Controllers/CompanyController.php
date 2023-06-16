@@ -13,10 +13,15 @@ use Inertia\Inertia;
 
 class CompanyController extends Controller
 {
-    public function show(){
-        $user = auth()->user() ;
+    public function show()
+    {
+        $user = auth()->user();
         $company = $user->company;
         $users = $company->users;
+        foreach ($users as $user) {
+            $user->canEditStore = $user->hasPermissionTo('edit-store');
+            $user->canEditCompany = $user->hasPermissionTo('edit-company');
+        }
 
         return Inertia::render('Company',
             [
@@ -26,23 +31,41 @@ class CompanyController extends Controller
             ]);
     }
 
-    public function inviteUser(Request $request){
+    public function editUserPermission(Request $request)
+    {
+        $user = User::find($request->get('user_id'));
+        $type = $request->get('type');
+        if ($user->role('company-owner')) {
+            return redirect()->back()->with(['success' => 'Company owner permissions cannot be revoked']);
+        }
+
+        if ($user->can($type)) {
+            $user->revokePermissionTo($type);
+        } else {
+            $user->givePermissionTo($type);
+        }
+
+        return redirect()->back()->with(['success' => 'Permissions edited']);
+    }
+
+    public function inviteUser(Request $request)
+    {
 
         $data = $request->validate([
-            'name'=>'required',
-            'email'=>'required|email|unique:users',
+            'name' => 'required',
+            'email' => 'required|email|unique:users',
         ]);
 
         $user = auth()->user();
         $company = $user->company;
 
-        $data = array_merge($data , ['invited_by' => $user->id ,'company_id' => $company->id]);
+        $data = array_merge($data, ['invited_by' => $user->id, 'company_id' => $company->id]);
 
         $pendingInvite = InvitedUser::create($data);
 
-        $signupUrl = URL::temporarySignedRoute('signup',now()->addWeeks(3) ,['id' => $pendingInvite->id]);
+        $signupUrl = URL::temporarySignedRoute('signup', now()->addWeeks(3), ['id' => $pendingInvite->id]);
 
-        Mail::to($pendingInvite->email)->send(new InviteNewVictim($pendingInvite,$signupUrl));
+        Mail::to($pendingInvite->email)->send(new InviteNewVictim($pendingInvite, $signupUrl));
 
         return redirect()->back();
 

@@ -42,7 +42,7 @@
                                   type="button"
                                   class="text-error hover:text-red-600"
                                   :data="{ product_id: order.product_id, }"
-                                  :only="['orders','flash']"
+                                  :only="['orders','flash','selectedRunner','totalPrice']"
                             >
                                 <FontAwesomeIcon icon="fas-fa fa-trash" />
                             </Link>
@@ -78,20 +78,7 @@ export default {
             request: null,
         };
     },
-    mounted() {
-        console.log('mounted orders')
-        this.request = setInterval(() => {
-            this.$inertia.get('/dashboard',{},{
-                preserveState: false,
-                preserveScroll: false,
-                only :['orders']
-            })
-        }, 60 * 1000);
-    },
-    unmounted() {
-        console.log('umounted orders')
-        clearInterval(this.request)
-    },
+
     props: {
         deliveryMoment: String,
         orders: Array,

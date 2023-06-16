@@ -6,8 +6,11 @@ import Orders from "@/Components/Orders.vue";
 import Products from "@/Components/Products.vue";
 import DeptList from "@/Components/DeptList.vue";
 import DoneOrders from "@/Components/DoneOrders.vue";
+import {onMounted , onUnmounted} from "vue";
+import { Inertia } from '@inertiajs/inertia'
 
 const props = defineProps({
+    selectedRunner: Object,
     products: Array,
     users: Array,
     deliveryMoment: String,
@@ -15,7 +18,24 @@ const props = defineProps({
     orders: Array,
     totalPrice: Number,
     filters:Object,
+    formattedOrders : Object,
 });
+
+
+onMounted(()=>{
+    setInterval(() => {
+          Inertia.get('/dashboard',{},
+            {
+                preserveState:true,
+                preserveScroll:true,
+                replace :true,
+                only : ['orders','selectedRunner','deliveryMoment','flash','totalPrice']
+            })
+    }, 60 * 1000);
+})
+onUnmounted(() => clearInterval(intervalId));
+
+
 
 </script>
 <script>
@@ -33,8 +53,8 @@ export default {
                     <div class="col-span-2 md:col-span-1 grid-cols-3">
                         <div class="grid grid-cols-3 gap-4">
                             <Orders :orders="orders" :totalPrice="totalPrice" :delivery-moment="deliveryMoment" class="col-span-3"></Orders>
-                            <done-orders></done-orders>
-                            <DeptList :company="company" class="col-span-3"></DeptList>
+                            <done-orders :orders="formattedOrders"></done-orders>
+                            <DeptList :users='users' :runner='selectedRunner' :company="company" class="col-span-3"></DeptList>
                         </div>
                     </div>
                     <Products :products="products" :filters="filters" class="col-span-2 md:col-span-1"/>
