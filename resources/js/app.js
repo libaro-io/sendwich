@@ -26,6 +26,7 @@ const appName = window.document.getElementsByTagName('title')[0]?.innerText || '
 const emitter = mitt()
 
 const Inert = createInertiaApp({
+
     title: (title) => `${title} - ${appName}`,
     resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
     setup({ el, app, props, plugin }) {

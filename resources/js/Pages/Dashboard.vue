@@ -21,19 +21,20 @@ const props = defineProps({
     formattedOrders : Object,
 });
 
-let intervalId;
 
 onMounted(()=>{
-    intervalId = setInterval(() => {
+    setInterval(() => {
           Inertia.get('/dashboard',{},
             {
                 preserveState:true,
+                preserveScroll:true,
                 replace :true,
-                only : ['orders','selectedRunner','deliveryMoment','flash']
+                only : ['orders','selectedRunner','deliveryMoment','flash','totalPrice']
             })
-    }, 6 * 1000);
+    }, 60 * 1000);
 })
 onUnmounted(() => clearInterval(intervalId));
+
 
 
 </script>
