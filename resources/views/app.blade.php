@@ -17,17 +17,21 @@
         <meta name="theme-color" content="#ffffff">
 
         <!-- Scripts -->
+        <script type="text/javascript">
+                window.Laravel = {
+                csrfToken: "{{ csrf_token() }}",
+                @auth
+                jsPermissions: {!! auth()->check()?auth()->user()->jsPermissions():null !!}
+                @endauth
+            }
+        </script>
         @routes
         @vite('resources/js/app.js')
         @inertiaHead
+
     </head>
     <body class="font-sans antialiased">
         @inertia
     </body>
-    <script type="text/javascript">
-        window.Laravel = {
-            csrfToken: "{{ csrf_token() }}",
-            jsPermissions: {!! auth()->check()?auth()->user()->jsPermissions():null !!}
-        }
-    </script>
+
 </html>
