@@ -35,9 +35,6 @@ class CompanyController extends Controller
     {
         $user = User::find($request->get('user_id'));
         $type = $request->get('type');
-        if ($user->role('company-owner')) {
-            return redirect()->back()->with(['success' => 'Company owner permissions cannot be revoked']);
-        }
 
         if ($user->can($type)) {
             $user->revokePermissionTo($type);
