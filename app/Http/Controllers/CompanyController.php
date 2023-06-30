@@ -48,6 +48,14 @@ class CompanyController extends Controller
         return redirect()->back()->with(['success' => 'Permissions edited']);
     }
 
+    public function deleteUser(Request $request)
+    {
+        $user = User::find($request->get('user_id'));
+        $user->delete();
+
+        return redirect()->back()->with(['success' => 'User deleted']);
+    }
+
     public function inviteUser(Request $request)
     {
 
