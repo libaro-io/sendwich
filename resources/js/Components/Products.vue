@@ -1,8 +1,8 @@
 <template>
-    <div class="bg-white shadow sm:rounded-lg">
+    <div class="bg-white shadow sm:rounded-md">
         <div class="px-4 py-5 sm:p-6">
             <h2>Menu</h2>
-            <div v-if="products.length">
+            <div>
                 <input type="text" placeholder="Search a product" class="input input-bordered input-info w-full"
                        v-model="search"/>
             </div>
@@ -13,10 +13,10 @@
                     <product-card :product="product" @ordered="addProduct"></product-card>
                 </div>
             </div>
-            <a v-else class="alert alert-success shadow-md hover:shadow-lg cursor-pointer" :href="route('store.index')">
+            <a v-else-if="!products.length && !search" class="alert alert-success shadow-md hover:shadow-lg cursor-pointer" :href="route('store.index')">
                 <div>
                     <div>
-                        <h3 class="font-bold">Noting to feed yourself</h3>
+                        <h3 class="font-bold">Nothing to feed yourself</h3>
                         <div class="">Add a store and products to get yourself started</div>
                     </div>
                 </div>
