@@ -98,7 +98,7 @@ const submit = () => {
             store: NewStore,
         }).then(response => {
             toast.success(response.data.message);
-            this.emitter.emit('updateStores');
+            this.$emit('updateStores');
         }).catch(error => {
             console.error(error);
         });
