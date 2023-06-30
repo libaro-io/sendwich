@@ -2,7 +2,7 @@
     <div class="bg-white shadow sm:rounded-lg">
         <div class="px-4 py-5 sm:p-6">
             <h2>Runners</h2>
-            <table v-if="users.length" class="mt-5 table w-full">
+            <table v-if="userCount" class="mt-5 table w-full">
                 <tbody>
                 <tr v-for="(user, index) in users" class="text-sm">
                     <td class="text-sm">
@@ -61,6 +61,7 @@ export default {
         users: Array,
         runner:Object,
         simulated:Boolean,
+        userCount: Number,
     },
     methods: {
         shortenName(name, start, end) {

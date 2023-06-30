@@ -2,18 +2,18 @@
     <div class="bg-white shadow sm:rounded-md">
         <div class="px-4 py-5 sm:p-6">
             <h2>Menu</h2>
-            <div>
+            <div v-if="productCount">
                 <input type="text" placeholder="Search a product" class="input input-bordered input-info w-full"
                        v-model="search"/>
             </div>
-            <div v-if="products.length" class="mt-5 flex flex-col gap-2">
+            <div v-if="productCount" class="mt-5 flex flex-col gap-2">
                 <div v-for="(product , index) in products"
                      :key="index"
                      class="card card-compact bg-gray-50 shadow">
                     <product-card :product="product" @ordered="addProduct"></product-card>
                 </div>
             </div>
-            <a v-else-if="!products.length && !search" class="alert alert-success shadow-md hover:shadow-lg cursor-pointer" :href="route('store.index')">
+            <a v-else class="alert alert-success shadow-md hover:shadow-lg cursor-pointer" :href="route('store.index')">
                 <div>
                     <div>
                         <h3 class="font-bold">Nothing to feed yourself</h3>
@@ -44,6 +44,7 @@ export default {
     props: {
         products: Array,
         filters : Object,
+        productCount : Number,
     },
     mounted() {
         this.searchedProducts = this.products

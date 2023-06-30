@@ -66,6 +66,8 @@ class DashboardController extends Controller
             [
                 'user' => $user,
                 'users' => fn() => $deptAction->execute(),
+                'userCount' => $company->users()->count(),
+                'productCount' => $company->products()->count(),
                 'company' => $company,
                 'selectedRunner' => $selectedRunner,
                 'simulated' => $simulated,
