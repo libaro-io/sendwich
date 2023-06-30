@@ -213,7 +213,7 @@ class OrderController extends Controller
         $user = auth()->user();
         $company = $user->company;
 
-        $orders = $company->orders()->query()
+        $orders = $company->orders()
             ->with([
                 'deliverer',
                 'user',
