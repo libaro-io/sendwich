@@ -37,6 +37,14 @@ class Company extends Model
         return $this->hasMany(Store::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
     public function getProducts(Carbon $tresHoldDate = null)
     {
         $products = $this->products()

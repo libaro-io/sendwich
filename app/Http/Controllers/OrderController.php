@@ -210,7 +210,10 @@ class OrderController extends Controller
      */
     public function getAllOrdersByDateAndUser(): JsonResponse
     {
-        $orders = Order::query()
+        $user = auth()->user();
+        $company = $user->company;
+
+        $orders = $company->orders()->query()
             ->with([
                 'deliverer',
                 'user',
