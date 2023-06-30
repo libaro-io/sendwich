@@ -78,6 +78,7 @@
 import axios from "axios";
 import {reactive} from "vue";
 import {useToast} from "vue-toastification";
+import {Inertia} from "@inertiajs/inertia";
 
 const toast = useToast();
 
@@ -97,8 +98,8 @@ const submit = () => {
         axios.put('/api/store/add', {
             store: NewStore,
         }).then(response => {
-            toast.success(response.data.message);
-            this.$emit('updateStores');
+            // toast.success(response.data.message);
+            Inertia.get('/stores',{}, {});
         }).catch(error => {
             console.error(error);
         });
