@@ -21,9 +21,11 @@ const props = defineProps({
     formattedOrders : Object,
 });
 
+let interval;
+
 
 onMounted(()=>{
-    const interval = setInterval(() => {
+    interval = setInterval(() => {
           Inertia.get('/dashboard',{},
             {
                 preserveState:true,
