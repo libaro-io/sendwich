@@ -28,6 +28,10 @@ class RegisteredCompanyController extends Controller
         return Inertia::render('Auth/RegisterCompany');
     }
 
+    /**
+     * @param CreateCompany $request
+     * @return \Illuminate\Http\Response
+     */
     public function store(CreateCompany $request)
     {
         $company = new Company();
@@ -42,9 +46,14 @@ class RegisteredCompanyController extends Controller
         event(new Registered($user));
         Auth::login($user);
 
-        return redirect(RouteServiceProvider::HOME);
+        return Inertia::location(RouteServiceProvider::HOME);
     }
 
+    /**
+     * @param array $userdata
+     * @param Company $company
+     * @return mixed
+     */
     private function createUser(array $userdata, Company $company)
     {
         $user = User::create($userdata);

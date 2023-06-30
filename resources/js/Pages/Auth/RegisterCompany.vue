@@ -34,7 +34,7 @@ const submit = () => {
         <form @submit.prevent="submit">
             <BreezeTitle value="About your company or group"></BreezeTitle>
             <div>
-                <BreezeLabel for="companyName" value="Company or group name"/>
+                <BreezeLabel for="companyName" value="Name"/>
                 <BreezeInput id="companyName" type="text" class="mt-1 block w-full" v-model="form.companyName" required autofocus
                              autocomplete="companyName"/>
             </div>

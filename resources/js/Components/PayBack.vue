@@ -2,7 +2,7 @@
     <input type="checkbox" id="modal-payback" class="modal-toggle" v-bind:checked="isModalOpen"/>
     <div class="modal modal-bottom sm:modal-middle">
         <div class="modal-box">
-            <h3 v-if="user" class="font-bold text-lg">You current balance is € {{ user.dept }}</h3>
+            <h3 v-if="user" class="font-bold text-lg">Your current balance is € {{ user.dept }}</h3>
             <table>
                 <thead>
                 <tr>
@@ -45,6 +45,7 @@ const toast = useToast();
 export default {
     name: "PayBack",
     mounted() {
+        console.log('dept', this.user.dept)
         if (this.user.dept > 0) {
             this.buildPayBackList();
         } else {
