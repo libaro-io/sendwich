@@ -23,7 +23,7 @@ const props = defineProps({
 
 
 onMounted(()=>{
-    setInterval(() => {
+    const interval = setInterval(() => {
           Inertia.get('/dashboard',{},
             {
                 preserveState:true,
@@ -33,7 +33,7 @@ onMounted(()=>{
             })
     }, 60 * 1000);
 })
-onUnmounted(() => clearInterval(intervalId));
+onUnmounted(() => clearInterval(interval));
 
 
 
