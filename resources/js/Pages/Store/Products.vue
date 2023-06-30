@@ -90,8 +90,10 @@ resetNewProduct();
                                     </td>
                                     <td>
                                         <button class="btn btn-primary" @click="save(product)">Save</button>
-
-                                        <button class="btn btn-danger ml-2" @click="remove(product)">Delete</button>
+                                        <button class="btn btn-accent btn-circle ml-2" @click="remove(product)">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                                        </button>
+<!--                                        <button class="btn btn-danger ml-2" @click="remove(product)">Delete</button>-->
                                     </td>
                                 </tr>
 
