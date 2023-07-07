@@ -24,7 +24,7 @@ let newStore = ref(false);
                         <div class="grid grid-cols-1 gap-4">
                             <List title="Stores">
                                 <div class="">
-                                    <label for="create-store-modal" class="btn btn-success modal-button">Create new
+                                    <label for="create-store-modal" class="action-button modal-button">Create new
                                         Store</label>
                                 </div>
                                 <ListItem v-for="store in stores" :item="store" type="store"

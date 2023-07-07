@@ -57,12 +57,9 @@ const deleteUser = (user) => {
                     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                         <div class="grid grid-cols-1 gap-4">
                             <div class="bg-white shadow sm:rounded-lg">
-                                <div class="px-4 py-5 sm:p-6">
+                                <div class="px-4 py-5 sm:p-6 relative">
                                     <h1>{{ company.name }}</h1>
-                                    <label
-                                        for="create-modal"
-                                        class="btn btn-success modal-button mb-3"
-                                    >
+                                    <label for="create-modal" class="modal-button action-button shadow-md">
                                         Invite new user
                                     </label>
                                         <div class="flex justify-between items-center">
