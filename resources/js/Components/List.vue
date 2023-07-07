@@ -1,5 +1,5 @@
 <template>
-    <div class="card bg-white shadow-xl">
+    <div class="card bg-white shadow sm:rounded-lg">
         <div class="card-body">
             <h1>{{ title }}</h1>
             <slot></slot>

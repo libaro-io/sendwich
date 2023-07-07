@@ -58,16 +58,14 @@ const deleteUser = (user) => {
                         <div class="grid grid-cols-1 gap-4">
                             <div class="bg-white shadow sm:rounded-lg">
                                 <div class="px-4 py-5 sm:p-6">
-                                    <h2 class="text-3xl leading-6 font-medium text-gray-900 mb-5 font-bold">{{ company.name }}</h2>
-                                    <section class="ml-4">
+                                    <h1>{{ company.name }}</h1>
+                                    <label
+                                        for="create-modal"
+                                        class="btn btn-success modal-button mb-3"
+                                    >
+                                        Invite new user
+                                    </label>
                                         <div class="flex justify-between items-center">
-                                            <h3 class="text-xl mb-3 pl-2 align-middle">{{ users.length }} Users</h3>
-                                            <label
-                                                for="create-modal"
-                                                class="btn btn-success modal-button mb-3"
-                                            >
-                                                Invite new user
-                                            </label>
                                             <input type="checkbox" id="create-modal" class="modal-toggle" v-model="toggle"/>
                                             <label for="create-modal" class="modal modal-bottom sm:modal-middle cursor-pointer">
                                                 <label class="modal-box relative" for="">
@@ -106,7 +104,7 @@ const deleteUser = (user) => {
                                                     <th>Email</th>
                                                     <th>Edit stores</th>
                                                     <th>Edit company</th>
-                                                    <th></th>
+                                                    <th>Remove</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -130,7 +128,6 @@ const deleteUser = (user) => {
                                                 </tbody>
                                             </table>
                                         </div>
-                                    </section>
                                 </div>
                             </div>
                         </div>

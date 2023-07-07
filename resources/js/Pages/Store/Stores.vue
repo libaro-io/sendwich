@@ -17,16 +17,21 @@ let newStore = ref(false);
 <template>
     <Head title="Stores"/>
     <BreezeAuthenticatedLayout>
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="grid grid-cols-1 gap-4">
-                    <List title="Stores">
-                        <div class="">
-                            <label for="create-store-modal" class="btn btn-success modal-button">Create new
-                                Store</label>
+        <div class="min-h-screen">
+            <div class="font-sans text-gray-900 antialiased">
+                <div class="py-12">
+                    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                        <div class="grid grid-cols-1 gap-4">
+                            <List title="Stores">
+                                <div class="">
+                                    <label for="create-store-modal" class="btn btn-success modal-button">Create new
+                                        Store</label>
+                                </div>
+                                <ListItem v-for="store in stores" :item="store" type="store"
+                                          :editable="true"></ListItem>
+                            </List>
                         </div>
-                        <ListItem v-for="store in stores" :item="store" type="store" :editable="true"></ListItem>
-                    </List>
+                    </div>
                 </div>
             </div>
         </div>
