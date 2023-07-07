@@ -131,6 +131,7 @@ const showingNavigationDropdown = ref(false);
                 <FlashMessages />
                 <slot />
             </main>
+            <Footer></Footer>
         </div>
     </div>
 </template>

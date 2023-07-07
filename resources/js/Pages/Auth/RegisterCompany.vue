@@ -63,6 +63,12 @@ const submit = () => {
                              v-model="form.password_confirmation" required autocomplete="new-password"/>
             </div>
 
+            <div class="mt-4">
+                <BreezeLabel for="password" :value="'I accept the terms and conditions'"/>
+                <BreezeInput id="terms" type="checkbox" class="mt-1 block" v-model="form.terms" required
+                             autocomplete="new-password"/>
+            </div>
+
             <div class="flex items-center justify-end mt-4">
                 <Link :href="route('login')" class="underline text-sm text-gray-600 hover:text-gray-900">
                     Already registered?
