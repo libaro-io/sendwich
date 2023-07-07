@@ -7,6 +7,8 @@ import BreezeNavLink from '@/Components/NavLink.vue';
 import BreezeResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import { Link } from '@inertiajs/inertia-vue3';
 import FlashMessages from "@/Components/FlashMessages.vue";
+import Footer from "@/Components/frontend/Footer.vue";
+
 
 const showingNavigationDropdown = ref(false);
 </script>

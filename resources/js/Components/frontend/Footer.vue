@@ -1,10 +1,10 @@
 <template>
-    <footer class="footer p-10 bg-gray-700 text-white rounded-xl">
+    <footer class="footer p-10 bg-transparent/20 text-white">
         <div>
             <img src="/images/logo_w.png" class="w-48" alt="">
         </div>
         <div class="">
-            <ul>
+            <ul v-if="!$page.props.auth.user">
                 <li><p><a :href="route('home')">Home</a></p></li>
                 <li v-if="$page.props.auth.user"><p><a :href="route('dashboard')" class="">Dashboard</a></p></li>
                 <li v-else><p><a :href="route('login')" class="">Login</a></p></li>
