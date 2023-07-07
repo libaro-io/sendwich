@@ -58,7 +58,7 @@ const deleteUser = (user) => {
                         <div class="grid grid-cols-1 gap-4">
                             <div class="bg-white shadow sm:rounded-lg">
                                 <div class="px-4 py-5 sm:p-6 relative">
-                                    <h1>{{ company.name }}</h1>
+                                    <h1>Users</h1>
                                     <label for="create-modal" class="modal-button action-button shadow-md">
                                         Invite new user
                                     </label>
