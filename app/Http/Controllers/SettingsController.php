@@ -18,4 +18,18 @@ class SettingsController extends Controller
                 'company' => $company,
             ]);
     }
+
+    public function update(Request $request)
+    {
+        $user = auth()->user();
+        $company = $user->company;
+
+
+        $company = $request->get('company');
+        return Inertia::render('Settings',
+            [
+                'user' => $user,
+                'company' => $company,
+            ]);
+    }
 }
