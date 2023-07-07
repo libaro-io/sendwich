@@ -48,6 +48,9 @@ const showingNavigationDropdown = ref(false);
                                 <BreezeNavLink v-if="can('edit-company')" :href="route('company.show')" :active="route().current('company.show')">
                                     Company
                                 </BreezeNavLink>
+                                <BreezeNavLink v-if="can('edit-company')" :href="route('settings.show')" :active="route().current('settings.show')">
+                                    Settings
+                                </BreezeNavLink>
                             </div>
                         </div>
 
@@ -103,6 +106,9 @@ const showingNavigationDropdown = ref(false);
                         <BreezeResponsiveNavLink v-if="can('edit-company')" :href="route('company.show')" :active="route().current('company.show')">
                             Company
                         </BreezeResponsiveNavLink>
+                        <BreezeNavLink v-if="can('edit-company')" :href="route('settings.show')" :active="route().current('settings.show')">
+                            Settings
+                        </BreezeNavLink>
                     </div>
 
                     <!-- Responsive Settings Options -->

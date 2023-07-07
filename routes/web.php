@@ -6,6 +6,7 @@ use App\Http\Controllers\DisplayController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LegalController;
+use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\StoreController;
 use Illuminate\Support\Facades\Route;
 
@@ -22,6 +23,7 @@ Route::get('/store/{id}', [StoreController::class, 'show'])->middleware(['auth',
 
 //companysettings
 Route::get('/company',  [CompanyController::class , 'show'])->middleware(['auth', 'verified','can:edit-company'])->name('company.show');
+Route::get('/settings',  [SettingsController::class , 'show'])->middleware(['auth', 'verified','can:edit-company'])->name('settings.show');
 Route::post('/user/invite',  [CompanyController::class , 'inviteUser'])->middleware(['auth', 'verified','can:edit-company'])->name('invite');
 Route::post('/user/permission',  [CompanyController::class , 'editUserPermission'])->middleware(['auth', 'verified','can:edit-company'])->name('user.permissions');
 Route::post('/user/delete',  [CompanyController::class , 'deleteUser'])->middleware(['auth', 'verified','can:edit-company'])->name('user.delete');
