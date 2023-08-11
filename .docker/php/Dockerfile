@@ -1,16 +1,15 @@
-FROM node:latest AS node
-FROM php:8-apache
+FROM node:16.19 AS node
+FROM php:8.0-apache
+
+ARG USER=dev
+
+ENV APACHE_DOCUMENT_ROOT=/var/www/public
 
 # Install nodejs
 COPY --from=node /usr/local/lib/node_modules /usr/local/lib/node_modules
 COPY --from=node /usr/local/bin/node /usr/local/bin/node
 RUN ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm
 RUN npm install -g npx
-
-ARG USER=dev
-ARG SSH_PRIVATE_KEY
-
-ENV APACHE_DOCUMENT_ROOT=/var/www/public
 
 # Set document root
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
@@ -42,22 +41,26 @@ RUN pecl install imagick
 RUN docker-php-ext-enable imagick
 
 # Install xdebug
-RUN pecl install xdebug && docker-php-ext-enable xdebug
+RUN pecl install xdebug
+
+# Instlal redis
+RUN pecl install redis
+RUN docker-php-ext-enable redis
 
 # Get latest Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Add scripts directory
+COPY .docker/php/scripts /home/$USER/scripts
+RUN mkdir /usr/local/etc/php/disabled
+RUN chmod -R 777 /usr/local/etc/php
+# Override files
+COPY .docker/php/files/usr/local/etc/php/disabled/docker-php-ext-xdebug.ini /usr/local/etc/php/disabled/docker-php-ext-xdebug.ini
 
 # Create system user to run Composer and Artisan Commands
 RUN useradd -G www-data,root -d /home/$USER $USER
 RUN mkdir -p /home/$USER/.composer && \
     chown -R $USER:$USER /home/$USER
-
-# Add ssh private key into container
-RUN mkdir /home/$USER/.ssh
-RUN echo "${SSH_PRIVATE_KEY}" > /home/$USER/.ssh/id_rsa
-RUN chmod 600 /home/$USER/.ssh/id_rsa
-RUN ssh-keyscan bitbucket.org >> /home/$USER/.ssh/known_hosts
-RUN chown -R $USER: /home/$USER
 
 # Set working directory
 WORKDIR /var/www

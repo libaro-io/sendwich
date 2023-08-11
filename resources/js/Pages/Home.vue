@@ -2,10 +2,10 @@
 
 import Hero from "@/Components/frontend/Hero.vue";
 import Navigation from '@/Components/frontend/Navigation.vue';
-import Features from '@/Components/frontend/Features.vue';
-import Store from '@/Components/frontend/Store.vue';
+import WeFeelYourPain from '@/Components/frontend/WeFeelYourPain.vue';
+import Steps from '@/Components/frontend/Steps.vue';
 import Footer from "@/Components/frontend/Footer.vue";
-import Company from "@/Components/frontend/Company.vue";
+import Benefits from "@/Components/frontend/Benefits.vue";
 
 const props = defineProps({});
 
@@ -21,8 +21,8 @@ export default {
 <template>
     <Navigation></Navigation>
     <Hero></Hero>
-    <Features></Features>
-    <Store></Store>
-    <Company></Company>
+    <WeFeelYourPain></WeFeelYourPain>
+    <Benefits></Benefits>
+    <Steps></Steps>
     <Footer></Footer>
 </template>
