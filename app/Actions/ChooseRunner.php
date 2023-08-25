@@ -3,10 +3,7 @@
 
 namespace App\Actions;
 
-use App\Actions\ChooseRunner as ChooseRandomVictimAlias;
-use App\Http\Controllers\OrderController;
-use App\Http\Controllers\UserController;
-use App\Mail\InformVictimMail;
+use App\Mail\SelectedAsRunner;
 use App\Models\Company;
 use App\Models\Order;
 use App\Models\User;
@@ -15,20 +12,11 @@ use Illuminate\Support\Facades\Mail;
 
 final class ChooseRunner
 {
-    private Company $company;
-    private ?User $user;
-    private bool $addTomorrow;
-
-    /**
-     * @param Company $company
-     * @param $user
-     * @param $addTomorrow
-     */
-    public function __construct(Company $company, ?User $user = null, bool $addTomorrow = false)
-    {
-        $this->setCompany($company);
-        $this->setUser($user);
-        $this->addTomorrow = $addTomorrow;
+    public function __construct(
+        private Company $company,
+        private ?User $user = null,
+        private bool $addTomorrow = false
+    ) {
     }
 
     public function execute(): ?User
@@ -38,6 +26,7 @@ final class ChooseRunner
         } else {
             $victim = $this->getVictim();
         }
+
         $orders = Order::getOrders($this->company, Carbon::now(), $this->addTomorrow)->get();
         if ($orders->count() > 0) {
             $this->setOrdersAppointed($orders, $victim);
@@ -69,36 +58,9 @@ final class ChooseRunner
         return $users->first();
     }
 
-    private function getRandomNumber()
-    {
-        return 1 + (rand(1, 99) / 100);
-    }
-
-
-    /**
-     * @param $company
-     * @return $this
-     */
-    private function setCompany($company)
-    {
-        $this->company = $company;
-
-        return $this;
-    }
-
-    /**
-     * @param $user
-     * @return $this
-     */
-    private function setUser(?User $user)
-    {
-        $this->user = $user;
-
-        return $this;
-    }
 
     private function sendMission($victim, $orders)
     {
-        Mail::to($victim->email)->send(new InformVictimMail($orders, $victim));
+        Mail::to($victim->email)->send(new SelectedAsRunner($victim, $orders));
     }
 }

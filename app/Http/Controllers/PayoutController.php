@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Actions\UsersWithDept;
-use App\Mail\InformPaymentPaidMail;
 use App\Mail\InformPaymentReceivedMail;
-use App\Mail\InformVictimMail;
 use App\Models\Order;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -59,6 +57,5 @@ class PayoutController extends Controller
         $payer = User::find($paid_by);
 
         Mail::to($receiver->email)->cc($payer->email)->send(new InformPaymentReceivedMail($receiver, $payer, $balance));
-//        Mail::to($payer->email)->send(new InformPaymentPaidMail($receiver, $payer, $balance));
     }
 }

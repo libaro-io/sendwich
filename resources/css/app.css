@@ -63,4 +63,3 @@ h3 {
 .action-button{
     @apply absolute right-0 top-0 rounded-tr-lg btn btn-success mb-3 shadow-md;
 }
-

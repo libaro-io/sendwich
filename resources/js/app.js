@@ -14,13 +14,23 @@ import "vue-toastification/dist/index.css";
 import { library } from '@fortawesome/fontawesome-svg-core';
 
 /* import specific icons */
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import {
+    faTrash,
+    faBasketShopping,
+    faShield,
+    faClock,
+} from '@fortawesome/free-solid-svg-icons';
 
 /* Import permissions */
 import LaravelPermissionToVueJS from 'laravel-permission-to-vuejs'
 
 /* add icons to the library */
-library.add(faTrash);
+library.add(
+    faTrash,
+    faBasketShopping,
+    faShield,
+    faClock,
+);
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 const emitter = mitt()

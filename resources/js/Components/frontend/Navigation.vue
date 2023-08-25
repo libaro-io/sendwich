@@ -1,45 +1,76 @@
-<template>
-    <div class="navbar">
-        <div class="navbar-start">
-            <div class="dropdown dark:text-pink-300">
-                <label tabindex="0" class="btn btn-ghost lg:hidden">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                         stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M4 6h16M4 12h8m-8 6h16"/>
-                    </svg>
-                </label>
-                <ul tabindex="0"
-                    class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52 dark:text-white">
-                    <a v-if="$page.props.auth.user" :href="route('dashboard')" class="btn btn-success my-2">Dashboard</a>
-                    <a v-else :href="route('login')" class="btn btn-success my-2 hover:bg-success/90">Login</a>
-                    <a :href="route('company.register')" class="btn btn-info hover:bg-info/90">Get started</a>
-
-                </ul>
-            </div>
-            <a :href="route('home')" class="normal-case text-xl"><img class="w-48" src="/images/logo_w.png" alt=""></a>
-        </div>
-        <div class="navbar-center hidden lg:flex">
-            <ul class="menu menu-horizontal px-1 dark:text-white">
-            </ul>
-        </div>
-        <div class="navbar-end invisible md:visible">
-            <div v-if="$page.props.auth.user" class="relative group">
-                <div class="absolute inset-0 bg-gradient-to-tr from-success to-success/90 rounded-3xl blur opacity-75 group-hover:opacity-100 transition duration-200 animate-tilt"></div>
-                <a :href="route('dashboard')" class="btn btn-success mr-2 relative">Dashboard</a>
-            </div>
-            <div v-else class="relative group">
-                <div class="absolute inset-0 bg-gradient-to-tr from-success to-success/90 rounded-3xl blur opacity-75 group-hover:opacity-100 transition duration-200 animate-tilt"></div>
-                <a :href="route('login')" class="btn btn-success mr-2 hover:bg-success/90 relative">Login</a>
-            </div>
-            <div class="relative group">
-                <div class="absolute inset-0 bg-gradient-to-tr from-info to-info/90 rounded-3xl blur opacity-75 group-hover:opacity-100 transition duration-200 animate-tilt"></div>
-                <a :href="route('company.register')" class="btn btn-info hover:bg-info/90 relative">Get started</a>
-            </div>
-        </div>
-    </div>
-</template>
-
 <script setup>
+import { ref } from 'vue';
 
+const isMobileMenuOpen = ref(false);
+
+const openMobileMenu = () => {
+    isMobileMenuOpen.value = true;
+}
+
+const closeMobileMenu = () => {
+    isMobileMenuOpen.value = false;
+}
 </script>
+
+<template>
+    <header class="absolute inset-x-0 top-0 z-50">
+        <nav class="flex items-center justify-between p-6 lg:px-8" aria-label="Global">
+            <div class="flex lg:flex-1">
+                <a href="#" class="-m-1.5 p-1.5">
+                    <span class="sr-only">Sendwich</span>
+                    <img class="h-12 w-auto" src="/images/logo_w.png" alt="">
+                </a>
+            </div>
+            <div
+                @click="openMobileMenu"
+                class="flex lg:hidden"
+            >
+                <button type="button" class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-400">
+                    <span class="sr-only">Open main menu</span>
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                    </svg>
+                </button>
+            </div>
+            <div class="hidden lg:flex lg:gap-x-12 lg:items-center ">
+            </div>
+            <div class="hidden lg:flex lg:flex-1 lg:justify-end lg:items-center gap-x-6">
+                <a :href="route('company.register')"
+                   class="rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400">
+                    Get started for free
+                </a>
+                <a :href="route('login')" class="text-sm font-semibold leading-6 text-white">Log in <span aria-hidden="true">&rarr;</span></a>
+            </div>
+        </nav>
+
+        <!-- Mobile menu, show/hide based on menu open state. -->
+        <div v-if="isMobileMenuOpen" class="lg:hidden" role="dialog" aria-modal="true">
+            <!-- Background backdrop, show/hide based on slide-over state. -->
+            <div class="fixed inset-0 z-50"></div>
+            <div class="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-gray-900 px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-white/10">
+                <div class="flex items-center justify-between">
+                    <a href="#" class="-m-1.5 p-1.5">
+                        <span class="sr-only">Sendwich</span>
+                        <img class="h-12 w-auto" src="/images/logo_w.png" alt="">
+                    </a>
+                    <button @click="closeMobileMenu" type="button" class="-m-2.5 rounded-md p-2.5 text-gray-400">
+                        <span class="sr-only">Close menu</span>
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="mt-6 flow-root">
+                    <div class="-my-6 divide-y divide-gray-500/25">
+                        <div class="space-y-2 py-6">
+                        </div>
+                        <div class="py-6">
+                            <a :href="route('company.register')" class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-white hover:bg-gray-800">Get started</a>
+                            <a :href="route('login')" class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-white hover:bg-gray-800">Log in</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+</template>
