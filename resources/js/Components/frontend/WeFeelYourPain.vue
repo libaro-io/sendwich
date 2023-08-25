@@ -76,7 +76,7 @@ const messages = [
                     </div>
                     <img src="https://images.unsplash.com/photo-1565312920580-4e604d7c3ee6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8fHx8fHx8MTY4NTA0MTA0NA&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1080"
                          alt="Product screenshot"
-                         class="hidden lg:block relative -z-20 min-w-h max-w-full rounded-xl shadow-xl ring lg:ring-4 ring-white/10 lg:row-span-4 lg:h-[64rem] lg:max-w-none"
+                         class="hidden lg:block relative -z-20 min-w-h max-w-full rounded-xl shadow-xl lg:row-span-4 lg:h-[64rem] lg:max-w-none"
                     >
                     <div class="max-w-xl lg:row-start-3 lg:mt-10 lg:max-w-md lg:border-t lg:border-white/10 lg:pt-10">
                         <dl class="max-w-xl space-y-8 text-base leading-7 text-gray-300 lg:max-w-none">

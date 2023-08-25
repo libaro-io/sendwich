@@ -42,17 +42,17 @@ import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
                         </div>
                     </div>
 
-                    <img src="/images/stores.png" alt="Product screenshot" class="w-[48rem] hidden lg:block max-w-none rounded-xl shadow-xl ring-1 ring-white/10 sm:w-[57rem] md:-ml-4 lg:-ml-0" width="2432" height="1442">
+                    <img src="/images/lunch.jpg" alt="Product screenshot" class="w-[48rem] hidden lg:block max-w-none rounded-xl shadow-xl sm:w-[57rem] md:-ml-4 lg:-ml-0">
                 </div>
 
                 <div class="relative">
                     <div class="px-6 py-16 sm:px-6 sm:py-32 lg:px-8">
                         <div class="mx-auto max-w-2xl text-center">
-                            <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">Start using Sandwich today</h2>
+                            <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">Start using Sendwich today</h2>
                             <p class="mx-auto mt-6 max-w-xl text-lg leading-8 text-gray-300">And stop wasting valuable time on getting lunch every day.</p>
                             <div class="mt-10 flex items-center justify-center gap-x-6">
                                 <a :href="route('company.register')" class="rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400">
-                                    Get started for free</a>
+                                    et started for free</a>
                             </div>
                         </div>
                     </div>
