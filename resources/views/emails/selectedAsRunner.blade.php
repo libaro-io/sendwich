@@ -11,5 +11,5 @@
     | | | **Total** | €{{ number_format($orders->sum('total'), 2) }} |
 </x-mail::table>
 <br />
-Hurry up! We're are starving here.
+Hurry up! We are starving here.
 </x-mail::message>
