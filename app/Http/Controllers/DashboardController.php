@@ -33,10 +33,12 @@ class DashboardController extends Controller
         $search = $request->input('search');
         $deliveryMoment = $orderController->getDeliveryMoment();
 
-        $products = $company
-            ->products()
-            ->with(['orders', 'options', 'store'])
-            ->when($search, fn($query) => $query->where('name', 'like', '%' . Str::lower($search) . '%'));
+//        $products = $company
+//            ->products()
+//            ->with(['orders', 'options', 'store'])
+//            ->when($search, fn($query) => $query->where('name', 'like', '%' . Str::lower($search) . '%'));
+
+        $stores = $company->stores()->select('name', 'id')->withCount('products')->with(['products.options'])->get();
 
         $orders = Order::getOrders($company, $this->getDate());
 
@@ -71,12 +73,13 @@ class DashboardController extends Controller
                 'company' => $company,
                 'selectedRunner' => $selectedRunner,
                 'simulated' => $simulated,
-                'products' => fn() => $products->get(),
+//                'products' => fn() => $products->get(),
                 'deliveryMoment' => $deliveryMoment,
                 'orders' => $orders->get(),
                 'filters' => $request->only(['search']),
                 'formattedOrders' => $formattedOrders,
                 'totalPrice' => $orders->sum('total'),
+                'stores' => $stores
             ]);
     }
 

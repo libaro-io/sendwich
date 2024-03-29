@@ -4,7 +4,7 @@
         <div class="mt-3 sm:mt-0 ">
             <div class="text-sm font-medium text-gray-900">{{ product.name }}</div>
             <div class="mt-1 sm:flex sm:items-center ">
-                <p class="text-primary font-bold">{{ product.store.name }}</p>
+<!--                <p class="text-primary font-bold">{{ product.store.name }}</p>-->
             </div>
         </div>
         <div class="card-actions justify-end mt-2">
