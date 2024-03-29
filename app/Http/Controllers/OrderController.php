@@ -221,6 +221,7 @@ class OrderController extends Controller
                 ]
             )
             ->orderBy('date','DESC')
+            ->where('date' , '>', Carbon::now()->subMonth())
             ->get()
             ->groupBy([function($order) {
                 return Carbon::parse($order->date)->format('Ymd');
