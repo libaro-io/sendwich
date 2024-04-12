@@ -5,17 +5,19 @@
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "require": {
-        "php": "^8.0.2",
+        "php": "^8.2",
         "ahmedsaoud31/laravel-permission-to-vuejs": "dev-master",
+        "filament/filament": "^3.2",
         "guzzlehttp/guzzle": "^7.2",
-        "inertiajs/inertia-laravel": "^0.5.4",
-        "laravel/framework": "^9.19",
-        "laravel/sanctum": "^2.8",
+        "inertiajs/inertia-laravel": "^1",
+        "laravel/framework": "^10",
+        "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.7",
         "spatie/laravel-permission": "^5.10",
         "tightenco/ziggy": "^1.0"
     },
     "require-dev": {
+        "roave/security-advisories": "dev-latest",
         "barryvdh/laravel-debugbar": "^3.6",
         "fakerphp/faker": "^1.9.1",
         "laravel/breeze": "^1.10",
@@ -23,7 +25,7 @@
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^6.1",
         "phpunit/phpunit": "^9.5.10",
-        "spatie/laravel-ignition": "^1.0"
+        "spatie/laravel-ignition": "^2"
     },
     "autoload": {
         "psr-4": {
@@ -40,7 +42,8 @@
     "scripts": {
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover --ansi"
+            "@php artisan package:discover --ansi",
+            "@php artisan filament:upgrade"
         ],
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
