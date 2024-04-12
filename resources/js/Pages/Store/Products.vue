@@ -98,10 +98,12 @@ resetNewProduct();
                                 </tr>
 
                                 <tr>
-                                    <th><input type="text" placeholder="Name for new product" v-model="newProduct.name"
-                                               class="input w-full max-w-xs"/></th>
+                                    <th>
+                                        <input type="text" placeholder="Name for new product" v-model="newProduct.name"
+                                               class="input  input-bordered b w-full max-w-xs"/>
+                                    </th>
                                     <td><input type="text" placeholder="Description for new product"
-                                               v-model="newProduct.description" class="input w-full max-w-xs"/>
+                                               v-model="newProduct.description" class="input  input-bordered w-full max-w-xs"/>
                                     </td>
                                     <td>
                                         <div class="form-control">
