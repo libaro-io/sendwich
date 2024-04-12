@@ -5,6 +5,7 @@ namespace App\Actions;
 use App\Models\Company;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
 class UsersWithDept
@@ -27,20 +28,24 @@ class UsersWithDept
     public function execute()
     {
         $company = $this->getCompany();
-        $query = User::query()->where('company_id', '=', $company->id)->where(function ($query) {
-            $query->has('orders')->orHas('payments');
-        })->with(['orders' => function ($query) {
-            $query->whereNotNull('paid_by');
-            if ($this->date) {
-                $query->where('date', '>=', Carbon::now()->startOfDay());
-            }
-        }, 'payments'])
+        $query = User::query()
+            ->where('company_id', '=', $company->id)
+            ->where(function ($query) {
+                $query->has('orders')->orHas('payments');
+            })
+            ->withSum('payments AS payments_sum', 'total')
             ->when($this->withOrdersForToday, function ($q) {
                 $q->whereHas('orders', function ($q2) {
                     $q2->where('date', '>=', Carbon::now()->startOfDay());
                     $q2->whereNull('paid_by');
                 });
-            });
+            })
+            ->withSum(['orders AS orders_dept' => function (Builder $query) {
+                $query->whereNotNull('paid_by');
+                if ($this->date) {
+                    $query->where('date', '>=', Carbon::now()->startOfDay());
+                }
+            }], 'total');
 
         if ($this->user !== null) {
             $query->where('users.id', $this->user->id);
@@ -53,8 +58,6 @@ class UsersWithDept
     public function calculateDept()
     {
         foreach ($this->users as $user) {
-            $user->orders_dept = $user->orders->sum('total');
-            $user->payments_sum = $user->payments->sum('total');
             $user->dept = round($user->payments_sum - $user->orders_dept, 2);
         }
 
