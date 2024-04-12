@@ -46,10 +46,10 @@ const save = () => {
                                                 <input type="time" required
                                                        v-model="form.time"
                                                        placeholder="time"
-                                                       class="input input-bordered max-w-2xl mt-6"
+                                                       class="input input-bordered max-w-2xl mt-10"
                                                 />
                                                 <div class="chat chat-start col-span-4 -mt-4">
-                                                    <div class="chat-bubble chat-bubble-primary text-primary-content">The selected runner will be notified by email and assigned to collect orders placed before a set time. Orders placed later will remain unassigned or can be manually claimed by a runner until the next day’s scheduled run.</div>
+                                                    <div class="chat-bubble chat-bubble-primary text-white">The selected runner will be notified by email and assigned to collect orders placed before a set time. Orders placed later will remain unassigned or can be manually claimed by a runner until the next day’s scheduled run.</div>
                                                 </div>
 
                                                 <div v-if="form.errors.time">{{ form.errors.time }}</div>
