@@ -37,9 +37,8 @@ const submit = () => {
     <BreezeGuestLayout>
         <Head title="Register"/>
         <BreezeValidationErrors class="mb-4"/>
-        <BreezeTitle :value="companyName"></BreezeTitle>
-        <p> Hallo , {{ name }} </p>
-        <p> Vul hieronder je wachtwoord in en je kunt bestellen. </p>
+        <BreezeTitle :value="'Set Up Your Account'"></BreezeTitle>
+        <p>You’ve been invited to join <strong>{{ companyName }}</strong>.<br/><br/>Let’s get you set up so you can start ordering your favorite meals with your team!<br/><br/>Please create a password to secure your account and access all the features of Sendwich.</p>
         <form @submit.prevent="submit">
             <div class="mt-4">
                 <BreezeLabel for="password" value="Password"/>
@@ -55,7 +54,7 @@ const submit = () => {
 
             <div class="flex items-center justify-end mt-4">
                 <Link :href="route('login')" class="underline text-sm text-gray-600 hover:text-gray-900">
-                    Al geregistreerd?
+                    Already registered?
                 </Link>
                 <BreezeLabel/>
                 <BreezeButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
