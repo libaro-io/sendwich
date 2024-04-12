@@ -13,7 +13,7 @@ import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
                             <dl class="mt-10 max-w-xl space-y-8 text-base leading-7 text-gray-300 lg:max-w-none">
                                 <div class="relative pl-12">
                                     <div class="absolute left-1 top-1 h-8 w-8 rounded-full flex justify-center align-middle bg-white/10">
-                                        <p class="text-center text-2xl h-5 w-5 text-white m-0">3</p>
+                                        <p class="text-center text-2xl h-5 w-5 text-white m-0">1</p>
                                     </div>
                                     <dt class="inline font-semibold text-white">
                                         Sign up.
@@ -22,7 +22,7 @@ import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
                                 </div>
                                 <div class="relative pl-12">
                                     <div class="absolute left-1 top-1 h-8 w-8 rounded-full flex justify-center align-middle bg-white/10">
-                                        <p class="text-center text-2xl h-5 w-5 text-white m-0">3</p>
+                                        <p class="text-center text-2xl h-5 w-5 text-white m-0">2</p>
                                     </div>
                                     <dt class="inline font-semibold text-white">
                                         Add your store.
