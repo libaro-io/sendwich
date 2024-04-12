@@ -8,6 +8,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class InviteNewVictim extends Mailable
 {
@@ -38,10 +39,13 @@ class InviteNewVictim extends Mailable
      */
     public function build()
     {
+        Log::info('sending invitation mail');
 
-
-        return $this->subject("You're Invited to Join {$this->company->name} on Sendwich! ")
+        $mail =  $this->subject("You're Invited to Join {$this->company->name} on Sendwich! ")
             ->view('emails.invitationMail');
 
+        Log::info('invitation mail sent');
+        
+        return $mail;
     }
 }
