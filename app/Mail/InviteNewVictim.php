@@ -38,7 +38,9 @@ class InviteNewVictim extends Mailable
      */
     public function build()
     {
-        return $this->subject("You're invited to Sendwich by " .$this->company->name)
+
+
+        return $this->subject("You're Invited to Join {$this->company->name} on Sendwich! ")
             ->view('emails.invitationMail');
 
     }
