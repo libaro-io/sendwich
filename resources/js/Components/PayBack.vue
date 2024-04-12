@@ -2,7 +2,12 @@
     <input type="checkbox" id="modal-payback" class="modal-toggle" v-bind:checked="isModalOpen"/>
     <div class="modal modal-bottom sm:modal-middle">
         <div class="modal-box">
-            <h3 v-if="user" class="font-bold text-lg">Your current balance is {{ formatMoney(user.dept) }}</h3>
+            <div class="flex justify-between items-center mb-4">
+                <h3 v-if="user" class="font-bold text-lg m-0">Your current balance is {{ formatMoney(user.dept) }}</h3>
+                <label for="modal-payback" class="hover:cursor-pointer">
+                    <i class="fas fa-times"></i>
+                </label>
+            </div>
             <table>
                 <thead>
                 <tr>
@@ -23,7 +28,9 @@
             </table>
             <div class="alert alert-info shadow-lg text-white">
                 <div>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
                     <span>Clicking the "Everything is paid" button will edit the  <br> Sendwich Balance and send an email to all users involved.</span>
                 </div>
             </div>
