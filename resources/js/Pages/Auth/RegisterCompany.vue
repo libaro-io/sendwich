@@ -6,6 +6,7 @@ import BreezeLabel from '@/Components/Label.vue';
 import BreezeTitle from '@/Components/Title.vue';
 import BreezeValidationErrors from '@/Components/ValidationErrors.vue';
 import {Head, Link, useForm} from '@inertiajs/inertia-vue3';
+import Label from "@/Components/Label.vue";
 
 
 const form = useForm({
@@ -63,10 +64,12 @@ const submit = () => {
                              v-model="form.password_confirmation" required autocomplete="new-password"/>
             </div>
 
-            <div class="mt-4">
-                <BreezeLabel for="password" :value="'I accept the terms and conditions'"/>
-                <BreezeInput id="terms" type="checkbox" class="mt-1 block" v-model="form.terms" required
+            <div class="mt-4 flex items-center">
+                <BreezeInput id="terms" type="checkbox" class="block mr-2" v-model="form.terms" required
                              autocomplete="new-password"/>
+                <label for="terms" class="block font-medium text-sm text-gray-700">
+                    I accept the <a :href="route('legal.general')" target="_blank" class="underline">terms and conditions</a>
+                </label>
             </div>
 
             <div class="flex items-center justify-end mt-4">
