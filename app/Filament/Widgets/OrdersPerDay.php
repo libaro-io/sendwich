@@ -17,8 +17,8 @@ class OrdersPerDay extends ChartWidget
 
     protected function getData(): array
     {
-        $startDate = Carbon::parse($this->filters['startDate']) ?? now()->startOfMonth();
-        $endDate = Carbon::parse($this->filters['endDate']) ?? now()->endOfMonth();
+        $startDate = isset($this->filters['startDate']) ? Carbon::parse($this->filters['startDate']) : now()->startOfMonth();
+        $endDate = isset($this->filters['endDate']) ? Carbon::parse($this->filters['endDate']) : now()->endOfMonth();
 
         $data = Trend::model(Order::class)
             ->dateAlias('period')

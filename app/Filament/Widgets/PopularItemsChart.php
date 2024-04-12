@@ -15,10 +15,8 @@ class PopularItemsChart extends ChartWidget
 
     protected function getData(): array
     {
-        $startDate = Carbon::parse($this->filters['startDate']) ?? now()->startOfMonth();
-        $endDate = Carbon::parse($this->filters['endDate']) ?? now()->endOfMonth();
-
-//        dd($startDate, $endDate);
+        $startDate = isset($this->filters['startDate']) ? Carbon::parse($this->filters['startDate']) : now()->startOfMonth();
+        $endDate = isset($this->filters['endDate']) ? Carbon::parse($this->filters['endDate']) : now()->endOfMonth();
 
         $popularItems = Order::query()
             ->join('products', 'products.id', '=', 'orders.product_id')
