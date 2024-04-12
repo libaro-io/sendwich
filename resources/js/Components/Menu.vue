@@ -10,6 +10,7 @@
                         <div class="flex flex-end flex-row justify-between sm:flex sm:items-start">
                             <div class="mt-3 sm:mt-0 ">
                                 <div class="text-sm font-medium text-gray-900">{{ store.name }}</div>
+                                <p class="mt-1" v-if="store.order_count">Orders: {{ store.order_count }}</p>
                                 <div class="mt-1 sm:flex sm:items-center ">
                                     <!--                <p class="text-primary font-bold">{{ product.store.ordercount }}</p>-->
                                 </div>
