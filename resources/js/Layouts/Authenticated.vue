@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import {onBeforeMount, onMounted, ref, watch} from 'vue';
 import BreezeApplicationLogo from '@/Components/ApplicationLogo.vue';
 import BreezeDropdown from '@/Components/Dropdown.vue';
 import BreezeDropdownLink from '@/Components/DropdownLink.vue';
@@ -8,7 +8,16 @@ import BreezeResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import { Link } from '@inertiajs/inertia-vue3';
 import FlashMessages from "@/Components/FlashMessages.vue";
 import Footer from "@/Components/frontend/Footer.vue";
+import { usePage } from '@inertiajs/inertia-vue3';
 
+const page = usePage();
+
+watch(page.props, (value) => {
+    window.Laravel.jsPermissions = JSON.parse(value.js_permissions ?? null);
+}, {
+    deep: true,
+    immediate: true,
+});
 
 const showingNavigationDropdown = ref(false);
 </script>
