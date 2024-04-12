@@ -28,8 +28,8 @@ Route::post('/user/permission',  [CompanyController::class , 'editUserPermission
 Route::post('/user/delete',  [CompanyController::class , 'deleteUser'])->middleware(['auth', 'verified','can:edit-company'])->name('user.delete');
 
 
-Route::get('/company/settings',  [CompanySettingsController::class , 'settings'])->middleware(['auth', 'verified','can:edit-company'])->name('company.settings.get');
-Route::post('/company/settings',  [CompanySettingsController::class , 'save'])->middleware(['auth', 'verified','can:edit-company'])->name('company.settings.save');
+Route::get('/company/settings',  [CompanySettingsController::class , 'settings'])->middleware(['auth', 'verified','can:edit-company'])->name('settings.show');
+Route::post('/company/settings',  [CompanySettingsController::class , 'save'])->middleware(['auth', 'verified','can:edit-company'])->name('settings.update');
 
 
 /*public routes*/

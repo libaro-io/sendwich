@@ -17,7 +17,7 @@ const form = useForm({
 })
 
 const save = () => {
-    form.post(route('company.settings.save'), {
+    form.post(route('settings.update'), {
         onSuccess: () => toast.success("Time saved"),
     });
 }

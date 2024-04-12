@@ -49,6 +49,9 @@ const showingNavigationDropdown = ref(false);
                                     <BreezeNavLink v-if="can('edit-company')" :href="route('company.show')" :active="route().current('company.show')">
                                         Users
                                     </BreezeNavLink>
+                                    <BreezeNavLink v-if="can('edit-company')" :href="route('settings.show')" :active="route().current('settings.show')">
+                                        Settings
+                                    </BreezeNavLink>
                                 </div>
                             </div>
 
