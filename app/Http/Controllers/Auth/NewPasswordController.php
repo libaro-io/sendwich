@@ -68,8 +68,6 @@ class NewPasswordController extends Controller
             ]);
         }
 
-        return Inertia::render('Auth/Login', [
-            'status' => __($status),
-        ]);
+        return redirect()->route('login');
     }
 }
