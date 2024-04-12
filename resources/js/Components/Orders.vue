@@ -82,7 +82,7 @@ export default {
         };
     },
     methods: {
-        formatMoney: helper.formatMoney()
+        formatMoney: helper.formatMoney
     },
     props: {
         deliveryMoment: String,
