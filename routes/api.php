@@ -15,6 +15,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 //Route::middleware('auth')->group(function () {
+    Route::post('/order/check-new-store', [OrderController::class, 'checkForDifferentStore']);
     Route::post('/order/add-product', [OrderController::class,  'addProduct']);
     Route::post('/order/remove-product', [OrderController::class,  'removeProduct']);
     Route::post('/users', [UserController::class,  'index']);

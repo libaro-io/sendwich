@@ -93,7 +93,7 @@ class Order extends Model
             ->with(['user' => function ($query) {
                 $query->select('id', 'name');
             }, 'product' => function ($query) {
-                $query->select('id', 'name', 'price');
+                $query->select('id', 'name', 'price','store_id');
             }]);
 
         if ($doneOrders) {

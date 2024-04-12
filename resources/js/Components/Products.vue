@@ -74,12 +74,33 @@ export default {
     },
     methods: {
         addProduct(product) {
+            var app = this;
+            var options = app.getSelectedOptionIdsForProduct(product)
+            axios.post('/api/order/check-new-store', {
+                product_id: product.id,
+                options: options,
+            }).then(function(response){
+                app.confirmOrder(product , options);
+            }).catch(function (error){
+                app.showConfirmationModal(product);
+            });
+            console.log('send')
+        },
+
+        confirmOrder(product, options) {
+            console.log('confirmed');
+            console.log(options)
             this.$inertia.post('/api/order/add-product', {
                 product_id: product.id,
-                options: this.getSelectedOptionIdsForProduct(product),
+                options: options,
             },{
                 only:['orders','totalPrice','flash','selectedRunner']
             });
+        },
+
+        showConfirmationModal(product){
+            //todo add conformation modal
+            alert('you added a product from a differnt store')
         },
 
         getSelectedOptionIdsForProduct(product) {
