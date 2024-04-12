@@ -45,7 +45,7 @@
                                 </tr>
                                 <tr>
                                     <td colspan="2">
-                                        <span class="badge badge-success" v-if="orderGroup[0].deliverer !== null && orderGroup[0].deliverer.id === $page.props.auth.user.id  ">Thank you for this delivery</span>
+                                        <span class="badge badge-success" v-if="orderGroup[0].deliverer !== null && orderGroup[0].deliverer.id === $page.props.auth.user.id  ">Delivered by you</span>
                                         <span class="badge" v-else-if="orderGroup[0].deliverer !== null">Delivered by {{ orderGroup[0].deliverer.name }}</span>
                                         <span class="badge" v-else>No runner was assigned</span>
                                     </td>
