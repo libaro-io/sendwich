@@ -98,8 +98,9 @@ const submit = () => {
         axios.put('/api/store/add', {
             store: NewStore,
         }).then(response => {
-            // toast.success(response.data.message);
-            Inertia.get('/stores',{}, {});
+             toast.success(response.data.message);
+            Inertia.get('/store/'+response.data.store.id,{
+            }, {});
         }).catch(error => {
             console.error(error);
         });

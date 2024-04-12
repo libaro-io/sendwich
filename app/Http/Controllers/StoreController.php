@@ -103,7 +103,10 @@ class StoreController extends Controller
             $templateAction = new AddTemplateToStore($store, auth()->user()->company, $products);
             $templateAction->execute();
         }
-        return $this->show($store->id);
+        return response()->json([
+            'message' => 'Store added',
+            'store' => $store
+        ]);
     }
 
     public function delete(Product $product)
