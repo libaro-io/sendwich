@@ -3,7 +3,9 @@
 namespace App\Filament\Pages;
 
 use App\Filament\Widgets\NewUsersPerMonth;
+use App\Filament\Widgets\OrdersPerDay;
 use App\Filament\Widgets\OrdersPerMonth;
+use App\Filament\Widgets\PopularItemsChart;
 use App\Filament\Widgets\StatsOverview;
 use Filament\Pages\Dashboard as BaseDashboard;
 use Filament\Pages\Dashboard\Actions\FilterAction;
@@ -22,6 +24,8 @@ class Dashboard extends BaseDashboard
             StatsOverview::class,
             OrdersPerMonth::class,
             NewUsersPerMonth::class,
+            OrdersPerDay::class,
+            PopularItemsChart::class,
         ];
     }
 
