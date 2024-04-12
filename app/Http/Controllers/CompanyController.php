@@ -7,6 +7,7 @@ use App\Mail\InviteNewVictim;
 use App\Models\InvitedUser;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
@@ -16,19 +17,28 @@ class CompanyController extends Controller
     public function show()
     {
         $user = auth()->user();
-        $company = $user->company;
-        $users = $company->users;
-        foreach ($users as $user) {
-            $user->canEditStore = $user->hasPermissionTo('edit-store');
-            $user->canEditCompany = $user->hasPermissionTo('edit-company');
-        }
 
-        return Inertia::render('Company',
+        /** @var Collection<User> $users */
+        $users = $user
+            ->company
+            ->users()
+            ->with('roles', 'permissions')
+            ->get()
+            ->map(function (User $user) {
+                $user->canEditStore = $user->hasPermissionTo('edit-store');
+                $user->canEditCompany = $user->hasPermissionTo('edit-company');
+
+                return $user;
+            });
+
+        return Inertia::render(
+            'Company',
             [
                 'user' => $user,
                 'users' => $users,
-                'company' => $company,
-            ]);
+                'company' => $user->company,
+            ],
+        );
     }
 
     public function editUserPermission(Request $request)
