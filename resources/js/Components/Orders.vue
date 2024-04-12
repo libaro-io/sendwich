@@ -18,7 +18,7 @@
                      class="card card-compact bg-gray-50 shadow">
                     <div class="sm:flex sm:items-start card-body">
                         <div class="text-sm font-medium text-gray-900">
-                            {{order.product.name}} <span v-if="order.comment">({{order.comment}})</span>
+                            <span class="text-gray-500 inline-block mr-4">{{ order.store_name }}</span>{{order.product.name}} <span v-if="order.comment">({{order.comment}})</span>
                         </div>
                         <div class="mt-1 text-sm text-gray-600 sm:flex sm:items-center">
                             <div>

@@ -6,7 +6,7 @@
 | For       | Product         | Quantity  | Price |
 | :------------- |:-------------| --------:|---------: |
 @foreach($orders as $order)
-    | {{ $order->user->name }} | {{ $order->product->name }} @if($order->comment !== '') ({{ $order->comment }}) @endif | {{ $order->quantity }} | €{{ number_format($order->total, 2) }} |
+    | {{ $order->user->name }} | {{ $order->store_name }} - {{ $order->product->name }} @if($order->comment !== '') ({{ $order->comment }}) @endif | {{ $order->quantity }} | €{{ number_format($order->total, 2) }} |
 @endforeach
     | | | **Total** | €{{ number_format($orders->sum('total'), 2) }} |
 </x-mail::table>
