@@ -26,7 +26,7 @@
         "@fortawesome/vue-fontawesome": "^3.0.1",
         "@headlessui/vue": "^1.7.10",
         "@heroicons/vue": "^1.0.6",
-        "daisyui": "^2.24.0",
+        "daisyui": "^2.52.0",
         "laravel-permission-to-vuejs": "^3.0.1",
         "mitt": "^3.0.0",
         "moment": "^2.29.4",
