@@ -11,14 +11,14 @@
             <label
                 :for="'option-modal-'+product.id"
                 class="btn btn-sm btn-success modal-button">
-                Order  <div class="badge bg-white text-success font-bold border-0 ml-3">&euro; {{ product.price }}</div>
+                Order  <div class="badge bg-white text-success font-bold border-0 ml-3">{{ formatMoney(product.price) }}</div>
             </label>
             <input type="checkbox" :id="'option-modal-'+product.id" class="modal-toggle" />
 
             <label :for="'option-modal-'+product.id" class="modal modal-bottom sm:modal-middle cursor-pointer">
                 <label class="modal-box relative" for="">
                     <h3 class="text-lg font-bold">{{product.name}}
-                        <span class="ml-2 badge badge-warning badge-outline p-1">&euro; {{ product.price }}</span>
+                        <span class="ml-2 badge badge-warning badge-outline p-1">{{ formatMoney(product.price) }}</span>
                     </h3>
                     <div v-if="options.length >=0">
                         <p v-if="options.length" class="py-4">Choose your options</p>
@@ -44,6 +44,9 @@
 
 <script>
 import Checkbox from "@/Components/Checkbox.vue";
+import {useHelpers} from "@/Composables/helpers";
+
+const helper = useHelpers();
 export default {
     name: "productCard",
     components : {
@@ -56,6 +59,7 @@ export default {
         product : Object,
     },
     methods:{
+        formatMoney: helper.formatMoney,
         toggleOption(option){
             option.selected = !option.selected;
 

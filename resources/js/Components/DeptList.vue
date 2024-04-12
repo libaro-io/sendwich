@@ -24,13 +24,13 @@
                         <template v-if="user.id ===  $page.props.auth.user.id">
                             <label for="modal-payback"
                                    :class="user.dept > 0 ? 'badge-success text-white font-bold' : 'badge-warning font-bold'"
-                                   class="badge justify-end cursor-pointer">€ {{ user.dept }}</label>
+                                   class="badge justify-end cursor-pointer">{{ formatMoney(user.dept) }}</label>
                             <PayBack :user="user" :users="users"></PayBack>
                         </template>
                         <template v-else>
                             <span
                                 :class="user.dept > 0 ? 'badge-success text-white font-bold' : 'badge-warning font-bold'"
-                                class="badge justify-end">€ {{ user.dept }}</span>
+                                class="badge justify-end">{{ formatMoney(user.dept) }}</span>
                         </template>
                     </td>
                 </tr>
@@ -51,7 +51,9 @@
 <script>
 
 import PayBack from "@/Components/PayBack.vue";
+import {useHelpers} from "@/Composables/helpers";
 
+const helper = useHelpers();
 export default {
     name: "DeptList",
     components: {PayBack},
@@ -64,6 +66,7 @@ export default {
         userCount: Number,
     },
     methods: {
+        formatMoney: helper.formatMoney,
         shortenName(name, start, end) {
             // find the index of the last space character in the substring
             let lastSpaceIndex = name.lastIndexOf(" ", end);
