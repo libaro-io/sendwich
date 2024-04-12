@@ -10,7 +10,8 @@
                       type="button"
                       class="btn btn-sm btn-primary"
                       :only="['orders','totalPrice','flash']"
-                >Assign to me</Link>
+                >Assign to me
+                </Link>
 
             </div>
             <div class="mb-5 flex flex-col gap-2">
@@ -18,14 +19,14 @@
                      class="card card-compact bg-gray-50 shadow">
                     <div class="sm:flex sm:items-start card-body">
                         <div class="text-sm font-medium text-gray-900">
-                            <span class="text-gray-500 inline-block mr-4">{{ order.store_name }}</span>{{order.product.name}} <span v-if="order.comment">({{order.comment}})</span>
+                            <span class="text-gray-500 inline-block mr-4">{{ order.store_name }}</span>{{ order.product.name }} <span v-if="order.comment">({{ order.comment }})</span>
                         </div>
                         <div class="mt-1 text-sm text-gray-600 sm:flex sm:items-center">
                             <div>
                                 <span
                                     class="badge badge-outline badge-success"
                                 >
-                                    €{{order.total}}
+                                    {{ formatMoney(order.total) }}
                                 </span>
                             </div>
                             <span class="hidden sm:mx-2 sm:inline"
@@ -44,7 +45,7 @@
                                   :data="{ product_id: order.product_id, }"
                                   :only="['orders','flash','selectedRunner','totalPrice']"
                             >
-                                <FontAwesomeIcon icon="fas-fa fa-trash" />
+                                <FontAwesomeIcon icon="fas-fa fa-trash"/>
                             </Link>
                         </div>
                     </div>
@@ -54,7 +55,7 @@
             <h3 class="pl-4"
                 v-if="totalPrice !== 0"
             > Totaal :
-                €{{ totalPrice.toFixed(2) }}
+                {{ formatMoney(totalPrice.toFixed(2)) }}
             </h3>
         </div>
 
@@ -62,23 +63,27 @@
 </template>
 
 <script>
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { useToast } from "vue-toastification";
-import { Link } from "@inertiajs/inertia-vue3"
+import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
+import {useToast} from "vue-toastification";
+import {Link} from "@inertiajs/inertia-vue3"
+import {useHelpers} from "@/Composables/helpers";
 
+const helper = useHelpers();
 const toast = useToast();
 
 export default {
     name: "Orders",
     components: {
-        FontAwesomeIcon,Link
+        FontAwesomeIcon, Link
     },
     data() {
         return {
             request: null,
         };
     },
-
+    methods: {
+        formatMoney: helper.formatMoney()
+    },
     props: {
         deliveryMoment: String,
         orders: Array,
