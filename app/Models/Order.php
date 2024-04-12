@@ -44,6 +44,11 @@ class Order extends Model
         return $this->belongsTo(User::class)->withTrashed();
     }
 
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Company::class);
+    }
+
     public function deliverer(): BelongsTo
     {
         return $this->belongsTo(User::class, 'paid_by')->withTrashed();
@@ -69,7 +74,21 @@ class Order extends Model
         }
 
         $query = self::query()
-            ->where('company_id', $company->id)
+            ->select(
+                'orders.id',
+                'orders.user_id',
+                'orders.company_id',
+                'orders.product_id',
+                'quantity',
+                'paid_by',
+                'total',
+                'comment',
+                'date',
+                'stores.name as store_name',
+            )
+            ->join('products', 'orders.product_id', '=', 'products.id')
+            ->join('stores', 'products.store_id', '=', 'stores.id')
+            ->where('orders.company_id', $company->id)
             ->whereBetween('date', [$from, $to])
             ->with(['user' => function ($query) {
                 $query->select('id', 'name');

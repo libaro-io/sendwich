@@ -1,5 +1,5 @@
 FROM node:16.19 AS node
-FROM php:8.0-apache
+FROM php:8.3-apache
 
 ARG USER=dev
 
@@ -37,8 +37,27 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 RUN docker-php-ext-install intl mysqli pdo pdo_mysql mbstring exif pcntl bcmath gd zip soap
 
 # Install imagick extension
-RUN pecl install imagick
-RUN docker-php-ext-enable imagick
+# Update the package list and install git
+RUN apt-get update && \
+    apt-get install -y git && \
+    # Clone the Imagick PHP extension source code
+    git clone https://github.com/Imagick/imagick.git --depth 1 /tmp/imagick && \
+    cd /tmp/imagick && \
+    # Fetch the latest master and switch to it
+    git fetch origin master && \
+    git switch master && \
+    # Prepare for PHP extension installation
+    phpize && \
+    ./configure && \
+    make && \
+    make install && \
+    # Clean up the installed packages to reduce image size
+    apt-get remove -y git && \
+    apt-get autoremove -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    # Enable the Imagick PHP extension
+    docker-php-ext-enable imagick
 
 # Install xdebug
 RUN pecl install xdebug

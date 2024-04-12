@@ -26,7 +26,8 @@ class OrderController extends Controller
         }else{
             $company = Company::query()->where('token', '=', $request->input('company_token'))->firstOrFail();
         }
-        $orders = Order::getOrders($company, $this->getDate())->get();
+        $orders = Order::getOrders($company, $this->getDate())
+            ->get();
         if($orders->count()){
             $user = $orders[0]->deliverer;
         }

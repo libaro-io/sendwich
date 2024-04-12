@@ -2,7 +2,7 @@
     <input type="checkbox" id="modal-payback" class="modal-toggle" v-bind:checked="isModalOpen"/>
     <div class="modal modal-bottom sm:modal-middle">
         <div class="modal-box">
-            <h3 v-if="user" class="font-bold text-lg">Your current balance is € {{ user.dept }}</h3>
+            <h3 v-if="user" class="font-bold text-lg">Your current balance is {{ formatMoney(user.dept) }}</h3>
             <table>
                 <thead>
                 <tr>
@@ -13,11 +13,11 @@
                 <tbody>
                 <tr v-for="user in payBackList">
                     <td>{{ user.name }}</td>
-                    <td>€ {{ user.paysBack }}</td>
+                    <td>{{ formatMoney(user.paysBack) }}</td>
                 </tr>
                 <tr>
                     <td><b>Your new balance</b></td>
-                    <td><b>€{{ calculatedDept }}</b></td>
+                    <td><b>{{ formatMoney(calculatedDept) }}</b></td>
                 </tr>
                 </tbody>
             </table>
@@ -39,8 +39,9 @@
 <script>
 import axios from "axios";
 import {useToast} from "vue-toastification";
+import {useHelpers} from "@/Composables/helpers";
 
-
+const helper = useHelpers();
 const toast = useToast();
 export default {
     name: "PayBack",
@@ -65,6 +66,7 @@ export default {
         users: Array,
     },
     methods: {
+        formatMoney: helper.formatMoney,
         buildGiveBackList() {
             this.calculatedDept = this.user.dept * -1;
             this.counter = this.users.length - 1;

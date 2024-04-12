@@ -103,7 +103,7 @@ const deleteUser = (user) => {
                                                 <th>Name</th>
                                                 <th>Email</th>
                                                 <th>Edit stores</th>
-                                                <th>Edit company</th>
+                                                <th>Edit users</th>
                                                 <th>Remove</th>
                                             </tr>
                                             </thead>
