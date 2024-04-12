@@ -15,7 +15,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-         $schedule->command('ChooseRandomVictim')->dailyAt(config('app.choose_runner_at', '11:30'));
+         $schedule->command('ChooseRandomVictim')->everyMinute();
     }
 
     /**

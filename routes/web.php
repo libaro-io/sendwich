@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\CompanySettingsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DisplayController;
 use App\Http\Controllers\HistoryController;
@@ -25,6 +26,10 @@ Route::get('/company',  [CompanyController::class , 'show'])->middleware(['auth'
 Route::post('/user/invite',  [CompanyController::class , 'inviteUser'])->middleware(['auth', 'verified','can:edit-company'])->name('invite');
 Route::post('/user/permission',  [CompanyController::class , 'editUserPermission'])->middleware(['auth', 'verified','can:edit-company'])->name('user.permissions');
 Route::post('/user/delete',  [CompanyController::class , 'deleteUser'])->middleware(['auth', 'verified','can:edit-company'])->name('user.delete');
+
+
+Route::get('/company/settings',  [CompanySettingsController::class , 'settings'])->middleware(['auth', 'verified','can:edit-company'])->name('company.settings.get');
+Route::post('/company/settings',  [CompanySettingsController::class , 'save'])->middleware(['auth', 'verified','can:edit-company'])->name('company.settings.save');
 
 
 /*public routes*/

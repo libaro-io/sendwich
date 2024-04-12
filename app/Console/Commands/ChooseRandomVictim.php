@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Actions\ChooseRunner;
 use App\Models\Company;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 
 class ChooseRandomVictim extends Command
@@ -30,11 +31,14 @@ class ChooseRandomVictim extends Command
      */
     public function handle()
     {
-        foreach (Company::query()->get() as $company) {
+        $currentTime = now()->format('H:i:s');
+        $companies = Company::query()->where('select_runner_at', '=', $currentTime)->whereHas('orders', function ($query) {
+            $query->whereDate('date', Carbon::today());
+        })->get();
 
+        foreach ($companies as $company) {
             $action = new ChooseRunner($company);
             $action->execute();
-
         }
     }
 
