@@ -34,6 +34,13 @@ class RegisteredCompanyController extends Controller
      */
     public function store(CreateCompany $request)
     {
+        $request->validate([
+            'companyName' => 'required|unique:companies,name',
+            'email' => 'required|email|unique:users,email',
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'name' => 'required',
+        ]);
+        
         $company = new Company();
 
         $company->name = $request->get('companyName');
