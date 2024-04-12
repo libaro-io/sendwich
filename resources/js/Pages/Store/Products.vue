@@ -113,7 +113,7 @@ resetNewProduct();
                                         </div>
                                     </td>
                                     <td>
-                                        <button class="btn btn-secondary" @click="saveNew(newProduct)">New</button>
+                                        <button class="btn btn-secondary" @click="saveNew(newProduct)">Add</button>
                                     </td>
                                 </tr>
                                 </tbody>
