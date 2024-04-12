@@ -23,12 +23,13 @@ let newStore = ref(false);
                     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                         <div class="grid grid-cols-1 gap-4">
                             <List title="Stores">
-                                <div class="">
-                                    <label for="create-store-modal" class="action-button modal-button">Create new
-                                        Store</label>
-                                </div>
-                                <ListItem v-for="store in stores" :item="store" type="store"
-                                          :editable="true"></ListItem>
+                                <template v-slot:actions>
+                                    <label for="create-store-modal" class="action-button modal-button">Create new Store</label>
+                                </template>
+                                <template v-slot:main>
+                                    <ListItem v-for="store in stores" :item="store" type="store"
+                                              :editable="true"></ListItem>
+                                </template>
                             </List>
                         </div>
                     </div>

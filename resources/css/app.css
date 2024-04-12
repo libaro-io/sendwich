@@ -61,5 +61,9 @@ h3 {
 }
 
 .action-button{
-    @apply absolute right-0 top-0 rounded-tr-lg btn btn-success mb-3 shadow-md;
+    @apply rounded-lg btn btn-success shadow-md;
+}
+
+.modal-box {
+    overflow: scroll;
 }
