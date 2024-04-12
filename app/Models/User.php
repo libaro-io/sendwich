@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -12,7 +14,6 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Laravel\Sanctum\HasApiTokens;
 use LaravelAndVueJS\Traits\LaravelPermissionToVueJS;
-use Spatie\Permission\Traits\HasPermissions;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
@@ -30,7 +31,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property Order[]|Collection $orders
  * @property Order[]|Collection $payments
  */
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles, SoftDeletes, LaravelPermissionToVueJS;
 
@@ -78,5 +79,10 @@ class User extends Authenticatable
     public function payments(): HasMany
     {
         return $this->hasMany(Order::class, 'paid_by');
+    }
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return $this->hasRole('Administrator');
     }
 }
