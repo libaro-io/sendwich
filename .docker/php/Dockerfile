@@ -1,5 +1,5 @@
 FROM node:16.19 AS node
-FROM php:8.0-apache
+FROM php:8.3-apache
 
 ARG USER=dev
 
