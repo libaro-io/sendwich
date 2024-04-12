@@ -2,7 +2,7 @@
     <div class="bg-white shadow sm:rounded-md">
         <div class="px-4 py-5 sm:p-6">
             <h2>Menu</h2>
-            <div  class="mt-5 flex flex-col gap-2">
+            <div v-if="stores" class="mt-5 flex flex-col gap-2">
                 <div v-for="(store , index) in stores"
                      :key="index"
                      class="card card-compact bg-gray-50 shadow">
@@ -26,6 +26,14 @@
                         </div>
 
                     </div>
+                </div>
+            </div>
+            <div v-else>
+                <div class="w-full flex flex-col items-center my-6">
+                    <a type="button" :href="route('store.index')" class="btn glass bt-wide btn-outline btn-default rounded-lg">
+                        <i class="fa-solid fa-store pr-3 text-lg"></i>
+                        Create your first store
+                    </a>
                 </div>
             </div>
         </div>

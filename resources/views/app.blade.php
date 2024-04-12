@@ -25,6 +25,7 @@
                 @endauth
             }
         </script>
+        <script src="https://kit.fontawesome.com/4609dd9a5e.js" crossorigin="anonymous"></script>
         @routes
         @vite('resources/js/app.js')
         @inertiaHead

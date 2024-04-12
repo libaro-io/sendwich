@@ -36,14 +36,15 @@
                 </tr>
                 </tbody>
             </table>
-            <a v-else class="alert alert-success shadow-md hover:shadow-lg cursor-pointer" :href="route('company.show')">
-                <div>
-                    <div>
-                        <h3 class="font-bold">You are all alone here</h3>
-                        <div class="">Start inviting colleagues and friends to get yourself started</div>
-                    </div>
+            <div v-else>
+                <div class="w-full flex flex-col items-center my-6">
+                    <a type="button" :href="route('company.show')" class="btn glass bt-wide btn-outline btn-default rounded-lg">
+                        <i class="fa-solid fa-person-carry-box pr-3 text-lg"></i>
+                        Create your first runner
+                    </a>
                 </div>
-            </a>
+            </div>
+
         </div>
     </div>
 </template>
