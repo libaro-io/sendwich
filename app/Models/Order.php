@@ -44,6 +44,11 @@ class Order extends Model
         return $this->belongsTo(User::class)->withTrashed();
     }
 
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Company::class);
+    }
+
     public function deliverer(): BelongsTo
     {
         return $this->belongsTo(User::class, 'paid_by')->withTrashed();
