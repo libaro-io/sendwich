@@ -105,7 +105,7 @@ const submit = () => {
             console.error(error);
         });
     }else{
-        toast.success('Fill in a name');
+        toast.error('Fill in a name');
     }
 
 };
