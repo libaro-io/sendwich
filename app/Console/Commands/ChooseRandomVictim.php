@@ -31,11 +31,10 @@ class ChooseRandomVictim extends Command
      */
     public function handle()
     {
-        $currentTime = now()->format('H:i:s');
-        $companies = Company::query()->where('select_runner_at', '=', $currentTime)->whereHas('orders', function ($query) {
-            $query->whereDate('date', Carbon::today());
-        })->get();
-
+        $currentTime = now()->format('H:i');
+        $companies = Company::query()->where('select_runner_at', '<=', $currentTime)->whereHas('orders', function ($query) {
+            $query->whereDate('date', Carbon::today())->whereNull('paid_by');
+        })->toSql();
         foreach ($companies as $company) {
             $action = new ChooseRunner($company);
             $action->execute();
