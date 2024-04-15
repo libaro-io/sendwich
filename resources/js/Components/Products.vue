@@ -28,6 +28,20 @@
                 </div>
             </a>
         </div>
+        <!--    confirmation modal when another store selected-->
+        <Teleport to="body">
+            <input type="checkbox" id="my-modal" class="modal-toggle" v-model="toggle"/>
+                <div class="modal modal-bottom sm:modal-middle">
+                    <div class="modal-box">
+                    <h3 class="font-bold text-lg">you added a product from a different store!</h3>
+                    <p class="py-4">Are you sure , the runner has to visit more then on store.</p>
+                    <div class="modal-action">
+                        <label for="my-modal" class="btn">Nah, drop it!</label>
+                        <button @click="confirmOrder(selectedProduct,selectedOptions)">Confirm</button>
+                    </div>
+                    </div>
+                </div>
+        </Teleport>
     </div>
 </template>
 
@@ -35,6 +49,7 @@
 import Checkbox from '@/Components/Checkbox.vue';
 import {useToast} from "vue-toastification";
 import ProductCard from "@/Components/Products/productCard.vue";
+import Button from "@/Components/Button.vue";
 
 
 const toast = useToast();
@@ -42,6 +57,7 @@ const toast = useToast();
 export default {
     name: "Products",
     components: {
+        Button,
         ProductCard,
         Checkbox,
     },
@@ -70,6 +86,8 @@ export default {
             selectedOptions: [],
             search: this.filters.search,
             searchedProducts: null,
+            toggle: false,
+            selectedProduct:null,
         };
     },
     methods: {
@@ -82,14 +100,13 @@ export default {
             }).then(function(response){
                 app.confirmOrder(product , options);
             }).catch(function (error){
-                app.showConfirmationModal(product);
+                app.showConfirmationModal(product, options);
             });
             console.log('send')
         },
 
         confirmOrder(product, options) {
-            console.log('confirmed');
-            console.log(options)
+            this.toggle = false;
             this.$inertia.post('/api/order/add-product', {
                 product_id: product.id,
                 options: options,
@@ -98,9 +115,10 @@ export default {
             });
         },
 
-        showConfirmationModal(product){
-            //todo add conformation modal
-            alert('you added a product from a differnt store')
+        showConfirmationModal(product, options){
+            this.selectedProduct = product;
+            this.selectedOptions = options;
+            this.toggle = true;
         },
 
         getSelectedOptionIdsForProduct(product) {

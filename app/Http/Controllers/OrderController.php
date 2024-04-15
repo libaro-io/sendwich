@@ -251,7 +251,7 @@ class OrderController extends Controller
         $orders = Order::getOrders($user->company, $this->getDate());
 
         //get different stores from the orders
-        $stores = $orders->get()->map(fn($order) => $order->product->first()->store_id);
+        $stores = $orders->get()->map(fn($order) => $order->product->store_id);
 
         //when there are check if the $store of the new order is already
         if($stores->count() > 0 && !$stores->contains($product->store_id)){
