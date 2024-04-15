@@ -13,6 +13,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
@@ -127,7 +128,6 @@ class OrderController extends Controller
             abort(400);
         }
 
-
         //$order = $this->getProductOrderForUser($user, $product);
 
 
@@ -232,5 +232,32 @@ class OrderController extends Controller
             })
             ->values();
         return response()->json($orders);
+    }
+
+    public function checkForDifferentStore(AddRequest $request){
+
+        $user = auth()->user();
+
+        $data = $request->validated();
+
+
+        /** @var Product|null $product */
+        $product = Product::query()->find($data['product_id']);
+
+        if (is_null($product)) {
+            abort(400);
+        }
+        //get the orders for the company
+        $orders = Order::getOrders($user->company, $this->getDate());
+
+        //get different stores from the orders
+        $stores = $orders->get()->map(fn($order) => $order->product->store_id);
+
+        //when there are check if the $store of the new order is already
+        if($stores->count() > 0 && !$stores->contains($product->store_id)){
+            return response()->json(false,Response::HTTP_CONFLICT);
+        }
+
+        return response()->json(true,200);
     }
 }
