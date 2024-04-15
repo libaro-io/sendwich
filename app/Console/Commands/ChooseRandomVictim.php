@@ -6,6 +6,7 @@ use App\Actions\ChooseRunner;
 use App\Models\Company;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class ChooseRandomVictim extends Command
 {
@@ -35,6 +36,7 @@ class ChooseRandomVictim extends Command
         $companies = Company::query()->where('select_runner_at', '<=', $currentTime)->whereHas('orders', function ($query) {
             $query->whereDate('date', Carbon::today())->whereNull('paid_by');
         })->get();
+        Log::info($companies->count(). ' companies for current time '. $currentTime);
         foreach ($companies as $company) {
             $action = new ChooseRunner($company);
             $action->execute();
