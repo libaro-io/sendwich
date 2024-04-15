@@ -34,7 +34,7 @@ class ChooseRandomVictim extends Command
         $currentTime = now()->format('H:i');
         $companies = Company::query()->where('select_runner_at', '<=', $currentTime)->whereHas('orders', function ($query) {
             $query->whereDate('date', Carbon::today())->whereNull('paid_by');
-        })->toSql();
+        })->get();
         foreach ($companies as $company) {
             $action = new ChooseRunner($company);
             $action->execute();
