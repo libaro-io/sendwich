@@ -33,7 +33,7 @@ class ChooseRandomVictim extends Command
     public function handle()
     {
         $currentTime = now()->format('H:i');
-        $companies = Company::query()->where('select_runner_at', '==', $currentTime)->whereHas('orders', function ($query) {
+        $companies = Company::query()->where('select_runner_at', '=', $currentTime)->whereHas('orders', function ($query) {
             $query->whereDate('date', Carbon::today())->whereNull('paid_by');
         })->get();
         foreach ($companies as $company) {
