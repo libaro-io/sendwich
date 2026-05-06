@@ -1,0 +1,76 @@
+---
+description: Laravel backend conventions for controllers, routing, validation, and domain logic
+globs: app/**/*.php, routes/**/*.php
+alwaysApply: false
+---
+
+# Laravel Backend Conventions
+
+## Invokable Controllers
+
+Use single-action invokable controllers with `__invoke()`. Group them in directories mirroring the URL structure.
+
+```php
+// /company/settings -> App\Http\Controllers\Company\Settings\
+class SaveRunnerSettingsController extends Controller
+{
+    public function __invoke(SaveRunnerSettingsRequest $request): RedirectResponse
+    {
+        // ...
+    }
+}
+```
+
+## Form Requests
+
+Extract validation into FormRequest classes. Never validate inline in controllers. Mirror the controller namespace.
+
+```php
+// App\Http\Requests\Company\Settings\SaveRunnerSettingsRequest
+class SaveRunnerSettingsRequest extends FormRequest
+{
+    public function rules(): array
+    {
+        return ['time' => ['required', 'date_format:H:i']];
+    }
+}
+```
+
+## Route References
+
+Always use `action(Controller::class)` instead of `route('name')` when referring to routes.
+
+```php
+// BAD
+return redirect()->route('settings.show');
+url()->route('settings.show');
+
+// GOOD
+return redirect()->action(ShowSettingsController::class);
+url()->action(ShowSettingsController::class);
+```
+
+## Return Types
+
+Always add explicit return types to public methods, especially `__invoke()`.
+
+## Actions for Domain Logic
+
+Place reusable domain logic in `app/Actions/` with an `execute()` method.
+
+```php
+final class NotifyCompany
+{
+    public function __construct(private Company $company) {}
+
+    public function execute(Notification $notification): void { /* ... */ }
+}
+```
+
+## Enums for Finite Sets
+
+Use PHP backed enums with helper methods for fixed value sets.
+
+## Custom Casts and DTOs
+
+Use custom Eloquent casts with DTO classes for structured JSON columns. DTOs must implement `JsonSerializable`.
