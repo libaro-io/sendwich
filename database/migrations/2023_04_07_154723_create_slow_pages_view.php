@@ -19,7 +19,7 @@ class CreateSlowPagesView extends Migration
     {
         $query = /** @lang sql */
             <<<SQL
-            CREATE VIEW view_slow_pages AS
+            CREATE OR REPLACE VIEW view_slow_pages AS
                 select 
                   request_guid, 
                   sum(duration) as the_page_duration, 

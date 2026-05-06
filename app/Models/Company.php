@@ -12,6 +12,18 @@ class Company extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'reminder_enabled' => 'boolean',
+        'reminder_days' => 'array',
+    ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function notificationChannels()
+    {
+        return $this->hasMany(CompanyNotificationChannel::class);
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
