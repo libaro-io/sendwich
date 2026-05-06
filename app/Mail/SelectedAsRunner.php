@@ -27,7 +27,7 @@ class SelectedAsRunner extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Libaro Sendwich needs you!',
+            subject: "{$this->runner->company->name} Sendwich needs you!",
         );
     }
 
