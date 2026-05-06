@@ -28,7 +28,7 @@ class InviteNewVictim extends Mailable
     {
         $this->invitee = $invitee;
         $this->signedUrl = $signedUrl;
-        $this->company = Company::query()->findOrFail($invitee->company_id)->first();
+        $this->company = Company::findOrFail($invitee->company_id);
 
     }
 
