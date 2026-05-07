@@ -16,7 +16,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
          $schedule->command('ChooseRandomVictim')->everyMinute();
-         $schedule->command('SendReminderNotifications')->everyMinute();
+         $schedule->command('app:send-reminder-notifications')->everyMinute();
     }
 
     /**
