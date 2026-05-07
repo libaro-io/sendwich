@@ -27,7 +27,7 @@ class PlaceOrderReminder extends Notification
         return GoogleChatMessage::create()
             ->header('Sendwich', 'Order Reminder')
             ->icon('RESTAURANT_ICON')
-            ->text("Hey <b>{$this->company->name}</b> — it's time to place your sandwich orders!")
+            ->text("Hey <b>{$this->company->name}</b> — it's time to place your sendwich orders!")
             ->button('Place your order →', $dashboardUrl, [
                 'red' => 0.24,
                 'green' => 0.65,
