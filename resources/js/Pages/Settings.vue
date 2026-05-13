@@ -4,6 +4,7 @@ import Authenticated from "@/Layouts/Authenticated.vue";
 import {useForm} from '@inertiajs/inertia-vue3';
 import {useToast} from "vue-toastification";
 import {ref} from "vue";
+import axios from "axios";
 
 const toast = useToast();
 
@@ -96,6 +97,28 @@ const saveChannel = () => {
 
 const removeChannel = (index) => {
     notificationForm.notification_channels.splice(index, 1);
+};
+
+const testingChannelIndex = ref(null);
+
+const testChannel = async (index) => {
+    const channel = notificationForm.notification_channels[index];
+
+    if (!channel.id) {
+        toast.warning("Please save the channel before testing.");
+        return;
+    }
+
+    testingChannelIndex.value = index;
+
+    try {
+        const response = await axios.post(route('settings.notifications.channels.test', {channel: channel.id}));
+        toast.success(response.data.message);
+    } catch (e) {
+        toast.error(e.response?.data?.message ?? "Failed to send test notification.");
+    } finally {
+        testingChannelIndex.value = null;
+    }
 };
 
 const driverLabel = (driverValue) => {
@@ -196,6 +219,14 @@ const saveNotifications = () => {
                                                     <span class="font-semibold">{{ driverLabel(channel.driver) }}</span>
                                                 </div>
                                                 <div class="flex items-center gap-2">
+                                                    <button type="button"
+                                                            @click="testChannel(index)"
+                                                            class="btn btn-sm btn-ghost"
+                                                            :class="{'loading': testingChannelIndex === index}"
+                                                            :disabled="!channel.id || testingChannelIndex === index"
+                                                    >
+                                                        <span v-if="testingChannelIndex !== index">Test</span>
+                                                    </button>
                                                     <button type="button"
                                                             @click="openEditChannel(index)"
                                                             class="btn btn-sm btn-ghost"

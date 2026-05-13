@@ -4,6 +4,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\Company\Settings\SaveNotificationSettingsController;
 use App\Http\Controllers\Company\Settings\SaveRunnerSettingsController;
 use App\Http\Controllers\Company\Settings\ShowSettingsController;
+use App\Http\Controllers\Company\Settings\TestNotificationChannelController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DisplayController;
 use App\Http\Controllers\HistoryController;
@@ -33,6 +34,7 @@ Route::post('/user/delete',  [CompanyController::class , 'deleteUser'])->middlew
 Route::get('/company/settings',  ShowSettingsController::class)->middleware(['auth', 'verified','can:edit-company'])->name('settings.show');
 Route::post('/company/settings/runner',  SaveRunnerSettingsController::class)->middleware(['auth', 'verified','can:edit-company'])->name('settings.runner.update');
 Route::post('/company/settings/notifications',  SaveNotificationSettingsController::class)->middleware(['auth', 'verified','can:edit-company'])->name('settings.notifications.update');
+Route::post('/company/settings/notifications/channels/{channel}/test',  TestNotificationChannelController::class)->middleware(['auth', 'verified','can:edit-company', 'can:test,channel'])->name('settings.notifications.channels.test');
 
 
 /*public routes*/
