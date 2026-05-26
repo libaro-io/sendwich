@@ -37,7 +37,8 @@
                                 }}</span></div>
                         </div>
                         <div class="card-actions justify-end w-full">
-                            <Link href="/api/order/remove-product"
+                            <Link v-if="order.user_id === $page.props.auth.user.id"
+                                  href="/api/order/remove-product"
                                   method="post"
                                   as="button"
                                   type="button"
