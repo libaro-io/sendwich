@@ -34,6 +34,7 @@ export default {
 </script>
 
 <style scoped>
+@reference "../../../css/app.css";
 a{
     @apply text-white font-bold hover:text-info;
 }

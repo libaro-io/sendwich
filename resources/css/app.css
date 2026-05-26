@@ -1,34 +1,58 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
+@plugin "@tailwindcss/forms";
+@plugin "daisyui" {
+    themes: cupcake --default, sendwich;
+}
+
+@plugin "daisyui/theme" {
+    name: "sendwich";
+    --color-primary: #abfce4;
+    --color-secondary: #51db83;
+    --color-accent: #e0ed84;
+    --color-neutral: #242D42;
+    --color-base-100: #324667;
+    --color-info: #6682EB;
+    --color-success: #62EA9F;
+    --color-warning: #FAD233;
+    --color-error: #FB0931;
+    --radius-box: 1rem;
+    --radius-field: 0.5rem;
+    --radius-selector: 1.9rem;
+}
+
+@theme {
+    --font-sans: "Nunito", ui-sans-serif, system-ui, sans-serif;
+    --animate-tilt: tilt 10s infinite linear;
+}
+
+@source "../views";
+@source "../js";
+
+@keyframes tilt {
+    0%, 50%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(1deg); }
+    75% { transform: rotate(-1deg); }
+}
 
 .bg-rainbow {
-    background: #f12711;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #f5af19, #f12711);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #f5af19, #f12711); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: #f12711;
+    background: -webkit-linear-gradient(to right, #f5af19, #f12711);
+    background: linear-gradient(to right, #f5af19, #f12711);
 }
 
 @keyframes gradient {
-    0% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-    100% {
-        background-position: 0% 50%;
-    }
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
 .bg-white-fix {
-    --tw-bg-opacity: 1;
-    background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+    background-color: rgb(255 255 255);
 }
 
 .bg-white {
-    --tw-bg-opacity: 0.7;
-    background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+    background-color: rgb(255 255 255 / 0.7);
 }
 
 h1, .card.title {
@@ -47,20 +71,19 @@ h3 {
     @apply text-white font-bold;
 }
 
-
 .landing h1 {
     @apply mt-10 text-4xl font-bold tracking-tight sm:text-6xl;
 }
 
 .landing p {
-    @apply text-lg leading-8 ;
+    @apply text-lg leading-8;
 }
 
-.card-body{
-   @apply px-4 py-5 sm:p-6;
+.card-body {
+    @apply px-4 py-5 sm:p-6;
 }
 
-.action-button{
+.action-button {
     @apply rounded-lg btn btn-success shadow-md;
 }
 

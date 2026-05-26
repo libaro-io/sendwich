@@ -38,6 +38,7 @@ export default {
 </template>
 
 <style>
+@reference "../../../css/app.css";
 p {
     @apply text-white;
 }

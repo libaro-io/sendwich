@@ -1,4 +1,4 @@
-FROM node:16.19 AS node
+FROM node:26 AS node
 FROM php:8.4-apache
 
 ARG USER=dev
