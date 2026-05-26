@@ -16,6 +16,7 @@ use Illuminate\Support\Carbon;
  * @property int|null $paid_by
  * @property float $total
  * @property string $comment
+ * @property string|null $delivered_at
  * @property string $date
  * @property Carbon $created_at
  * @property Carbon $updated_at
@@ -36,7 +37,8 @@ class Order extends Model
         'company_id',
         'quantity',
         'total',
-        'date'
+        'date',
+        'delivered_at',
     ];
 
     public function user(): BelongsTo
@@ -83,6 +85,7 @@ class Order extends Model
                 'paid_by',
                 'total',
                 'comment',
+                'delivered_at',
                 'date',
                 'stores.name as store_name',
             )
@@ -96,9 +99,9 @@ class Order extends Model
                 $query->select('id', 'name', 'price','store_id');
             }]);
 
-        if ($doneOrders) {
+        if ($doneOrders === true) {
             $query->whereNotNull('paid_by');
-        } else {
+        } elseif ($doneOrders === false) {
             $query->whereNull('paid_by');
         }
 

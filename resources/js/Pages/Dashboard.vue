@@ -4,7 +4,6 @@ import Orders from "@/Components/Orders.vue";
 import Products from "@/Components/Products.vue";
 import Menu from "@/Components/Menu.vue";
 import DeptList from "@/Components/DeptList.vue";
-import DoneOrders from "@/Components/DoneOrders.vue";
 import {onMounted, onUnmounted, ref} from "vue";
 import {Inertia} from '@inertiajs/inertia'
 
@@ -20,7 +19,6 @@ const props = defineProps({
     orders: Array,
     totalPrice: Number,
     filters: Object,
-    formattedOrders: Object,
 });
 
 let interval;
@@ -68,7 +66,6 @@ export default {
                     <div class="grid grid-cols-3 gap-4">
                         <Orders :orders="orders" :totalPrice="totalPrice" :delivery-moment="deliveryMoment"
                                 class="col-span-3"></Orders>
-                        <done-orders :orders="formattedOrders"></done-orders>
                         <DeptList :userCount="userCount" :users='users' :runner='selectedRunner' :company="company"
                                   class="col-span-3"></DeptList>
                     </div>

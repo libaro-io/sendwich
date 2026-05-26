@@ -197,6 +197,22 @@ class OrderController extends Controller
 
     }
 
+    public function markAsDelivered(): \Illuminate\Http\RedirectResponse
+    {
+        $user = Auth::user();
+
+        Order::query()
+            ->where('paid_by', $user->id)
+            ->whereNull('delivered_at')
+            ->whereBetween('date', [
+                $this->getDate()->startOfDay(),
+                $this->getDate()->endOfDay(),
+            ])
+            ->update(['delivered_at' => now()]);
+
+        return redirect()->back()->with(['success' => 'Bestellingen gemarkeerd als afgeleverd']);
+    }
+
     private function getProductOrderForUser(User $user, Product $product): ?Order
     {
         /** @var Order|null $order */

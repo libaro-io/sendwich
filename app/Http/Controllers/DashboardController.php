@@ -40,22 +40,13 @@ class DashboardController extends Controller
 
         $stores = $company->stores()->select('name', 'id')->withCount('products')->with(['products.options'])->get();
 
-        $orders = Order::getOrders($company, $this->getDate());
+        $orders = Order::getOrders($company, $this->getDate(), false, null);
 
-        $order = (clone $orders)->first();
+        $assignedOrder = Order::getOrders($company, $this->getDate(), false, true)->first();
 
         $simulated = false;
 
-        $selectedRunner = $order?->deliverer ?? null;
-
-        $formattedOrders = collect();
-        $doneOrders = Order::getOrders($company, $this->getDate(), false, true)
-            ->get()
-            ->groupBy('paid_by');
-
-        foreach ($doneOrders as $userId => $orderGroup) {
-            $formattedOrders[$orderGroup->first()->deliverer->name] = $orderGroup;
-        }
+        $selectedRunner = $assignedOrder?->deliverer ?? null;
 
         if (!$selectedRunner) {
             $action = new ChooseRunner($company);
@@ -77,7 +68,6 @@ class DashboardController extends Controller
                 'deliveryMoment' => $deliveryMoment,
                 'orders' => $orders->get(),
                 'filters' => $request->only(['search']),
-                'formattedOrders' => $formattedOrders,
                 'totalPrice' => $orders->sum('total'),
                 'stores' => $stores
             ]);
