@@ -10,7 +10,7 @@
         "filament/filament": "^3.2",
         "flowframe/laravel-trend": "^0.4",
         "guzzlehttp/guzzle": "^7.2",
-        "inertiajs/inertia-laravel": "^1",
+        "inertiajs/inertia-laravel": "^3.0",
         "laravel/framework": "^12.0",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.7",

@@ -70,7 +70,7 @@
 <script>
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 import {useToast} from "vue-toastification";
-import {Link} from "@inertiajs/inertia-vue3"
+import {Link} from "@inertiajs/vue3"
 import {useHelpers} from "@/Composables/helpers";
 
 const helper = useHelpers();

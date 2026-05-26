@@ -1,7 +1,7 @@
 <script setup>
 
 import Authenticated from "@/Layouts/Authenticated.vue";
-import {useForm} from '@inertiajs/inertia-vue3';
+import {useForm} from '@inertiajs/vue3';
 import {useToast} from "vue-toastification";
 import {ref} from "vue";
 import axios from "axios";

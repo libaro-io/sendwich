@@ -1,9 +1,9 @@
 <script setup>
 
 import Authenticated from "@/Layouts/Authenticated.vue";
-import {useForm} from '@inertiajs/inertia-vue3';
+import {useForm} from '@inertiajs/vue3';
 import {ref} from 'vue';
-import {Inertia} from '@inertiajs/inertia';
+import {router} from '@inertiajs/vue3';
 
 
 const props = defineProps({
@@ -26,7 +26,7 @@ const invite = () => {
 }
 
 const togglePermission = (type, user) => {
-    Inertia.post(route('user.permissions'), {
+    router.post(route('user.permissions'), {
         user_id: user.id,
         type: type,
     }, {
@@ -38,7 +38,7 @@ const togglePermission = (type, user) => {
 
 const deleteUser = (user) => {
     if (confirm("Do you really want to delete this user?")) {
-        Inertia.post(route('user.delete'), {
+        router.post(route('user.delete'), {
             user_id: user.id,
         }, {
             preserveState: true,

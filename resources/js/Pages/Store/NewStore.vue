@@ -78,7 +78,7 @@
 import axios from "axios";
 import {reactive} from "vue";
 import {useToast} from "vue-toastification";
-import {Inertia} from "@inertiajs/inertia";
+import {router} from "@inertiajs/vue3";
 
 const toast = useToast();
 
@@ -99,7 +99,7 @@ const submit = () => {
             store: NewStore,
         }).then(response => {
              toast.success(response.data.message);
-            Inertia.get('/store/'+response.data.store.id,{
+            router.get('/store/'+response.data.store.id,{
             }, {});
         }).catch(error => {
             console.error(error);

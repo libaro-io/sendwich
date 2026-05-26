@@ -2,7 +2,7 @@
 import mitt from 'mitt'
 import UsersWithOrders from "@/Components/UsersWithOrders.vue";
 import SelectedRunner from "@/Components/SelectedRunner.vue";
-import {Link} from '@inertiajs/inertia-vue3';
+import {Link} from '@inertiajs/vue3';
 
 const props = defineProps({
     deliveryMoment: String,

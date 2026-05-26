@@ -1,12 +1,12 @@
 <script setup>
-import {Head} from '@inertiajs/inertia-vue3';
+import {Head} from '@inertiajs/vue3';
 import Orders from "@/Components/Orders.vue";
 import Products from "@/Components/Products.vue";
 import Menu from "@/Components/Menu.vue";
 import DeptList from "@/Components/DeptList.vue";
 import DoneOrders from "@/Components/DoneOrders.vue";
 import {onMounted, onUnmounted, ref} from "vue";
-import {Inertia} from '@inertiajs/inertia'
+import {router} from '@inertiajs/vue3'
 
 const props = defineProps({
     selectedRunner: Object,
@@ -38,7 +38,7 @@ const unsetStore = () => {
 
 onMounted(() => {
     interval = setInterval(() => {
-        Inertia.get('/dashboard', {},
+        router.get('/dashboard', {},
             {
                 preserveState: true,
                 preserveScroll: true,
