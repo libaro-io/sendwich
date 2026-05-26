@@ -2,6 +2,9 @@
 
 namespace App\Http\Middleware;
 
+use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Closure;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 
@@ -10,10 +13,10 @@ class EnsureEmailIsVerified
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param Request $request
+     * @param Closure $next
      * @param  string|null  $redirectToRoute
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse|null
+     * @return JsonResponse|RedirectResponse|null
      */
     public function handle($request, Closure $next, $redirectToRoute = null)
     {

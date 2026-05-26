@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Inertia\Response;
+use Illuminate\Http\JsonResponse;
 use App\Actions\AddTemplateToStore;
 use App\Templates\FriesTemplate;
 use App\Templates\PastaTemplate;
@@ -16,7 +18,7 @@ use Inertia\Inertia;
 class StoreController extends Controller
 {
     /**
-     * @return \Inertia\Response
+     * @return Response
      */
     public function index()
     {
@@ -32,7 +34,7 @@ class StoreController extends Controller
 
     /**
      * @param int $store_id
-     * @return \Inertia\Response
+     * @return Response
      */
     public function show(int $store_id)
     {
@@ -49,7 +51,7 @@ class StoreController extends Controller
     /**
      * @param UpdateProduct $request
      * @param Product $product
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function update(UpdateProduct $request, Product $product)
     {

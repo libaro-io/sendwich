@@ -7,6 +7,7 @@ use App\Filament\Widgets\OrdersPerDay;
 use App\Filament\Widgets\OrdersPerMonth;
 use App\Filament\Widgets\PopularItemsChart;
 use App\Filament\Widgets\StatsOverview;
+use BackedEnum;
 use Filament\Pages\Dashboard as BaseDashboard;
 use Filament\Pages\Dashboard\Actions\FilterAction;
 use Filament\Pages\Dashboard\Concerns\HasFiltersAction;
@@ -16,7 +17,7 @@ class Dashboard extends BaseDashboard
 {
     use HasFiltersAction;
 
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-document-text';
 
     public function getWidgets(): array
     {
@@ -33,7 +34,7 @@ class Dashboard extends BaseDashboard
     {
         return [
             FilterAction::make()
-                ->form([
+                ->schema([
                     DatePicker::make('startDate'),
                     DatePicker::make('endDate'),
                 ]),

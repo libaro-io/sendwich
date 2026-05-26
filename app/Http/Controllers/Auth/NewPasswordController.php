@@ -35,9 +35,9 @@ class NewPasswordController extends Controller
     /**
      * Handle an incoming new password request.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function store(Request $request)
     {

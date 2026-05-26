@@ -11,12 +11,12 @@ class PopularItemsChart extends ChartWidget
 {
     use InteractsWithPageFilters;
 
-    protected static ?string $heading = 'Popular products';
+    protected ?string $heading = 'Popular products';
 
     protected function getData(): array
     {
-        $startDate = isset($this->filters['startDate']) ? Carbon::parse($this->filters['startDate']) : now()->startOfMonth();
-        $endDate = isset($this->filters['endDate']) ? Carbon::parse($this->filters['endDate']) : now()->endOfMonth();
+        $startDate = isset($this->pageFilters['startDate']) ? Carbon::parse($this->pageFilters['startDate']) : now()->startOfMonth();
+        $endDate = isset($this->pageFilters['endDate']) ? Carbon::parse($this->pageFilters['endDate']) : now()->endOfMonth();
 
         $popularItems = Order::query()
             ->join('products', 'products.id', '=', 'orders.product_id')

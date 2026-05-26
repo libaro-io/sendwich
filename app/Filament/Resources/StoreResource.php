@@ -2,12 +2,19 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\StoreResource\Pages\ListStores;
+use App\Filament\Resources\StoreResource\Pages\CreateStore;
+use App\Filament\Resources\StoreResource\Pages\EditStore;
 use App\Filament\Resources\StoreResource\Pages;
 use App\Filament\Resources\StoreResource\RelationManagers\ProductsRelationManager;
 use App\Models\Store;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -16,12 +23,12 @@ class StoreResource extends Resource
 {
     protected static ?string $model = Store::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-building-storefront';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-building-storefront';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('name')->required(),
                 Select::make('company_id')->relationship('company', 'name')->required(),
             ]);
@@ -31,18 +38,18 @@ class StoreResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')->searchable()->sortable(),
-                Tables\Columns\TextColumn::make('company.name')->searchable()->sortable(),
+                TextColumn::make('name')->searchable()->sortable(),
+                TextColumn::make('company.name')->searchable()->sortable(),
             ])
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -57,9 +64,9 @@ class StoreResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListStores::route('/'),
-            'create' => Pages\CreateStore::route('/create'),
-            'edit' => Pages\EditStore::route('/{record}/edit'),
+            'index' => ListStores::route('/'),
+            'create' => CreateStore::route('/create'),
+            'edit' => EditStore::route('/{record}/edit'),
         ];
     }
 }

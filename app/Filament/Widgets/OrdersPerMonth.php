@@ -9,7 +9,7 @@ use Flowframe\Trend\TrendValue;
 
 class OrdersPerMonth extends ChartWidget
 {
-    protected static ?string $heading = 'Orders per month';
+    protected ?string $heading = 'Orders per month';
 
     protected function getData(): array
     {

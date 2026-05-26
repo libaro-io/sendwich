@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Illuminate\Validation\Rules\Password;
+use Inertia\Response;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateCompany;
 use App\Models\Company;
@@ -21,7 +23,7 @@ class RegisteredCompanyController extends Controller
     /**
      * Display the registration view.
      *
-     * @return \Inertia\Response
+     * @return Response
      */
     public function create()
     {
@@ -37,7 +39,7 @@ class RegisteredCompanyController extends Controller
         $request->validate([
             'companyName' => 'required|unique:companies,name',
             'email' => 'required|email|unique:users,email',
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'password' => ['required', 'confirmed', Password::defaults()],
             'name' => 'required',
         ]);
         

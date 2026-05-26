@@ -13,12 +13,12 @@ class OrdersPerDay extends ChartWidget
 {
     use InteractsWithPageFilters;
 
-    protected static ?string $heading = 'Orders per day';
+    protected ?string $heading = 'Orders per day';
 
     protected function getData(): array
     {
-        $startDate = isset($this->filters['startDate']) ? Carbon::parse($this->filters['startDate']) : now()->startOfMonth();
-        $endDate = isset($this->filters['endDate']) ? Carbon::parse($this->filters['endDate']) : now()->endOfMonth();
+        $startDate = isset($this->pageFilters['startDate']) ? Carbon::parse($this->pageFilters['startDate']) : now()->startOfMonth();
+        $endDate = isset($this->pageFilters['endDate']) ? Carbon::parse($this->pageFilters['endDate']) : now()->endOfMonth();
 
         $data = Trend::model(Order::class)
             ->dateAlias('period')
