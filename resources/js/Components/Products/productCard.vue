@@ -31,6 +31,14 @@
                     <div v-else>
                         <p>There are no options for this product</p>
                     </div>
+                    <div class="mt-4">
+                        <textarea
+                            v-model="comment"
+                            class="textarea textarea-bordered w-full"
+                            placeholder="Extra opmerking (bv. zonder ei aub)"
+                            rows="1"
+                        ></textarea>
+                    </div>
                     <div class="flex justify-end mt-4">
                         <button class="btn btn-success" @click="order">Place Order</button>
                     </div>
@@ -58,6 +66,11 @@ export default {
     props: {
         product : Object,
     },
+    data() {
+        return {
+            comment: '',
+        };
+    },
     methods:{
         formatMoney: helper.formatMoney,
         toggleOption(option){
@@ -65,7 +78,8 @@ export default {
 
         },
         order(){
-            this.$emit('ordered',this.product);
+            this.$emit('ordered', this.product, this.comment);
+            this.comment = '';
             this.closeModal();
         },
         closeModal(){

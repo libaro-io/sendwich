@@ -155,7 +155,11 @@ class OrderController extends Controller
             $order->total += $option->price;
         }
 
-        $order->comment = $options->pluck('name')->join(', ');
+        $comment = $options->pluck('name')->join(', ');
+        if (!empty($data['comment'])) {
+            $comment = $comment ? $comment . ' — ' . $data['comment'] : $data['comment'];
+        }
+        $order->comment = $comment ?: null;
         $order->save();
 
         return redirect()->back()->with(['success'=> $message]);
