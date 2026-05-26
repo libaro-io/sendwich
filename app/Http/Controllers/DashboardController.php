@@ -48,7 +48,7 @@ class DashboardController extends Controller
 
         $selectedRunner = $assignedOrder?->deliverer ?? null;
 
-        if (!$selectedRunner) {
+        if (!$selectedRunner && $company->auto_assign_runner) {
             $action = new ChooseRunner($company);
             $selectedRunner = $action->getSimulatedRunner();
             $simulated = true;
