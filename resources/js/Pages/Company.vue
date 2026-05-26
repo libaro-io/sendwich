@@ -56,7 +56,7 @@ const deleteUser = (user) => {
                 <div class="py-12">
                     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                         <div class="grid grid-cols-1 gap-4">
-                            <div class="bg-white shadow sm:rounded-lg">
+                            <div class="bg-white shadow-sm sm:rounded-lg">
                                 <div class="px-4 py-5 sm:p-6 relative">
                                     <div class="flex items-center justify-between mb-5">
                                         <h1 class="m-0">Users</h1>

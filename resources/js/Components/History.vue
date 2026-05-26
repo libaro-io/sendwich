@@ -1,5 +1,63 @@
+<script>
+import axios from "axios";
+import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
+import {useToast} from "vue-toastification";
+import moment from "moment"
+
+const toast = useToast();
+
+export default {
+    name: "History",
+    components: {
+        FontAwesomeIcon,
+    },
+    mounted() {
+        this.getData()
+    },
+    props: {
+        products: Array,
+    },
+    data() {
+        return {
+            orders: [],
+        };
+    },
+    methods: {
+        getData() {
+            axios.post('/api/getAllOrdersByDateAndUser', {}).then(response => {
+                this.orders = response.data;
+            }).catch(error => {
+                console.log(error);
+            });
+        },
+        currentDateTime(orderByDate) {
+            return moment(orderByDate, "YYYYMMDD").format('DD/MM/YYYY');
+        },
+        totalOrders(orders) {
+            let sum = 0;
+            orders.forEach((order) => {
+                sum = sum + order.total
+            })
+            return sum;
+        },
+        showSaveButton(group) {
+            group.showSaveButton = true;
+        },
+        updateOrder(group) {
+            const data = group.data
+            axios.post('/api/updateOldOrder', {data}).then(response => {
+                this.getData()
+                group.showSaveButton = false;
+            }).catch(error => {
+                console.log(error);
+            });
+        },
+
+    }
+}
+</script>
 <template>
-    <div class="bg-white shadow sm:rounded-lg">
+    <div class="bg-white shadow-sm sm:rounded-lg">
         <div class="px-4 py-5 sm:p-6">
             <h1>History</h1>
             <article v-for="group in orders" class="mb-4">
@@ -71,62 +129,3 @@
         </div>
     </div>
 </template>
-
-<script>
-import axios from "axios";
-import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
-import {useToast} from "vue-toastification";
-import moment from "moment"
-
-const toast = useToast();
-
-export default {
-    name: "History",
-    components: {
-        FontAwesomeIcon,
-    },
-    mounted() {
-        this.getData()
-    },
-    props: {
-        products: Array,
-    },
-    data() {
-        return {
-            orders: [],
-        };
-    },
-    methods: {
-        getData() {
-            axios.post('/api/getAllOrdersByDateAndUser', {}).then(response => {
-                this.orders = response.data;
-            }).catch(error => {
-                console.log(error);
-            });
-        },
-        currentDateTime(orderByDate) {
-            return moment(orderByDate, "YYYYMMDD").format('DD/MM/YYYY');
-        },
-        totalOrders(orders) {
-            let sum = 0;
-            orders.forEach((order) => {
-                sum = sum + order.total
-            })
-            return sum;
-        },
-        showSaveButton(group) {
-            group.showSaveButton = true;
-        },
-        updateOrder(group) {
-            const data = group.data
-            axios.post('/api/updateOldOrder', {data}).then(response => {
-                this.getData()
-                group.showSaveButton = false;
-            }).catch(error => {
-                console.log(error);
-            });
-        },
-
-    }
-}
-</script>

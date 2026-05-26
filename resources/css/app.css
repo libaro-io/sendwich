@@ -56,7 +56,7 @@
 }
 
 h1, .card.title {
-    @apply text-2xl leading-6 font-medium font-bold text-primary mb-5;
+    @apply text-2xl leading-6 font-bold text-primary mb-5;
 }
 
 h2 {

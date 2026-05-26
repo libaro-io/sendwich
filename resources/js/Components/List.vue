@@ -1,17 +1,3 @@
-<template>
-    <div class="card bg-white shadow sm:rounded-lg">
-        <div class="card-body">
-            <div class="flex items-center justify-between mb-4">
-                <h1 class="m-0">{{ title }}</h1>
-                <div>
-                    <slot name="actions"></slot>
-                </div>
-            </div>
-            <slot name="main"></slot>
-        </div>
-    </div>
-</template>
-
 <script>
 import Checkbox from '@/Components/Checkbox.vue';
 
@@ -34,3 +20,16 @@ export default {
     }
 }
 </script>
+<template>
+    <div class="card bg-white shadow-sm sm:rounded-lg">
+        <div class="card-body">
+            <div class="flex items-center justify-between mb-4">
+                <h1 class="m-0">{{ title }}</h1>
+                <div>
+                    <slot name="actions"></slot>
+                </div>
+            </div>
+            <slot name="main"></slot>
+        </div>
+    </div>
+</template>

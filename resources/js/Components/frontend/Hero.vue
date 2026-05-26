@@ -1,3 +1,5 @@
+<script setup>
+</script>
 <template>
     <div class="relative isolate pt-14">
         <div class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80" aria-hidden="true">
@@ -9,7 +11,7 @@
                     <h1 class="text-4xl font-bold tracking-tight text-white sm:text-6xl">Streamline your lunch break</h1>
                     <p class="mt-6 text-lg leading-8 text-gray-300">Stuck in a lunchtime nightmare, where all eyes fixate on you, anticipating requests to fetch their meals as well? Streamline your lunch break and stop wasting your precious time today!</p>
                     <div class="mt-10 flex items-center justify-center gap-x-6">
-                        <a :href="route('company.register')" class="rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400">Get started for free</a>
+                        <a :href="route('company.register')" class="rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400">Get started for free</a>
                         <a href="#steps" class="text-sm font-semibold leading-6 text-white">Learn more <span aria-hidden="true">→</span></a>
                     </div>
                 </div>
@@ -20,6 +22,3 @@
         </div>
     </div>
 </template>
-
-<script setup>
-</script>

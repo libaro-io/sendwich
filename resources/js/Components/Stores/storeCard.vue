@@ -1,3 +1,22 @@
+<script>
+import Checkbox from "@/Components/Checkbox.vue";
+export default {
+    name: "productCard",
+    components : {
+      Checkbox,
+    },
+    mounted() {
+        console.log(this.store)
+    },
+    props: {
+        store : Object,
+    },
+    methods:{
+    },
+    computed:{
+    }
+}
+</script>
 <template>
 <div class="card-body flex justify-between align-middle">
     <div class="flex flex-end flex-row justify-between sm:flex sm:items-start">
@@ -19,27 +38,6 @@
 
 </div>
 </template>
-
-<script>
-import Checkbox from "@/Components/Checkbox.vue";
-export default {
-    name: "productCard",
-    components : {
-      Checkbox,
-    },
-    mounted() {
-        console.log(this.store)
-    },
-    props: {
-        store : Object,
-    },
-    methods:{
-    },
-    computed:{
-    }
-}
-</script>
-
 <style scoped>
 
 </style>

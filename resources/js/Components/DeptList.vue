@@ -1,5 +1,40 @@
+<script>
+
+import PayBack from "@/Components/PayBack.vue";
+import {useHelpers} from "@/Composables/helpers";
+
+const helper = useHelpers();
+export default {
+    name: "DeptList",
+    components: {PayBack},
+
+    props: {
+        company: Object,
+        users: Array,
+        runner:Object,
+        simulated:Boolean,
+        userCount: Number,
+    },
+    methods: {
+        formatMoney: helper.formatMoney,
+        shortenName(name, start, end) {
+            // find the index of the last space character in the substring
+            let lastSpaceIndex = name.lastIndexOf(" ", end);
+
+            // if the last word is not complete, adjust the end index
+            if (lastSpaceIndex > end - 10) {
+                end = lastSpaceIndex + 1;
+            }
+
+            // get the substring and return it
+            const substring = name.substring(start, end);
+            return substring;
+        },
+    }
+}
+</script>
 <template>
-    <div class="bg-white shadow sm:rounded-lg">
+    <div class="bg-white shadow-sm sm:rounded-lg">
         <div class="px-4 py-5 sm:p-6">
             <h2>Runners</h2>
             <table v-if="userCount" class="mt-5 table w-full">
@@ -48,43 +83,6 @@
         </div>
     </div>
 </template>
-
-<script>
-
-import PayBack from "@/Components/PayBack.vue";
-import {useHelpers} from "@/Composables/helpers";
-
-const helper = useHelpers();
-export default {
-    name: "DeptList",
-    components: {PayBack},
-
-    props: {
-        company: Object,
-        users: Array,
-        runner:Object,
-        simulated:Boolean,
-        userCount: Number,
-    },
-    methods: {
-        formatMoney: helper.formatMoney,
-        shortenName(name, start, end) {
-            // find the index of the last space character in the substring
-            let lastSpaceIndex = name.lastIndexOf(" ", end);
-
-            // if the last word is not complete, adjust the end index
-            if (lastSpaceIndex > end - 10) {
-                end = lastSpaceIndex + 1;
-            }
-
-            // get the substring and return it
-            const substring = name.substring(start, end);
-            return substring;
-        },
-    }
-}
-</script>
-
 <style scoped>
 
 </style>
