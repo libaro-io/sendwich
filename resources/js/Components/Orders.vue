@@ -17,8 +17,27 @@ export default {
             request: null,
         };
     },
+    computed: {
+        hasPendingOrders() {
+            return this.orders.some(o => o.paid_by === null);
+        },
+        isRunner() {
+            const userId = this.$page.props.auth.user.id;
+            return this.orders.some(o => o.paid_by === userId && o.delivered_at === null);
+        },
+    },
     methods: {
-        formatMoney: helper.formatMoney
+        formatMoney: helper.formatMoney,
+        statusLabel(order) {
+            if (order.delivered_at) return 'Afgeleverd';
+            if (order.paid_by) return 'Onderweg';
+            return 'Open';
+        },
+        statusBadgeClass(order) {
+            if (order.delivered_at) return 'badge-success';
+            if (order.paid_by) return 'badge-warning';
+            return 'badge-ghost';
+        },
     },
     props: {
         deliveryMoment: String,

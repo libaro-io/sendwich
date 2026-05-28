@@ -16,6 +16,7 @@ export default {
     },
     props: {
         products: Array,
+        users: Array,
     },
     data() {
         return {
@@ -53,6 +54,20 @@ export default {
             });
         },
 
+        updateRunner(orderGroup, runnerId) {
+            const orderIds = orderGroup.map(order => order.id);
+            const parsedRunnerId = runnerId ? parseInt(runnerId) : null;
+            axios.post('/api/updateOrderRunner', {
+                order_ids: orderIds,
+                runner_id: parsedRunnerId,
+            }).then(() => {
+                this.getData();
+                toast.success('Runner updated');
+            }).catch(error => {
+                toast.error('Failed to update runner');
+                console.log(error);
+            });
+        },
     }
 }
 </script>
@@ -64,10 +79,10 @@ export default {
                 <h2>{{ currentDateTime(group.date) }}</h2>
                 <div v-for="(orderGroup, user_id) in group.data" class="">
                     <div>
-                        <div class="overflow-x-auto mb-5">
+                        <div class="overflow-x-auto mb-5 rounded-lg shadow-sm border border-gray-100">
                             <table class="table w-full">
                                 <thead>
-                                <tr>
+                                <tr class="bg-white">
                                     <th>Ordered by</th>
                                     <th>Product</th>
                                     <th>Quantity</th>
@@ -75,21 +90,17 @@ export default {
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <!-- row 1 -->
-                                <tr v-for="item in orderGroup">
-                                    <td width="25% ">{{ item.user.name }}</td>
+                                <tr v-for="item in orderGroup" class="bg-white hover:bg-gray-50">
+                                    <td width="25%">{{ item.user.name }}</td>
                                     <td v-if="orderGroup[0].deliverer && $page.props.auth.user.id !== orderGroup[0].deliverer.id">
-                                        <strong>
-                                            {{ item.product.name }}
-                                        </strong>
+                                        <span class="font-bold text-base">{{ item.product.name }}</span>
                                         <br>
-                                        {{ item.comment }}
+                                        <span class="text-gray-500">{{ item.comment }}</span>
                                     </td>
                                     <td v-else>
-                                        <select class="select w-full max-w-xs bg-white" v-model="item.product.id"
+                                        <select class="w-full max-w-xs bg-transparent border-none outline-none font-bold cursor-pointer" v-model="item.product.id"
                                                 @change="showSaveButton(group)">
-                                            <option v-for="product in products" :value="product.id">{{ product.name }}
-                                            </option>
+                                            <option v-for="product in products" :value="product.id">{{ product.name }}</option>
                                         </select>
                                     </td>
                                     <td width="10%">{{ item.quantity }}</td>
@@ -101,11 +112,19 @@ export default {
                                         }}
                                     </td>
                                 </tr>
-                                <tr>
+                                <tr class="bg-white border-t border-gray-100">
                                     <td colspan="2">
-                                        <span class="badge badge-success" v-if="orderGroup[0].deliverer !== null && orderGroup[0].deliverer.id === $page.props.auth.user.id  ">Delivered by you</span>
-                                        <span class="badge" v-else-if="orderGroup[0].deliverer !== null">Delivered by {{ orderGroup[0].deliverer.name }}</span>
-                                        <span class="badge" v-else>No runner was assigned</span>
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-sm font-medium text-gray-600">Runner:</span>
+                                        <select class="select select-sm bg-white border border-gray-200"
+                                                :value="orderGroup[0].paid_by"
+                                                @change="updateRunner(orderGroup, $event.target.value)">
+                                            <option :value="null">No runner</option>
+                                            <option v-for="user in users" :key="user.id" :value="user.id">
+                                                {{ user.id === $page.props.auth.user.id ? 'You (' + user.name + ')' : user.name }}
+                                            </option>
+                                        </select>
+                                        </div>
                                     </td>
                                     <td class="text-right">
                                         <button v-if="group.showSaveButton" @click="updateOrder(group)"
@@ -118,7 +137,8 @@ export default {
                                                 style: 'currency',
                                                 currency: 'EUR'
                                             }).format(totalOrders(orderGroup))
-                                        }}</span></td>
+                                        }}</span>
+                                    </td>
                                 </tr>
                                 </tbody>
                             </table>
