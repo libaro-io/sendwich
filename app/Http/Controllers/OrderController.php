@@ -156,7 +156,11 @@ class OrderController extends Controller
             $order->total += $option->price;
         }
 
-        $order->comment = $options->pluck('name')->join(', ');
+        $comment = $options->pluck('name')->join(', ');
+        if (!empty($data['comment'])) {
+            $comment = $comment ? $comment . ' — ' . $data['comment'] : $data['comment'];
+        }
+        $order->comment = $comment ?: null;
         $order->save();
 
         return redirect()->back()->with(['success'=> $message]);
@@ -176,7 +180,16 @@ class OrderController extends Controller
         /** @var Product|null $product */
         $product = Product::query()->find($data['product_id']);
 
-        $this->getProductOrderForUser($user, $product)?->delete();
+        if (is_null($product)) {
+            abort(404);
+        }
+
+        $order = $this->getProductOrderForUser($user, $product);
+
+        abort_if(is_null($order), 404);
+        abort_if($order->user_id !== $user->id, 403);
+
+        $order->delete();
 
         return redirect()->back()->with(['success' => 'Uw bestelling is verwijderd']);
     }
@@ -192,6 +205,24 @@ class OrderController extends Controller
 
         return redirect()->back()->with(['success'=>'You have been assigned']);
 
+    }
+
+    public function markAsDelivered(): \Illuminate\Http\RedirectResponse
+    {
+        $user = Auth::user();
+
+        $updatedCount = Order::query()
+            ->where('paid_by', $user->id)
+            ->whereNull('delivered_at')
+            ->whereBetween('date', [
+                $this->getDate()->startOfDay(),
+                $this->getDate()->endOfDay(),
+            ])
+            ->update(['delivered_at' => now()]);
+
+        abort_if($updatedCount === 0, 404);
+
+        return redirect()->back()->with(['success' => 'Bestellingen gemarkeerd als afgeleverd']);
     }
 
     private function getProductOrderForUser(User $user, Product $product): ?Order

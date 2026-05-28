@@ -23,6 +23,11 @@ class AddRequest extends FormRequest
                 'integer',
                 Rule::exists('product_options', 'id'),
             ],
+            'comment' => [
+                'nullable',
+                'string',
+                'max:500',
+            ],
         ];
     }
 }

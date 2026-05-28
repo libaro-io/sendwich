@@ -40,37 +40,39 @@ export default {
             search: this.filters.search,
             searchedProducts: null,
             toggle: false,
-            selectedProduct:null,
+            selectedProduct: null,
+            selectedDescription: null,
         };
     },
     methods: {
-        addProduct(product) {
+        addProduct(product, comment) {
             var app = this;
             var options = app.getSelectedOptionIdsForProduct(product)
             axios.post('/api/order/check-new-store', {
                 product_id: product.id,
                 options: options,
             }).then(function(response){
-                app.confirmOrder(product , options);
+                app.confirmOrder(product, options, comment);
             }).catch(function (error){
-                app.showConfirmationModal(product, options);
+                app.showConfirmationModal(product, options, comment);
             });
-            console.log('send')
         },
 
-        confirmOrder(product, options) {
+        confirmOrder(product, options, comment) {
             this.toggle = false;
             this.$inertia.post('/api/order/add-product', {
                 product_id: product.id,
                 options: options,
+                comment: comment || null,
             },{
                 only:['orders','totalPrice','flash','selectedRunner']
             });
         },
 
-        showConfirmationModal(product, options){
+        showConfirmationModal(product, options, comment){
             this.selectedProduct = product;
             this.selectedOptions = options;
+            this.selectedDescription = comment;
             this.toggle = true;
         },
 
