@@ -42,7 +42,7 @@ class RegisteredCompanyController extends Controller
             'password' => ['required', 'confirmed', Password::defaults()],
             'name' => 'required',
         ]);
-        
+
         $company = new Company();
 
         $company->name = $request->get('companyName');
@@ -65,7 +65,9 @@ class RegisteredCompanyController extends Controller
      */
     private function createUser(array $userdata, Company $company)
     {
-        $user = User::create($userdata);
+        $user = User::create(array_merge($userdata, [
+            'password' => Hash::make($userdata['password']),
+        ]));
 
         $user->company_id = $company->id;
         $user->save();
