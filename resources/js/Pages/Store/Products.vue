@@ -52,6 +52,10 @@ const saveNew = (product) => {
     });
 }
 
+const preventNegative = (event) => {
+    if (event.key === '-') event.preventDefault();
+};
+
 let newProduct = reactive();
 resetNewProduct();
 </script>
@@ -83,7 +87,7 @@ resetNewProduct();
                                         <div class="form-control">
                                             <label class="input-group">
                                                 <input type="number" v-model="product.price"
-                                                       class="input input-bordered"/>
+                                                       min="0" @keydown="preventNegative" class="input input-bordered"/>
                                                 <span>EUR</span>
                                             </label>
                                         </div>
@@ -109,7 +113,7 @@ resetNewProduct();
                                         <div class="form-control">
                                             <label class="input-group">
                                                 <input type="number" v-model="newProduct.price"
-                                                       placeholder="0.00" class="input input-bordered"/>
+                                                       placeholder="0.00" min="0" @keydown="preventNegative" class="input input-bordered"/>
                                                 <span>EUR</span>
                                             </label>
                                         </div>

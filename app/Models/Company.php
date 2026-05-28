@@ -15,6 +15,7 @@ class Company extends Model
     protected $casts = [
         'reminder_enabled' => 'boolean',
         'reminder_days' => 'array',
+        'auto_assign_runner' => 'boolean',
     ];
 
     /**

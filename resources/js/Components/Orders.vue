@@ -3,41 +3,44 @@
         <div class="px-4 py-5 sm:p-6">
             <div class="flex items-center justify-between mb-5">
                 <h2>Orders for {{ deliveryMoment }}</h2>
-                <Link href="/api/assign-to-me"
-                      v-if="orders.length !== 0"
-                      method="post"
-                      as="button"
-                      type="button"
-                      class="btn btn-sm btn-primary"
-                      :only="['orders','totalPrice','flash']"
-                >Assign to me
-                </Link>
-
+                <div class="flex gap-2">
+                    <Link href="/api/assign-to-me"
+                          v-if="hasPendingOrders"
+                          method="post"
+                          as="button"
+                          type="button"
+                          class="btn btn-sm btn-primary"
+                          :only="['orders','totalPrice','flash']"
+                    >Assign to me
+                    </Link>
+                    <Link href="/api/order/deliver"
+                          v-if="isRunner"
+                          method="patch"
+                          as="button"
+                          type="button"
+                          class="btn btn-sm btn-success"
+                          :only="['orders','totalPrice','flash']"
+                    >Alles afgeleverd
+                    </Link>
+                </div>
             </div>
             <div class="mb-5 flex flex-col gap-2">
                 <div v-for="order in orders"
                      class="card card-compact bg-gray-50 shadow" v-if="orders.length">
                     <div class="sm:flex sm:items-start card-body">
-                        <div class="text-sm font-medium text-gray-900">
+                        <div class="text-sm font-medium text-gray-900 flex-1">
                             <span class="text-gray-500 inline-block mr-4">{{ order.store_name }}</span>{{ order.product.name }} <span v-if="order.comment">({{ order.comment }})</span>
                         </div>
-                        <div class="mt-1 text-sm text-gray-600 sm:flex sm:items-center">
-                            <div>
-                                <span
-                                    class="badge badge-outline badge-success"
-                                >
-                                    {{ formatMoney(order.total) }}
-                                </span>
-                            </div>
-                            <span class="hidden sm:mx-2 sm:inline"
-                                  aria-hidden="true"> &middot; </span>
-                            <div class="mt-1 sm:mt-0"><span
-                                class="badge badge-info">{{
-                                    order.user.name
-                                }}</span></div>
+                        <div class="mt-1 text-sm text-gray-600 sm:flex sm:items-center gap-2 flex-wrap">
+                            <span class="badge badge-outline badge-success">{{ formatMoney(order.total) }}</span>
+                            <span class="hidden sm:inline" aria-hidden="true">&middot;</span>
+                            <span class="badge badge-info">{{ order.user.name }}</span>
+                            <span class="hidden sm:inline" aria-hidden="true">&middot;</span>
+                            <span :class="statusBadgeClass(order)" class="badge">{{ statusLabel(order) }}</span>
                         </div>
                         <div class="card-actions justify-end w-full">
-                            <Link href="/api/order/remove-product"
+                            <Link v-if="order.user_id === $page.props.auth.user.id"
+                                  href="/api/order/remove-product"
                                   method="post"
                                   as="button"
                                   type="button"
@@ -86,8 +89,27 @@ export default {
             request: null,
         };
     },
+    computed: {
+        hasPendingOrders() {
+            return this.orders.some(o => o.paid_by === null);
+        },
+        isRunner() {
+            const userId = this.$page.props.auth.user.id;
+            return this.orders.some(o => o.paid_by === userId && o.delivered_at === null);
+        },
+    },
     methods: {
-        formatMoney: helper.formatMoney
+        formatMoney: helper.formatMoney,
+        statusLabel(order) {
+            if (order.delivered_at) return 'Afgeleverd';
+            if (order.paid_by) return 'Onderweg';
+            return 'Open';
+        },
+        statusBadgeClass(order) {
+            if (order.delivered_at) return 'badge-success';
+            if (order.paid_by) return 'badge-warning';
+            return 'badge-ghost';
+        },
     },
     props: {
         deliveryMoment: String,

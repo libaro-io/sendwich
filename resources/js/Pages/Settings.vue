@@ -26,6 +26,7 @@ const dayLabels = [
 
 const runnerForm = useForm({
     time: props.company.select_runner_at?.substring(0, 5) ?? '',
+    auto_assign_runner: props.company.auto_assign_runner ?? true,
 });
 
 const notificationForm = useForm({
@@ -165,6 +166,19 @@ const saveNotifications = () => {
                                                 <div class="chat-bubble chat-bubble-primary text-white">The selected runner will be notified by email and assigned to collect orders placed before a set time. Orders placed later will remain unassigned or can be manually claimed by a runner until the next day's scheduled run.</div>
                                             </div>
                                             <div v-if="runnerForm.errors.time" class="text-error text-sm">{{ runnerForm.errors.time }}</div>
+                                        </div>
+
+                                        <div class="flex items-center justify-between mt-6">
+                                            <div>
+                                                <h4 class="font-semibold">Auto-assign runner</h4>
+                                                <p class="text-gray-500 text-sm mt-1">
+                                                    When disabled, the runner must always be assigned manually via the dashboard.
+                                                </p>
+                                            </div>
+                                            <input type="checkbox"
+                                                   v-model="runnerForm.auto_assign_runner"
+                                                   class="toggle toggle-success"
+                                            />
                                         </div>
 
                                         <div class="flex justify-end mt-4">

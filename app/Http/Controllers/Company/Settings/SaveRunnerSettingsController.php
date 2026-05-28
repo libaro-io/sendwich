@@ -13,6 +13,7 @@ class SaveRunnerSettingsController extends Controller
     {
         $company = Auth::user()->company;
         $company->select_runner_at = $request->validated('time');
+        $company->auto_assign_runner = $request->validated('auto_assign_runner');
         $company->save();
 
         return redirect()->action(ShowSettingsController::class);

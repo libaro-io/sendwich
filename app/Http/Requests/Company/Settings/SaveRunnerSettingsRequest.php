@@ -15,6 +15,7 @@ class SaveRunnerSettingsRequest extends FormRequest
     {
         return [
             'time' => ['required', 'date_format:H:i'],
+            'auto_assign_runner' => ['required', 'boolean'],
         ];
     }
 }
