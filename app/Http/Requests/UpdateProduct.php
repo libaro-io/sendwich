@@ -26,7 +26,7 @@ class UpdateProduct extends FormRequest
         return [
             'product.name' => 'required|string',
             'product.description' => 'nullable|string',
-            'product.price' => 'required|numeric',
+            'product.price' => 'required|numeric|min:0',
         ];
     }
 }

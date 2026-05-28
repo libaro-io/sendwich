@@ -15,7 +15,7 @@
                     </Link>
                     <Link href="/api/order/deliver"
                           v-if="isRunner"
-                          method="post"
+                          method="patch"
                           as="button"
                           type="button"
                           class="btn btn-sm btn-success"

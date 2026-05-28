@@ -77,7 +77,7 @@ export default {
             const searchTerm = this.search.toLowerCase();
             return this.products.filter(product =>
                 product.name.toLowerCase().includes(searchTerm) ||
-                (product.comment && product.comment.toLowerCase().includes(searchTerm))
+                (product.description && product.description.toLowerCase().includes(searchTerm))
             );
         }
     },
