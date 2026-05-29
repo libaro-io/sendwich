@@ -250,7 +250,7 @@ class OrderController extends Controller
             ->with([
                 'deliverer',
                 'user',
-                'product'
+                'product.store',
                 ]
             )
             ->orderBy('date','DESC')

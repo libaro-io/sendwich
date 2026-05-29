@@ -17,8 +17,27 @@ export default {
             request: null,
         };
     },
+    computed: {
+        hasPendingOrders() {
+            return this.orders.some(o => o.paid_by === null);
+        },
+        isRunner() {
+            const userId = this.$page.props.auth.user.id;
+            return this.orders.some(o => o.paid_by === userId && o.delivered_at === null);
+        },
+    },
     methods: {
-        formatMoney: helper.formatMoney
+        formatMoney: helper.formatMoney,
+        statusLabel(order) {
+            if (order.delivered_at) return 'Afgeleverd';
+            if (order.paid_by) return 'Onderweg';
+            return 'Open';
+        },
+        statusBadgeClass(order) {
+            if (order.delivered_at) return 'badge-success';
+            if (order.paid_by) return 'badge-warning';
+            return 'badge-ghost';
+        },
     },
     props: {
         deliveryMoment: String,
@@ -68,7 +87,7 @@ export default {
                             <span :class="statusBadgeClass(order)" class="badge">{{ statusLabel(order) }}</span>
                         </div>
                         <div class="card-actions justify-end w-full">
-                            <Link v-if="order.user_id === $page.props.auth.user.id"
+                            <Link v-if="order.user_id === $page.props.auth.user.id && !order.delivered_at"
                                   href="/api/order/remove-product"
                                   method="post"
                                   as="button"

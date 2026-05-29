@@ -29,6 +29,7 @@ Route::post('/simulated-runner', [OrderController::class,  'getSimulatedRunner']
 
 Route::post('/getAllOrdersByDateAndUser', [OrderController::class,  'getAllOrdersByDateAndUser']);
 Route::post('/updateOldOrder', [HistoryController::class,  'updateOrder']);
+Route::post('/updateOrderRunner', [HistoryController::class, 'updateRunner']);
 
 Route::post('/payouts/handle', [PayoutController::class, 'payout']);
 

@@ -6,6 +6,7 @@ use App\Jobs\NotifyOnHistoryEdit;
 use App\Models\Company;
 use App\Models\Order;
 use App\Models\Product;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -18,11 +19,13 @@ class HistoryController extends Controller
         $company = $user->company;
 
         $products = $company->getProducts();
+        $users = $company->users()->select('id', 'name')->get();
 
         return Inertia::render('History',
             [
                 'company' => $company,
-                'products' => $products
+                'products' => $products,
+                'users' => $users,
             ]);
     }
 
@@ -46,5 +49,23 @@ class HistoryController extends Controller
         }
 
         return response()->json();
+    }
+
+    public function updateRunner(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'order_ids' => ['required', 'array'],
+            'order_ids.*' => ['integer'],
+            'runner_id' => ['nullable', 'integer', 'exists:users,id'],
+        ]);
+
+        $user = auth()->user();
+
+        Order::query()
+            ->whereIn('id', $data['order_ids'])
+            ->where('company_id', $user->company->id)
+            ->update(['paid_by' => $data['runner_id']]);
+
+        return response()->json(['success' => true]);
     }
 }

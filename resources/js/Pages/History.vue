@@ -6,7 +6,8 @@ import History from '@/Components/History.vue'
 const props = defineProps({
     deliveryMoment: String,
     company: Object,
-    products: Array
+    products: Array,
+    users: Array,
 });
 
 </script>
@@ -18,7 +19,7 @@ const props = defineProps({
                 <div class="py-12">
                     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                         <div class="grid grid-cols-1 gap-4">
-                            <History :products="products"></History>
+                            <History :products="products" :users="users"></History>
                         </div>
                     </div>
                 </div>
