@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Company\Settings;
 
+use Throwable;
 use App\Http\Controllers\Controller;
 use App\Models\CompanyNotificationChannel;
 use App\Notifications\TestNotificationChannel;
@@ -18,7 +19,7 @@ class TestNotificationChannelController extends Controller
                 ->notify(new TestNotificationChannel());
 
             return response()->json(['message' => 'Test notification sent!']);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             Log::error('Test notification failed', ['channel' => $channel->id, 'error' => $e->getMessage()]);
 
             return response()->json(['message' => 'Failed to send test notification.'], 500);

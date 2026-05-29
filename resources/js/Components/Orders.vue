@@ -1,5 +1,34 @@
+<script>
+import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
+import {useToast} from "vue-toastification";
+import {Link} from "@inertiajs/vue3"
+import {useHelpers} from "@/Composables/helpers";
+
+const helper = useHelpers();
+const toast = useToast();
+
+export default {
+    name: "Orders",
+    components: {
+        FontAwesomeIcon, Link
+    },
+    data() {
+        return {
+            request: null,
+        };
+    },
+    methods: {
+        formatMoney: helper.formatMoney
+    },
+    props: {
+        deliveryMoment: String,
+        orders: Array,
+        totalPrice: Number,
+    },
+}
+</script>
 <template>
-    <div  class="bg-white shadow sm:rounded-lg">
+    <div  class="bg-white shadow-sm sm:rounded-lg">
         <div class="px-4 py-5 sm:p-6">
             <div class="flex items-center justify-between mb-5">
                 <h2>Orders for {{ deliveryMoment }}</h2>
@@ -26,7 +55,7 @@
             </div>
             <div class="mb-5 flex flex-col gap-2">
                 <div v-for="order in orders"
-                     class="card card-compact bg-gray-50 shadow" v-if="orders.length">
+                     class="card card-compact bg-gray-50 shadow-sm" v-if="orders.length">
                     <div class="sm:flex sm:items-start card-body">
                         <div class="text-sm font-medium text-gray-900 flex-1">
                             <span class="text-gray-500 inline-block mr-4">{{ order.store_name }}</span>{{ order.product.name }} <span v-if="order.comment">({{ order.comment }})</span>
@@ -53,7 +82,7 @@
                         </div>
                     </div>
                 </div>
-                <div v-else class="card card-compact bg-gray-50 shadow">
+                <div v-else class="card card-compact bg-gray-50 shadow-sm">
                     <div class="card-body">
                         <p class="font-bold">There are no orders yet</p>
                     </div>
@@ -69,53 +98,4 @@
 
     </div>
 </template>
-
-<script>
-import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
-import {useToast} from "vue-toastification";
-import {Link} from "@inertiajs/inertia-vue3"
-import {useHelpers} from "@/Composables/helpers";
-
-const helper = useHelpers();
-const toast = useToast();
-
-export default {
-    name: "Orders",
-    components: {
-        FontAwesomeIcon, Link
-    },
-    data() {
-        return {
-            request: null,
-        };
-    },
-    computed: {
-        hasPendingOrders() {
-            return this.orders.some(o => o.paid_by === null);
-        },
-        isRunner() {
-            const userId = this.$page.props.auth.user.id;
-            return this.orders.some(o => o.paid_by === userId && o.delivered_at === null);
-        },
-    },
-    methods: {
-        formatMoney: helper.formatMoney,
-        statusLabel(order) {
-            if (order.delivered_at) return 'Afgeleverd';
-            if (order.paid_by) return 'Onderweg';
-            return 'Open';
-        },
-        statusBadgeClass(order) {
-            if (order.delivered_at) return 'badge-success';
-            if (order.paid_by) return 'badge-warning';
-            return 'badge-ghost';
-        },
-    },
-    props: {
-        deliveryMoment: String,
-        orders: Array,
-        totalPrice: Number,
-    },
-}
-</script>
 

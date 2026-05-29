@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 
 class NewUsersPerMonth extends ChartWidget
 {
-    protected static ?string $heading = 'New users per month';
+    protected ?string $heading = 'New users per month';
 
     protected function getData(): array
     {

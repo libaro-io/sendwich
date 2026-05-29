@@ -5,7 +5,7 @@ import BreezeInput from '@/Components/Input.vue';
 import BreezeLabel from '@/Components/Label.vue';
 import BreezeTitle from '@/Components/Title.vue';
 import BreezeValidationErrors from '@/Components/ValidationErrors.vue';
-import {Head, Link, useForm} from '@inertiajs/inertia-vue3';
+import {Head, Link, useForm} from '@inertiajs/vue3';
 import Label from "@/Components/Label.vue";
 
 

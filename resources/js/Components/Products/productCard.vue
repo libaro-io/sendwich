@@ -1,3 +1,40 @@
+<script>
+import Checkbox from "@/Components/Checkbox.vue";
+import {useHelpers} from "@/Composables/helpers";
+
+const helper = useHelpers();
+export default {
+    name: "productCard",
+    components : {
+      Checkbox,
+    },
+    mounted() {
+        this.product.options.forEach(( option ) => option['selected'] = false)
+    },
+    props: {
+        product : Object,
+    },
+    methods:{
+        formatMoney: helper.formatMoney,
+        toggleOption(option){
+            option.selected = !option.selected;
+
+        },
+        order(){
+            this.$emit('ordered',this.product);
+            this.closeModal();
+        },
+        closeModal(){
+            document.getElementById('option-modal-'+this.product.id).checked = false;
+        }
+    },
+    computed:{
+        options(){
+            return this.product.options;
+        }
+    }
+}
+</script>
 <template>
 <div class="card-body flex justify-between align-middle">
     <div class="flex flex-end flex-row justify-between sm:flex sm:items-start">
@@ -49,51 +86,6 @@
 
 </div>
 </template>
-
-<script>
-import Checkbox from "@/Components/Checkbox.vue";
-import {useHelpers} from "@/Composables/helpers";
-
-const helper = useHelpers();
-export default {
-    name: "productCard",
-    components : {
-      Checkbox,
-    },
-    mounted() {
-        this.product.options.forEach(( option ) => option['selected'] = false)
-    },
-    props: {
-        product : Object,
-    },
-    data() {
-        return {
-            comment: '',
-        };
-    },
-    methods:{
-        formatMoney: helper.formatMoney,
-        toggleOption(option){
-            option.selected = !option.selected;
-
-        },
-        order(){
-            this.$emit('ordered', this.product, this.comment);
-            this.comment = '';
-            this.closeModal();
-        },
-        closeModal(){
-            document.getElementById('option-modal-'+this.product.id).checked = false;
-        }
-    },
-    computed:{
-        options(){
-            return this.product.options;
-        }
-    }
-}
-</script>
-
 <style scoped>
 
 </style>

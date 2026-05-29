@@ -1,5 +1,14 @@
+<script setup>
+import {useToast} from "vue-toastification";
+import { useHelpers} from "@/Composables/helpers";
+
+const helper = useHelpers();
+const toast = useToast();
+
+const props = defineProps(['orders']);
+</script>
 <template>
-    <div v-if="props.orders.length" class="bg-white shadow sm:rounded-lg col-span-3">
+    <div v-if="props.orders.length" class="bg-white shadow-sm sm:rounded-lg col-span-3">
         <div class="px-4 py-5 sm:p-6">
 
             <h2>Assigned Orders</h2>
@@ -25,13 +34,3 @@
         </div>
     </div>
 </template>
-
-<script setup>
-import {useToast} from "vue-toastification";
-import { useHelpers} from "@/Composables/helpers";
-
-const helper = useHelpers();
-const toast = useToast();
-
-const props = defineProps(['orders']);
-</script>

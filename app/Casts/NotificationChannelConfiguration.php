@@ -2,6 +2,7 @@
 
 namespace App\Casts;
 
+use RuntimeException;
 use App\DataObjects\NotificationChannelConfig;
 use App\Enums\NotificationDriver;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
@@ -15,7 +16,7 @@ class NotificationChannelConfiguration implements CastsAttributes
         $driver = NotificationDriver::tryFrom($attributes['driver'] ?? '');
 
         if (!$driver) {
-            throw new \RuntimeException("Unknown notification driver: {$attributes['driver']}");
+            throw new RuntimeException("Unknown notification driver: {$attributes['driver']}");
         }
 
         $configClass = $driver->configClass();

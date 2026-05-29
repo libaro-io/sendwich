@@ -1,7 +1,7 @@
 <script setup>
 
 import Authenticated from "@/Layouts/Authenticated.vue";
-import {useForm} from '@inertiajs/inertia-vue3';
+import {useForm} from '@inertiajs/vue3';
 import {useToast} from "vue-toastification";
 import {ref} from "vue";
 import axios from "axios";
@@ -151,7 +151,7 @@ const saveNotifications = () => {
 
                             <!-- Runner selection time -->
                             <form @submit.prevent="saveRunner">
-                                <div class="bg-white shadow sm:rounded-lg">
+                                <div class="bg-white shadow-sm sm:rounded-lg">
                                     <div class="px-4 py-5 sm:p-6">
                                         <h3 class="text-lg font-bold mb-4">
                                             At which time of day should the runner be selected?</h3>
@@ -194,7 +194,7 @@ const saveNotifications = () => {
 
                             <!-- Notifications -->
                             <form @submit.prevent="saveNotifications">
-                                <div class="bg-white shadow sm:rounded-lg">
+                                <div class="bg-white shadow-sm sm:rounded-lg">
                                     <div class="px-4 py-5 sm:p-6">
                                         <h3 class="text-lg font-bold mb-6">Notifications</h3>
 

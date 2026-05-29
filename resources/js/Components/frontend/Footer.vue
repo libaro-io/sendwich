@@ -1,5 +1,10 @@
+<script>
+export default {
+    name: "Footer"
+}
+</script>
 <template>
-    <footer class="footer p-10 bg-transparent/20 text-white">
+    <footer class="footer sm:footer-horizontal p-10 bg-black/20 text-white">
         <div>
             <img src="/images/logo_w.png" class="w-48" alt="">
         </div>
@@ -26,14 +31,8 @@
         </div>
     </footer>
 </template>
-
-<script>
-export default {
-    name: "Footer"
-}
-</script>
-
 <style scoped>
+@reference "../../../css/app.css";
 a{
     @apply text-white font-bold hover:text-info;
 }

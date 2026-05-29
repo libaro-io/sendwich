@@ -1,11 +1,5 @@
-<template>
-    <Link :href="href" :class="classes">
-        <slot />
-    </Link>
-</template>
-
 <script>
-import { Link } from '@inertiajs/inertia-vue3';
+import { Link } from '@inertiajs/vue3';
 
 export default {
     components: {
@@ -23,3 +17,8 @@ export default {
     }
 }
 </script>
+<template>
+    <Link :href="href" :class="classes">
+        <slot />
+    </Link>
+</template>

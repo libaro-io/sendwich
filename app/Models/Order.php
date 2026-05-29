@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -69,7 +70,7 @@ class Order extends Model
      * @param Company $company
      * @param $date
      * @param $addTomorrow
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return Builder
      */
     public static function getOrders(Company $company, $date, $addTomorrow = false, $doneOrders = false)
     {

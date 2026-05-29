@@ -119,6 +119,7 @@ export default {
 </template>
 
 <style>
+@reference "../../../css/app.css";
 p, ul{
     @apply text-white;
 }

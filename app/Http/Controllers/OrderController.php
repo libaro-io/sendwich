@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\RedirectResponse;
 use App\Actions\ChooseRunner;
 use App\Http\Requests\Order\AddRequest;
 use App\Http\Requests\Order\RemoveRequest;
@@ -111,9 +112,9 @@ class OrderController extends Controller
 
     /**
      * @param AddRequest $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function addProduct(AddRequest $request): \Illuminate\Http\RedirectResponse
+    public function addProduct(AddRequest $request): RedirectResponse
     {
         /** @var User $user */
         $user = auth()->user();
@@ -167,9 +168,9 @@ class OrderController extends Controller
 
     /**
      * @param RemoveRequest $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function removeProduct(RemoveRequest $request): \Illuminate\Http\RedirectResponse
+    public function removeProduct(RemoveRequest $request): RedirectResponse
     {
         /** @var User $user */
         $user = auth()->user();
@@ -194,9 +195,9 @@ class OrderController extends Controller
     }
 
     /**
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function assignToMe(): \Illuminate\Http\RedirectResponse
+    public function assignToMe(): RedirectResponse
     {
         $user = Auth::user();
         $action = new ChooseRunner($user->company, $user, true);

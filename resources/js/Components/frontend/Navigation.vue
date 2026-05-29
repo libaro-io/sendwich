@@ -36,7 +36,7 @@ const closeMobileMenu = () => {
             </div>
             <div class="hidden lg:flex lg:flex-1 lg:justify-end lg:items-center gap-x-6">
                 <a :href="route('company.register')"
-                   class="rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400">
+                   class="rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400">
                     Get started for free
                 </a>
                 <a :href="route('login')" class="text-sm font-semibold leading-6 text-white">Log in <span aria-hidden="true">&rarr;</span></a>
