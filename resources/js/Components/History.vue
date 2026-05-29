@@ -54,6 +54,14 @@ export default {
             });
         },
 
+        getStoreNames(group) {
+            const names = Object.values(group.data)
+                .flat()
+                .map(order => order.product?.store?.name)
+                .filter(Boolean);
+            return [...new Set(names)].join(', ');
+        },
+
         updateRunner(orderGroup, runnerId) {
             const orderIds = orderGroup.map(order => order.id);
             const parsedRunnerId = runnerId ? parseInt(runnerId) : null;
@@ -76,7 +84,7 @@ export default {
         <div class="px-4 py-5 sm:p-6">
             <h1>History</h1>
             <article v-for="group in orders" class="mb-4">
-                <h2>{{ currentDateTime(group.date) }}</h2>
+                <h2>{{ currentDateTime(group.date) }}<span v-if="getStoreNames(group)"> — {{ getStoreNames(group) }}</span></h2>
                 <div v-for="(orderGroup, user_id) in group.data" class="">
                     <div>
                         <div class="overflow-x-auto mb-5 rounded-lg shadow-sm border border-gray-100">

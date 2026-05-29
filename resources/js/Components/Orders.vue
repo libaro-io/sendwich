@@ -87,7 +87,7 @@ export default {
                             <span :class="statusBadgeClass(order)" class="badge">{{ statusLabel(order) }}</span>
                         </div>
                         <div class="card-actions justify-end w-full">
-                            <Link v-if="order.user_id === $page.props.auth.user.id"
+                            <Link v-if="order.user_id === $page.props.auth.user.id && !order.delivered_at"
                                   href="/api/order/remove-product"
                                   method="post"
                                   as="button"

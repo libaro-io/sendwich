@@ -72,7 +72,7 @@ h3 {
 }
 
 .landing h1 {
-    @apply mt-10 text-4xl font-bold tracking-tight sm:text-6xl;
+    @apply mt-10 text-4xl font-bold tracking-tight leading-tight sm:text-6xl sm:leading-tight mb-0;
 }
 
 .landing p {
