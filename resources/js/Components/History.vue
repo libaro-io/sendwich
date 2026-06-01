@@ -25,7 +25,7 @@ export default {
     },
     methods: {
         getData() {
-            axios.post('/api/getAllOrdersByDateAndUser', {}).then(response => {
+            axios.post(route('orders.by-date'), {}).then(response => {
                 this.orders = response.data;
             }).catch(error => {
                 console.log(error);
@@ -33,6 +33,9 @@ export default {
         },
         currentDateTime(orderByDate) {
             return moment(orderByDate, "YYYYMMDD").format('DD/MM/YYYY');
+        },
+        formatDateTime(dateTime) {
+            return moment(dateTime).format('DD/MM/YYYY HH:mm');
         },
         totalOrders(orders) {
             let sum = 0;
@@ -46,7 +49,7 @@ export default {
         },
         updateOrder(group) {
             const data = group.data
-            axios.post('/api/updateOldOrder', {data}).then(response => {
+            axios.post(route('history.update-order'), {data}).then(response => {
                 this.getData()
                 group.showSaveButton = false;
             }).catch(error => {
@@ -59,7 +62,7 @@ export default {
                 toast.error('Please enter a weight');
                 return;
             }
-            axios.patch('/api/order/weight', {
+            axios.patch(route('order.weight'), {
                 order_id: item.id,
                 weight: parseFloat(item.weight),
             }).then(() => {
@@ -81,7 +84,7 @@ export default {
         updateRunner(orderGroup, runnerId) {
             const orderIds = orderGroup.map(order => order.id);
             const parsedRunnerId = runnerId ? parseInt(runnerId) : null;
-            axios.post('/api/updateOrderRunner', {
+            axios.post(route('history.update-runner'), {
                 order_ids: orderIds,
                 runner_id: parsedRunnerId,
             }).then(() => {
@@ -103,6 +106,9 @@ export default {
                 <h2>{{ currentDateTime(group.date) }}<span v-if="getStoreNames(group)"> — {{ getStoreNames(group) }}</span></h2>
                 <div v-for="(orderGroup, user_id) in group.data" class="">
                     <div>
+                        <p v-if="orderGroup[0].delivered_at" class="text-xs text-gray-400 mb-1">
+                            Delivered on {{ formatDateTime(orderGroup[0].delivered_at) }}
+                        </p>
                         <div class="overflow-x-auto mb-5 rounded-lg shadow-sm border border-gray-100">
                             <table class="table w-full">
                                 <thead>

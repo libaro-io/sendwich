@@ -49,7 +49,7 @@ export default {
         addProduct(product, comment) {
             var app = this;
             var options = app.getSelectedOptionIdsForProduct(product)
-            axios.post('/api/order/check-new-store', {
+            axios.post(route('order.check-new-store'), {
                 product_id: product.id,
                 options: options,
             }).then(function(response){
@@ -61,7 +61,7 @@ export default {
 
         confirmOrder(product, options, comment) {
             this.toggle = false;
-            this.$inertia.post('/api/order/add-product', {
+            this.$inertia.post(route('order.add-product'), {
                 product_id: product.id,
                 options: options,
                 comment: comment || null,

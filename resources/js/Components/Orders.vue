@@ -72,13 +72,13 @@ export default {
             }
             const variableOrders = this.deliveryOrders.filter(o => o.product.variable_price && o.weight);
             for (const order of variableOrders) {
-                await axios.patch('/api/order/weight', {
+                await axios.patch(route('order.weight'), {
                     order_id: order.id,
                     weight: parseFloat(order.weight),
                 });
             }
             this.showDeliveryModal = false;
-            router.patch('/api/order/deliver', {}, {
+            router.patch(route('order.deliver'), {}, {
                 only: ['orders', 'totalPrice', 'flash'],
             });
         },
@@ -97,7 +97,7 @@ export default {
             <div class="flex items-center justify-between mb-5">
                 <h2>Orders for {{ deliveryMoment }}</h2>
                 <div class="flex gap-2">
-                    <Link href="/api/assign-to-me"
+                    <Link :href="route('order.assign-to-me')"
                           v-if="hasPendingOrders"
                           method="post"
                           as="button"
@@ -106,7 +106,7 @@ export default {
                           :only="['orders','totalPrice','flash']"
                     >Assign to me
                     </Link>
-                    <Link href="/api/order/depart"
+                    <Link :href="route('order.depart')"
                           v-if="isRunnerNotDeparted"
                           method="patch"
                           as="button"
@@ -139,7 +139,7 @@ export default {
                         </div>
                         <div class="card-actions justify-end w-full">
                             <Link v-if="order.user_id === $page.props.auth.user.id && !order.delivered_at"
-                                  href="/api/order/remove-product"
+                                  :href="route('order.remove-product')"
                                   method="post"
                                   as="button"
                                   type="button"

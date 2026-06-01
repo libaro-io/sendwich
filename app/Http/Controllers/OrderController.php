@@ -121,17 +121,6 @@ class OrderController extends Controller
             abort(400);
         }
 
-        $departed = Order::query()
-            ->where('company_id', $user->company->id)
-            ->whereNotNull('departed_at')
-            ->whereBetween('date', [
-                $this->getDate()->startOfDay(),
-                $this->getDate()->endOfDay(),
-            ])
-            ->exists();
-
-        abort_if($departed, 403, 'The runner has already departed.');
-
         $message = 'Your order has been updated';
 
         //if (is_null($order)) {
@@ -175,19 +164,9 @@ class OrderController extends Controller
         /** @var User $user */
         $user = auth()->user();
 
-        $data = $request->validated();
+        $order = $request->getOrder();
 
-        /** @var Product|null $product */
-        $product = Product::query()->find($data['product_id']);
-
-        if (is_null($product)) {
-            abort(404);
-        }
-
-        $order = $this->getProductOrderForUser($user, $product);
-
-        abort_if(is_null($order), 404);
-        abort_if($order->user_id !== $user->id, 403);
+        abort_if($order === null, 404);
 
         $order->delete();
 

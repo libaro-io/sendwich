@@ -25,7 +25,7 @@ let interval;
 
 let selectedStore = ref();
 
-const orderingBlocked = computed(() => props.orders.some(o => o.departed_at !== null));
+const orderingBlocked = computed(() => props.orders.some(o => o.departed_at !== null && o.delivered_at === null));
 
 const selectStore = (store) => {
     selectedStore.value = store;

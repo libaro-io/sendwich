@@ -47,7 +47,6 @@ class DashboardController extends Controller
             $simulated = true;
         }
 
-
         return Inertia::render('Dashboard',
             [
                 'user' => $user,
