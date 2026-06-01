@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\RedirectResponse;
 use App\Actions\ChooseRunner;
+use App\Actions\DeliverySchedule;
 use App\Http\Requests\Order\AddRequest;
 use App\Http\Requests\Order\RemoveRequest;
+use App\Http\Requests\Order\UpdateWeightRequest;
 use App\Models\Company;
 use App\Models\Order;
 use App\Models\Product;
@@ -57,7 +59,7 @@ class OrderController extends Controller
         return response()->json(['orders' => $formattedOrders, 'user' => $user ?? null]);
     }
 
-    public function getSelectedRunner(Request $request)
+    public function getSelectedRunner(Request $request): JsonResponse
     {
         if(Auth::check()){
             $company = Auth::user()->company;
@@ -73,7 +75,7 @@ class OrderController extends Controller
         return response()->json(['user' => $user]);
     }
 
-    public function getSimulatedRunner(Request $request)
+    public function getSimulatedRunner(Request $request): JsonResponse
     {
         if(Auth::check()){
             $company = Auth::user()->company;
@@ -85,29 +87,19 @@ class OrderController extends Controller
         return response()->json(['runner' => $runner ?? null]);
     }
 
-    public function getDeliveryMoment()
+    public function getDeliveryMoment(): string
     {
-        if (Carbon::now() < $this->getTresholdDate()) {
-            $deliveryMoment = 'today';
-        } else {
-            $deliveryMoment = 'tomorrow';
-        }
-        return $deliveryMoment;
+        return (new DeliverySchedule())->moment();
     }
 
-    public function getTresholdDate()
+    public function getTresholdDate(): Carbon
     {
-        return Carbon::now()->hour(12)->minute(15);
+        return (new DeliverySchedule())->thresholdDate();
     }
 
-    public function getDate()
+    public function getDate(): Carbon
     {
-        if (Carbon::now() < $this->getTresholdDate()) {
-            $date = Carbon::now();
-        } else {
-            $date = Carbon::now()->addDay();
-        }
-        return $date->setHour(12)->setMinutes(15)->setSecond(00);
+        return (new DeliverySchedule())->deliveryDate();
     }
 
     /**
@@ -231,20 +223,12 @@ class OrderController extends Controller
         return redirect()->back()->with(['success' => 'On the way!']);
     }
 
-    public function updateWeight(Request $request): JsonResponse
+    public function updateWeight(UpdateWeightRequest $request): JsonResponse
     {
-        $data = $request->validate([
-            'order_id' => ['required', 'integer', 'exists:orders,id'],
-            'weight'   => ['required', 'numeric', 'min:0'],
-        ]);
+        $order = $request->getOrder();
 
-        $order = Order::query()
-            ->where('id', $data['order_id'])
-            ->where('company_id', Auth::user()->company->id)
-            ->firstOrFail();
-
-        $order->weight = $data['weight'];
-        $order->total  = $order->product->price * $data['weight'];
+        $order->weight = $request->input('weight');
+        $order->total  = $order->product->price * $request->input('weight');
         $order->save();
 
         return response()->json(['success' => true]);
@@ -296,8 +280,8 @@ class OrderController extends Controller
                 'product.store',
                 ]
             )
-            ->orderBy('date','DESC')
-            ->where('date' , '>', Carbon::now()->subMonth())
+            ->orderBy('date', 'DESC')
+            ->where('date', '>', Carbon::now()->subMonth())
             ->get()
             ->groupBy([function($order) {
                 return Carbon::parse($order->date)->format('Ymd');
@@ -309,7 +293,8 @@ class OrderController extends Controller
         return response()->json($orders);
     }
 
-    public function checkForDifferentStore(AddRequest $request){
+    public function checkForDifferentStore(AddRequest $request): JsonResponse
+    {
 
         $user = auth()->user();
 

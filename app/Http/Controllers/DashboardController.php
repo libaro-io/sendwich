@@ -3,35 +3,27 @@
 namespace App\Http\Controllers;
 
 use App\Actions\ChooseRunner;
+use App\Actions\DeliverySchedule;
 use App\Actions\UsersWithDept;
-use App\Models\Company;
 use App\Models\Order;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 
 class DashboardController extends Controller
 {
-    public bool $simulated = false;
-
-    /**
-     * @return InertiaResponse
-     */
     public function dashboard(Request $request): InertiaResponse
     {
+        $schedule = new DeliverySchedule();
         $deptAction = new UsersWithDept();
-        $orderController = new OrderController();
 
         /** @var User $user */
         $user = auth()->user();
         $user->load('roles');
         $company = $user->company;
-        $search = $request->input('search');
-        $deliveryMoment = $orderController->getDeliveryMoment();
+        $deliveryMoment = $schedule->moment();
 
 //        $products = $company
 //            ->products()
@@ -40,9 +32,10 @@ class DashboardController extends Controller
 
         $stores = $company->stores()->select('name', 'id')->withCount('products')->with(['products.options'])->get();
 
-        $orders = Order::getOrders($company, $this->getDate(), false, null);
+        $deliveryDate = $schedule->deliveryDate();
+        $orders = Order::getOrders($company, $deliveryDate, false, null);
 
-        $assignedOrder = Order::getOrders($company, $this->getDate(), false, true)->first();
+        $assignedOrder = Order::getOrders($company, $deliveryDate, false, true)->first();
 
         $simulated = false;
 
@@ -73,18 +66,4 @@ class DashboardController extends Controller
             ]);
     }
 
-    public function getDate()
-    {
-        if (Carbon::now() < $this->getTresholdDate()) {
-            $date = Carbon::now();
-        } else {
-            $date = Carbon::now()->addDay();
-        }
-        return $date->setHour(12)->setMinutes(15)->setSecond(00);
-    }
-
-    public function getTresholdDate()
-    {
-        return Carbon::now()->hour(12)->minute(15);
-    }
 }
