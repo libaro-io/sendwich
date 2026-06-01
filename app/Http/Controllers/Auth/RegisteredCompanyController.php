@@ -32,7 +32,7 @@ class RegisteredCompanyController extends Controller
 
     /**
      * @param CreateCompany $request
-     * @return \Illuminate\Http\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function store(CreateCompany $request)
     {

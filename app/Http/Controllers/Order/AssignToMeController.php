@@ -13,7 +13,7 @@ class AssignToMeController extends Controller
     {
         $user = Auth::user();
 
-        (new ChooseRunner($user->company, $user, true))->execute();
+        new ChooseRunner($user->company, $user, true)->execute();
 
         return redirect()->back()->with(['success' => 'You have been assigned']);
     }

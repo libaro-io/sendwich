@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Controllers\HistoryController;
+use App\Http\Controllers\History\UpdateOrderController;
+use App\Http\Controllers\History\UpdateRunnerController;
 use App\Http\Controllers\Order\AddProductController;
 use App\Http\Controllers\Order\AssignToMeController;
 use App\Http\Controllers\Order\CheckNewStoreController;
@@ -14,7 +15,10 @@ use App\Http\Controllers\Order\MarkAsDeliveredController;
 use App\Http\Controllers\Order\RemoveProductController;
 use App\Http\Controllers\Order\UpdateWeightController;
 use App\Http\Controllers\PayoutController;
-use App\Http\Controllers\StoreController;
+use App\Http\Controllers\Store\AddStoreController;
+use App\Http\Controllers\Store\DeleteProductController;
+use App\Http\Controllers\Store\StoreProductController;
+use App\Http\Controllers\Store\UpdateProductController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -38,20 +42,14 @@ Route::post('/selected-runner', GetSelectedRunnerController::class)->name('order
 Route::post('/simulated-runner', GetSimulatedRunnerController::class)->name('order.simulated-runner');
 
 Route::post('/getAllOrdersByDateAndUser', GetOrdersByDateController::class)->name('orders.by-date');
-Route::post('/updateOldOrder', [HistoryController::class, 'updateOrder'])->name('history.update-order');
-Route::post('/updateOrderRunner', [HistoryController::class, 'updateRunner'])->name('history.update-runner');
+Route::post('/updateOldOrder', UpdateOrderController::class)->name('history.update-order');
+Route::post('/updateOrderRunner', UpdateRunnerController::class)->name('history.update-runner');
 
 Route::post('/payouts/handle', [PayoutController::class, 'payout']);
 
-Route::group(
-    [
-        'controller' => StoreController::class,
-        'middleware' => ['auth', 'verified', 'can:edit-store'],
-    ],
-    function () {
-        Route::put('/store/add', 'addStore')->name('store.add');
-        Route::post('/store/product/{product}', 'update')->name('store.product.update');
-        Route::put('/store/product', 'store')->name('store.product.add');
-        Route::delete('/store/product/{product}', 'delete')->name('store.product.delete');
-    }
-);
+Route::middleware(['auth', 'verified', 'can:edit-store'])->group(function () {
+    Route::put('/store/add', AddStoreController::class)->name('store.add');
+    Route::post('/store/product/{product}', UpdateProductController::class)->name('store.product.update');
+    Route::put('/store/product', StoreProductController::class)->name('store.product.add');
+    Route::delete('/store/product/{product}', DeleteProductController::class)->name('store.product.delete');
+});

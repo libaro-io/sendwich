@@ -20,7 +20,6 @@ class PasswordResetLinkController extends Controller
         return Inertia::render('Auth/ForgotPassword');
     }
 
-
     /**
      * Handle an incoming password reset link request.
      *

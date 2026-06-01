@@ -29,7 +29,7 @@ class AddProductController extends Controller
         $order = new Order();
         $order->user_id = $user->id;
         $order->company_id = $user->company->id;
-        $order->date = (new DeliverySchedule())->deliveryDate();
+        $order->date = new DeliverySchedule()->deliveryDate();
         $order->quantity = 1;
         $order->product_id = $product->id;
         $order->total = $product->price * $order->quantity;

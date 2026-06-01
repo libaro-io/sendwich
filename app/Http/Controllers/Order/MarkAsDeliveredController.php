@@ -13,7 +13,7 @@ class MarkAsDeliveredController extends Controller
     public function __invoke(): RedirectResponse
     {
         $user = Auth::user();
-        $deliveryDate = (new DeliverySchedule())->deliveryDate();
+        $deliveryDate = new DeliverySchedule()->deliveryDate();
 
         $updatedCount = Order::query()
             ->where('paid_by', '=', $user->id)

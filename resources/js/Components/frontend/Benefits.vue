@@ -68,12 +68,6 @@ const old = false;
         </div>
     </div>
 
-
-
-
-
-
-
     <div v-if="old" class="overflow-hidden py-8 lg:py-24">
         <div class="relative isolate overflow-hidden lg:px-6 xl:px-24">
             <div class="mx-auto max-w-7xl px-6 lg:px-8">

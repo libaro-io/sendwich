@@ -24,7 +24,7 @@ class CheckNewStoreController extends Controller
             abort(400);
         }
 
-        $deliveryDate = (new DeliverySchedule())->deliveryDate();
+        $deliveryDate = new DeliverySchedule()->deliveryDate();
         $stores = Order::getOrders($user->company, $deliveryDate)
             ->whereNull('delivered_at')
             ->get()
