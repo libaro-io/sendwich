@@ -4,7 +4,7 @@ import Orders from "@/Components/Orders.vue";
 import Products from "@/Components/Products.vue";
 import Menu from "@/Components/Menu.vue";
 import DeptList from "@/Components/DeptList.vue";
-import {onMounted, onUnmounted, ref} from "vue";
+import {onMounted, onUnmounted, ref, computed} from "vue";
 import {router} from '@inertiajs/vue3'
 
 const props = defineProps({
@@ -25,8 +25,9 @@ let interval;
 
 let selectedStore = ref();
 
+const orderingBlocked = computed(() => props.orders.some(o => o.departed_at !== null));
+
 const selectStore = (store) => {
-    console.log('store', store)
     selectedStore.value = store;
 }
 
@@ -73,7 +74,7 @@ export default {
                 <Menu v-if="!selectedStore" :stores="stores" class="col-span-2 md:col-span-1"
                       @select-store="selectStore"/>
                 <Products v-else :productCount="selectedStore.products_count" :products="selectedStore.products"
-                          :filters="filters" @unset-store="unsetStore" class="col-span-2 md:col-span-1"/>
+                          :filters="filters" :ordering-blocked="orderingBlocked" @unset-store="unsetStore" class="col-span-2 md:col-span-1"/>
             </div>
         </div>
     </div>

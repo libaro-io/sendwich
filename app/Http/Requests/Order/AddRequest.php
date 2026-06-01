@@ -28,6 +28,11 @@ class AddRequest extends FormRequest
                 'string',
                 'max:500',
             ],
+            'weight' => [
+                'nullable',
+                'numeric',
+                'min:0',
+            ],
         ];
     }
 }

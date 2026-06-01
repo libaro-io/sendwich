@@ -24,6 +24,8 @@ Route::post('/orders', [OrderController::class, 'index']);
 Route::post('/done-orders', [OrderController::class, 'getDoneOrders']);
 Route::post('/assign-to-me', [OrderController::class, 'assignToMe']);
 Route::patch('/order/deliver', [OrderController::class, 'markAsDelivered']);
+Route::patch('/order/depart', [OrderController::class, 'departAsRunner']);
+Route::patch('/order/weight', [OrderController::class, 'updateWeight']);
 Route::post('/selected-runner', [OrderController::class,  'getSelectedRunner']);
 Route::post('/simulated-runner', [OrderController::class,  'getSimulatedRunner']);
 

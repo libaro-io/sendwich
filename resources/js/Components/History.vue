@@ -54,6 +54,22 @@ export default {
             });
         },
 
+        updateWeight(item) {
+            if (!item.weight) {
+                toast.error('Please enter a weight');
+                return;
+            }
+            axios.patch('/api/order/weight', {
+                order_id: item.id,
+                weight: parseFloat(item.weight),
+            }).then(() => {
+                item.total = item.product.price * item.weight;
+                toast.success('Weight updated');
+            }).catch(() => {
+                toast.error('Failed to update weight');
+            });
+        },
+
         getStoreNames(group) {
             const names = Object.values(group.data)
                 .flat()
@@ -93,6 +109,8 @@ export default {
                                 <tr class="bg-white">
                                     <th>Ordered by</th>
                                     <th>Product</th>
+                                    <th>Weight</th>
+                                    <th>Price</th>
                                     <th>Quantity</th>
                                     <th class="text-right">Total</th>
                                 </tr>
@@ -111,6 +129,27 @@ export default {
                                             <option v-for="product in products" :value="product.id">{{ product.name }}</option>
                                         </select>
                                     </td>
+                                    <td>
+                                        <template v-if="item.product.variable_price">
+                                            <template v-if="orderGroup[0].deliverer && $page.props.auth.user.id === orderGroup[0].deliverer.id">
+                                                <div class="flex items-center gap-1">
+                                                    <input type="number" v-model="item.weight" min="0" step="0.01"
+                                                           class="input input-bordered input-xs w-20" placeholder="0.00"/>
+                                                    <span class="text-xs text-gray-500">kg</span>
+                                                </div>
+                                                <button class="btn btn-xs btn-primary mt-1" @click="updateWeight(item)">Save</button>
+                                            </template>
+                                            <span v-else class="text-sm">{{ item.weight ? item.weight + ' kg' : '—' }}</span>
+                                        </template>
+                                    </td>
+                                    <td>
+                                        <template v-if="item.product.variable_price">
+                                            {{ new Intl.NumberFormat('nl-BE', { style: 'currency', currency: 'EUR' }).format(item.product.price) }}/kg
+                                        </template>
+                                        <template v-else>
+                                            {{ new Intl.NumberFormat('nl-BE', { style: 'currency', currency: 'EUR' }).format(item.product.price) }}
+                                        </template>
+                                    </td>
                                     <td width="10%">{{ item.quantity }}</td>
                                     <td width="10%" class="font-bold text-right">{{
                                             new Intl.NumberFormat('nl-BE', {
@@ -121,7 +160,7 @@ export default {
                                     </td>
                                 </tr>
                                 <tr class="bg-white border-t border-gray-100">
-                                    <td colspan="2">
+                                    <td colspan="4">
                                         <div class="flex items-center gap-2">
                                             <span class="text-sm font-medium text-gray-600">Runner:</span>
                                         <select class="select select-sm bg-white border border-gray-200"

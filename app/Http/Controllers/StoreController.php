@@ -60,6 +60,7 @@ class StoreController extends Controller
             'name' => $data['name'],
             'description' => $data['description'],
             'price' => $data['price'],
+            'variable_price' => $data['variable_price'] ?? false,
         ]);
 
         return response()->json([
@@ -76,6 +77,7 @@ class StoreController extends Controller
             'name' => $data['name'],
             'description' => $data['description'],
             'price' => $data['price'],
+            'variable_price' => $data['variable_price'] ?? false,
             'company_id' => $company->id,
             'store_id' => $store->id
         ]);

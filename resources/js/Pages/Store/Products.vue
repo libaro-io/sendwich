@@ -16,6 +16,7 @@ const resetNewProduct = () => {
         name: '',
         description: '',
         price: 0,
+        variable_price: false,
     };
 }
 
@@ -84,12 +85,15 @@ resetNewProduct();
                                     <td><input type="text" v-model="product.description" class="input w-full max-w-xs"/>
                                     </td>
                                     <td>
-                                        <div class="form-control">
-                                            <label class="input-group">
-                                                <input type="number" v-model="product.price"
-                                                       min="0" @keydown="preventNegative" class="input input-bordered"/>
-                                                <span>EUR</span>
-                                            </label>
+                                        <div class="flex">
+                                            <input type="number" v-model="product.price"
+                                                   min="0" @keydown="preventNegative"
+                                                   class="input input-bordered rounded-r-none w-24"/>
+                                            <select v-model="product.variable_price"
+                                                    class="select select-bordered rounded-l-none border-l-0">
+                                                <option :value="false">€</option>
+                                                <option :value="true">€/kg</option>
+                                            </select>
                                         </div>
                                     </td>
                                     <td>
@@ -110,12 +114,15 @@ resetNewProduct();
                                                v-model="newProduct.description" class="input  input-bordered w-full max-w-xs"/>
                                     </td>
                                     <td>
-                                        <div class="form-control">
-                                            <label class="input-group">
-                                                <input type="number" v-model="newProduct.price"
-                                                       placeholder="0.00" min="0" @keydown="preventNegative" class="input input-bordered"/>
-                                                <span>EUR</span>
-                                            </label>
+                                        <div class="flex">
+                                            <input type="number" v-model="newProduct.price"
+                                                   placeholder="0.00" min="0" @keydown="preventNegative"
+                                                   class="input input-bordered rounded-r-none w-24"/>
+                                            <select v-model="newProduct.variable_price"
+                                                    class="select select-bordered rounded-l-none border-l-0">
+                                                <option :value="false">€</option>
+                                                <option :value="true">€/kg</option>
+                                            </select>
                                         </div>
                                     </td>
                                     <td>

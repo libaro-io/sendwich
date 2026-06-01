@@ -37,13 +37,16 @@ class Order extends Model
         'paid_by',
         'company_id',
         'quantity',
+        'weight',
         'total',
         'date',
         'delivered_at',
+        'departed_at',
     ];
 
     protected $casts = [
         'delivered_at' => 'datetime',
+        'departed_at'  => 'datetime',
     ];
 
     public function user(): BelongsTo
@@ -87,10 +90,12 @@ class Order extends Model
                 'orders.company_id',
                 'orders.product_id',
                 'quantity',
+                'weight',
                 'paid_by',
                 'total',
                 'comment',
                 'delivered_at',
+                'departed_at',
                 'date',
                 'stores.name as store_name',
             )
@@ -101,7 +106,7 @@ class Order extends Model
             ->with(['user' => function ($query) {
                 $query->select('id', 'name');
             }, 'product' => function ($query) {
-                $query->select('id', 'name', 'price','store_id');
+                $query->select('id', 'name', 'price', 'variable_price', 'store_id');
             }]);
 
         if ($doneOrders === true) {

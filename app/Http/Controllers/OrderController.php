@@ -129,10 +129,18 @@ class OrderController extends Controller
             abort(400);
         }
 
-        //$order = $this->getProductOrderForUser($user, $product);
+        $departed = Order::query()
+            ->where('company_id', $user->company->id)
+            ->whereNotNull('departed_at')
+            ->whereBetween('date', [
+                $this->getDate()->startOfDay(),
+                $this->getDate()->endOfDay(),
+            ])
+            ->exists();
 
+        abort_if($departed, 403, 'The runner has already departed.');
 
-        $message = 'Uw bestelling is aangepast';
+        $message = 'Your order has been updated';
 
         //if (is_null($order)) {
             $order = new Order();
@@ -140,7 +148,7 @@ class OrderController extends Controller
             $order->company_id = $user->company->id;
             $order->date = Carbon::now()->isBefore(Carbon::now()->hour(12)->minute(15)) ? Carbon::now()->hour(12)->minute(15) : Carbon::now()->addDay()->hour(12)->minute(15);
 
-            $message = 'Bestelling geplaatst!';
+            $message = 'Order placed!';
         //}
 
         $order->quantity = 1;
@@ -191,7 +199,7 @@ class OrderController extends Controller
 
         $order->delete();
 
-        return redirect()->back()->with(['success' => 'Uw bestelling is verwijderd']);
+        return redirect()->back()->with(['success' => 'Your order has been deleted']);
     }
 
     /**
@@ -205,6 +213,41 @@ class OrderController extends Controller
 
         return redirect()->back()->with(['success'=>'You have been assigned']);
 
+    }
+
+    public function departAsRunner(): RedirectResponse
+    {
+        $user = Auth::user();
+
+        Order::query()
+            ->where('paid_by', $user->id)
+            ->whereNull('departed_at')
+            ->whereBetween('date', [
+                $this->getDate()->startOfDay(),
+                $this->getDate()->endOfDay(),
+            ])
+            ->update(['departed_at' => now()]);
+
+        return redirect()->back()->with(['success' => 'On the way!']);
+    }
+
+    public function updateWeight(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'order_id' => ['required', 'integer', 'exists:orders,id'],
+            'weight'   => ['required', 'numeric', 'min:0'],
+        ]);
+
+        $order = Order::query()
+            ->where('id', $data['order_id'])
+            ->where('company_id', Auth::user()->company->id)
+            ->firstOrFail();
+
+        $order->weight = $data['weight'];
+        $order->total  = $order->product->price * $data['weight'];
+        $order->save();
+
+        return response()->json(['success' => true]);
     }
 
     public function markAsDelivered(): \Illuminate\Http\RedirectResponse
@@ -222,7 +265,7 @@ class OrderController extends Controller
 
         abort_if($updatedCount === 0, 404);
 
-        return redirect()->back()->with(['success' => 'Bestellingen gemarkeerd als afgeleverd']);
+        return redirect()->back()->with(['success' => 'Orders marked as delivered']);
     }
 
     private function getProductOrderForUser(User $user, Product $product): ?Order
