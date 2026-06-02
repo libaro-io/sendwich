@@ -48,7 +48,7 @@ export default {
         statusLabel(order) {
             if (order.delivered_at) return 'Delivered';
             if (order.departed_at) return 'On the way';
-            if (order.paid_by) return 'Runner assigned';
+            if (order.paid_by) return `Assigned to ${order.deliverer?.name ?? 'runner'}`;
             return 'Open';
         },
         statusBadgeClass(order) {
