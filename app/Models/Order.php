@@ -107,6 +107,8 @@ class Order extends Model
                 $query->select('id', 'name');
             }, 'product' => function ($query) {
                 $query->select('id', 'name', 'price', 'variable_price', 'store_id');
+            }, 'deliverer' => function ($query) {
+                $query->select('id', 'name');
             }]);
 
         if ($doneOrders === true) {
