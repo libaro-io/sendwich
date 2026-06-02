@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\DeliverySchedule;
 use App\Models\Company;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -11,8 +12,7 @@ class DisplayController extends Controller
     public function showDisplayPublic($company_token)
     {
         $company = Company::query()->where('token', '=', $company_token)->firstOrFail();
-        $orderController = new OrderController();
-        $deliveryMoment = $orderController->getDeliveryMoment();
+        $deliveryMoment = new DeliverySchedule()->moment();
 
         return Inertia::render('Display',
             [

@@ -27,6 +27,7 @@ class UpdateProduct extends FormRequest
             'product.name' => 'required|string',
             'product.description' => 'nullable|string',
             'product.price' => 'required|numeric|min:0',
+            'product.variable_price' => 'boolean',
         ];
     }
 }

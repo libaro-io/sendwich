@@ -18,6 +18,7 @@ export default {
         products: Array,
         filters : Object,
         productCount : Number,
+        orderingBlocked: Boolean,
     },
     mounted() {
         this.searchedProducts = this.products
@@ -48,7 +49,7 @@ export default {
         addProduct(product, comment) {
             var app = this;
             var options = app.getSelectedOptionIdsForProduct(product)
-            axios.post('/api/order/check-new-store', {
+            axios.post(route('order.check-new-store'), {
                 product_id: product.id,
                 options: options,
             }).then(function(response){
@@ -60,7 +61,7 @@ export default {
 
         confirmOrder(product, options, comment) {
             this.toggle = false;
-            this.$inertia.post('/api/order/add-product', {
+            this.$inertia.post(route('order.add-product'), {
                 product_id: product.id,
                 options: options,
                 comment: comment || null,
@@ -96,7 +97,10 @@ export default {
                           v-model="search"/>
                </div>
             </div>
-            <div v-if="filteredProducts.length" class="mt-5 flex flex-col gap-2">
+            <div v-if="orderingBlocked" class="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-lg text-amber-700 text-sm font-medium">
+                The runner is on the way — new orders are no longer possible.
+            </div>
+            <div v-else-if="filteredProducts.length" class="mt-5 flex flex-col gap-2">
                 <div v-for="(product, index) in filteredProducts"
                      :key="index"
                      class="card card-compact bg-gray-50 shadow-sm">
@@ -121,7 +125,7 @@ export default {
                     <p class="py-4">Are you sure , the runner has to visit more then on store.</p>
                     <div class="modal-action">
                         <label for="my-modal" class="btn">Nah, drop it!</label>
-                        <button @click="confirmOrder(selectedProduct,selectedOptions)">Confirm</button>
+                        <button @click="confirmOrder(selectedProduct, selectedOptions, selectedDescription, selectedWeight)">Confirm</button>
                     </div>
                     </div>
                 </div>

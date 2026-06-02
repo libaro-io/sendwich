@@ -1,46 +1,55 @@
 <?php
 
-use App\Http\Controllers\CompanyController;
-use App\Http\Controllers\HistoryController;
+use App\Http\Controllers\History\UpdateOrderController;
+use App\Http\Controllers\History\UpdateRunnerController;
+use App\Http\Controllers\Order\AddProductController;
+use App\Http\Controllers\Order\AssignToMeController;
+use App\Http\Controllers\Order\CheckNewStoreController;
+use App\Http\Controllers\Order\DepartAsRunnerController;
+use App\Http\Controllers\Order\GetDoneOrdersController;
+use App\Http\Controllers\Order\GetOrdersByDateController;
+use App\Http\Controllers\Order\GetOrdersController;
+use App\Http\Controllers\Order\GetSelectedRunnerController;
+use App\Http\Controllers\Order\GetSimulatedRunnerController;
+use App\Http\Controllers\Order\MarkAsDeliveredController;
+use App\Http\Controllers\Order\RemoveProductController;
+use App\Http\Controllers\Order\UpdateWeightController;
 use App\Http\Controllers\PayoutController;
+use App\Http\Controllers\Store\AddStoreController;
+use App\Http\Controllers\Store\DeleteProductController;
+use App\Http\Controllers\Store\StoreProductController;
+use App\Http\Controllers\Store\UpdateProductController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\OrderController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\StoreController;
-
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-//Route::middleware('auth')->group(function () {
-    Route::post('/order/check-new-store', [OrderController::class, 'checkForDifferentStore']);
-    Route::post('/order/add-product', [OrderController::class,  'addProduct']);
-    Route::post('/order/remove-product', [OrderController::class,  'removeProduct']);
-    Route::post('/users', [UserController::class,  'index']);
-//});
-Route::post('/orders', [OrderController::class, 'index']);
-Route::post('/done-orders', [OrderController::class, 'getDoneOrders']);
-Route::post('/assign-to-me', [OrderController::class, 'assignToMe']);
-Route::patch('/order/deliver', [OrderController::class, 'markAsDelivered']);
-Route::post('/selected-runner', [OrderController::class,  'getSelectedRunner']);
-Route::post('/simulated-runner', [OrderController::class,  'getSimulatedRunner']);
+Route::post('/order/check-new-store', CheckNewStoreController::class)->name('order.check-new-store');
+Route::post('/order/add-product', AddProductController::class)->name('order.add-product');
+Route::post('/order/remove-product', RemoveProductController::class)->name('order.remove-product');
+Route::post('/users', [UserController::class, 'index'])->name('users.index');
 
-Route::post('/getAllOrdersByDateAndUser', [OrderController::class,  'getAllOrdersByDateAndUser']);
-Route::post('/updateOldOrder', [HistoryController::class,  'updateOrder']);
-Route::post('/updateOrderRunner', [HistoryController::class, 'updateRunner']);
+Route::post('/orders', GetOrdersController::class)->name('orders.index');
+Route::post('/done-orders', GetDoneOrdersController::class)->name('orders.done');
+Route::post('/assign-to-me', AssignToMeController::class)->name('order.assign-to-me');
+Route::patch('/order/deliver', MarkAsDeliveredController::class)->name('order.deliver');
+Route::patch('/order/depart', DepartAsRunnerController::class)->name('order.depart');
+Route::patch('/order/weight', UpdateWeightController::class)->name('order.weight');
+Route::post('/selected-runner', GetSelectedRunnerController::class)->name('order.selected-runner');
+Route::post('/simulated-runner', GetSimulatedRunnerController::class)->name('order.simulated-runner');
+
+Route::post('/getAllOrdersByDateAndUser', GetOrdersByDateController::class)->name('orders.by-date');
+Route::post('/updateOldOrder', UpdateOrderController::class)->name('history.update-order');
+Route::post('/updateOrderRunner', UpdateRunnerController::class)->name('history.update-runner');
 
 Route::post('/payouts/handle', [PayoutController::class, 'payout']);
 
-Route::group(
-    ['controller' => StoreController::class,
-        'middleware' => ['auth', 'verified', 'can:edit-store']
-    ], function () {
-
-    Route::put('/store/add', 'addStore')->name('store.add');
-
-    Route::post('/store/product/{product}', 'update')->name('store.product.update');
-    Route::put('/store/product', 'store')->name('store.product.add');
-    Route::delete('/store/product/{product}', 'delete')->name('store.product.delete');
+Route::middleware(['auth', 'verified', 'can:edit-store'])->group(function () {
+    Route::put('/store/add', AddStoreController::class)->name('store.add');
+    Route::post('/store/product/{product}', UpdateProductController::class)->name('store.product.update');
+    Route::put('/store/product', StoreProductController::class)->name('store.product.add');
+    Route::delete('/store/product/{product}', DeleteProductController::class)->name('store.product.delete');
 });

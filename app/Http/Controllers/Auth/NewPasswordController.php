@@ -14,8 +14,6 @@ use Inertia\Inertia;
 
 class NewPasswordController extends Controller
 {
-
-
     public function create(Request $request, string $token)
     {
         $request->validate([
@@ -30,7 +28,6 @@ class NewPasswordController extends Controller
                 'token' => $token
             ]);
     }
-
 
     /**
      * Handle an incoming new password request.

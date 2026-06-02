@@ -29,8 +29,13 @@ class Product extends Model
         'name',
         'description',
         'price',
+        'variable_price',
         'company_id',
         'store_id',
+    ];
+
+    protected $casts = [
+        'variable_price' => 'boolean',
     ];
 
     public function orders(): HasMany

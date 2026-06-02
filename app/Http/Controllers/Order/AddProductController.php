@@ -1,0 +1,55 @@
+<?php
+
+namespace App\Http\Controllers\Order;
+
+use App\Actions\DeliverySchedule;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Order\AddRequest;
+use App\Models\Order;
+use App\Models\Product;
+use App\Models\ProductOption;
+use Carbon\Carbon;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Collection;
+
+class AddProductController extends Controller
+{
+    public function __invoke(AddRequest $request): RedirectResponse
+    {
+        $user = auth()->user();
+        $data = $request->validated();
+
+        /** @var Product|null $product */
+        $product = Product::query()->find($data['product_id']);
+
+        if ($product === null) {
+            abort(400);
+        }
+
+        $order = new Order();
+        $order->user_id = $user->id;
+        $order->company_id = $user->company->id;
+        $order->date = new DeliverySchedule()->deliveryDate();
+        $order->quantity = 1;
+        $order->product_id = $product->id;
+        $order->total = $product->price * $order->quantity;
+
+        /** @var ProductOption[]|Collection $options */
+        $options = ProductOption::query()
+            ->whereIn('id', $data['options'])
+            ->get();
+
+        foreach ($options as $option) {
+            $order->total += $option->price;
+        }
+
+        $comment = $options->pluck('name')->join(', ');
+        if (!empty($data['comment'])) {
+            $comment = $comment ? $comment . ' — ' . $data['comment'] : $data['comment'];
+        }
+        $order->comment = $comment ?: null;
+        $order->save();
+
+        return redirect()->back()->with(['success' => 'Order placed!']);
+    }
+}

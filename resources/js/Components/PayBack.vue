@@ -8,7 +8,6 @@ const toast = useToast();
 export default {
     name: "PayBack",
     mounted() {
-        console.log('dept', this.user.dept)
         if (this.user.dept > 0) {
             this.buildPayBackList();
         } else {

@@ -25,7 +25,7 @@ export default {
     },
     methods: {
         getData() {
-            axios.post('/api/getAllOrdersByDateAndUser', {}).then(response => {
+            axios.post(route('orders.by-date'), {}).then(response => {
                 this.orders = response.data;
             }).catch(error => {
                 console.log(error);
@@ -33,6 +33,9 @@ export default {
         },
         currentDateTime(orderByDate) {
             return moment(orderByDate, "YYYYMMDD").format('DD/MM/YYYY');
+        },
+        formatDateTime(dateTime) {
+            return moment(dateTime).format('DD/MM/YYYY HH:mm');
         },
         totalOrders(orders) {
             let sum = 0;
@@ -46,11 +49,27 @@ export default {
         },
         updateOrder(group) {
             const data = group.data
-            axios.post('/api/updateOldOrder', {data}).then(response => {
+            axios.post(route('history.update-order'), {data}).then(response => {
                 this.getData()
                 group.showSaveButton = false;
             }).catch(error => {
                 console.log(error);
+            });
+        },
+
+        updateWeight(item) {
+            if (!item.weight) {
+                toast.error('Please enter a weight');
+                return;
+            }
+            axios.patch(route('order.weight'), {
+                order_id: item.id,
+                weight: parseFloat(item.weight),
+            }).then(() => {
+                item.total = item.product.price * item.weight;
+                toast.success('Weight updated');
+            }).catch(() => {
+                toast.error('Failed to update weight');
             });
         },
 
@@ -65,7 +84,7 @@ export default {
         updateRunner(orderGroup, runnerId) {
             const orderIds = orderGroup.map(order => order.id);
             const parsedRunnerId = runnerId ? parseInt(runnerId) : null;
-            axios.post('/api/updateOrderRunner', {
+            axios.post(route('history.update-runner'), {
                 order_ids: orderIds,
                 runner_id: parsedRunnerId,
             }).then(() => {
@@ -87,12 +106,17 @@ export default {
                 <h2>{{ currentDateTime(group.date) }}<span v-if="getStoreNames(group)"> — {{ getStoreNames(group) }}</span></h2>
                 <div v-for="(orderGroup, user_id) in group.data" class="">
                     <div>
+                        <p v-if="orderGroup[0].delivered_at" class="text-xs text-gray-400 mb-1">
+                            Delivered on {{ formatDateTime(orderGroup[0].delivered_at) }}
+                        </p>
                         <div class="overflow-x-auto mb-5 rounded-lg shadow-sm border border-gray-100">
                             <table class="table w-full">
                                 <thead>
                                 <tr class="bg-white">
                                     <th>Ordered by</th>
                                     <th>Product</th>
+                                    <th>Weight</th>
+                                    <th>Price</th>
                                     <th>Quantity</th>
                                     <th class="text-right">Total</th>
                                 </tr>
@@ -111,6 +135,27 @@ export default {
                                             <option v-for="product in products" :value="product.id">{{ product.name }}</option>
                                         </select>
                                     </td>
+                                    <td>
+                                        <template v-if="item.product.variable_price">
+                                            <template v-if="orderGroup[0].deliverer && $page.props.auth.user.id === orderGroup[0].deliverer.id">
+                                                <div class="flex items-center gap-1">
+                                                    <input type="number" v-model="item.weight" min="0" step="0.01"
+                                                           class="input input-bordered input-xs w-20" placeholder="0.00"/>
+                                                    <span class="text-xs text-gray-500">kg</span>
+                                                </div>
+                                                <button class="btn btn-xs btn-primary mt-1" @click="updateWeight(item)">Save</button>
+                                            </template>
+                                            <span v-else class="text-sm">{{ item.weight ? item.weight + ' kg' : '—' }}</span>
+                                        </template>
+                                    </td>
+                                    <td>
+                                        <template v-if="item.product.variable_price">
+                                            {{ new Intl.NumberFormat('nl-BE', { style: 'currency', currency: 'EUR' }).format(item.product.price) }}/kg
+                                        </template>
+                                        <template v-else>
+                                            {{ new Intl.NumberFormat('nl-BE', { style: 'currency', currency: 'EUR' }).format(item.product.price) }}
+                                        </template>
+                                    </td>
                                     <td width="10%">{{ item.quantity }}</td>
                                     <td width="10%" class="font-bold text-right">{{
                                             new Intl.NumberFormat('nl-BE', {
@@ -121,7 +166,7 @@ export default {
                                     </td>
                                 </tr>
                                 <tr class="bg-white border-t border-gray-100">
-                                    <td colspan="2">
+                                    <td colspan="4">
                                         <div class="flex items-center gap-2">
                                             <span class="text-sm font-medium text-gray-600">Runner:</span>
                                         <select class="select select-sm bg-white border border-gray-200"
