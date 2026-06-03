@@ -179,8 +179,8 @@ resetNewProduct();
                                                    class="input input-bordered rounded-r-none w-24"/>
                                             <select v-model="product.variable_price"
                                                     class="select select-bordered rounded-l-none border-l-0">
-                                                <option :value="false">€</option>
-                                                <option :value="true">€/kg</option>
+                                                <option :value="false">Fixed</option>
+                                                <option :value="true">Variable</option>
                                             </select>
                                         </div>
                                     </td>
@@ -208,8 +208,8 @@ resetNewProduct();
                                                    class="input input-bordered rounded-r-none w-24"/>
                                             <select v-model="newProduct.variable_price"
                                                     class="select select-bordered rounded-l-none border-l-0">
-                                                <option :value="false">€</option>
-                                                <option :value="true">€/kg</option>
+                                                <option :value="false">Fixed</option>
+                                                <option :value="true">Variable</option>
                                             </select>
                                         </div>
                                     </td>

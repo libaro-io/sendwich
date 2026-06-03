@@ -57,19 +57,18 @@ export default {
             });
         },
 
-        updateWeight(item) {
-            if (!item.weight) {
-                toast.error('Please enter a weight');
+        updatePrice(item) {
+            if (item.total === null || item.total === '' || isNaN(parseFloat(item.total)) || parseFloat(item.total) < 0) {
+                toast.error('Please enter a valid price');
                 return;
             }
-            axios.patch(route('order.weight'), {
+            axios.patch(route('order.price'), {
                 order_id: item.id,
-                weight: parseFloat(item.weight),
+                total: parseFloat(item.total),
             }).then(() => {
-                item.total = item.product.price * item.weight;
-                toast.success('Weight updated');
+                toast.success('Price updated');
             }).catch(() => {
-                toast.error('Failed to update weight');
+                toast.error('Failed to update price');
             });
         },
 
@@ -115,7 +114,6 @@ export default {
                                 <tr class="bg-white">
                                     <th>Ordered by</th>
                                     <th>Product</th>
-                                    <th>Weight</th>
                                     <th>Price</th>
                                     <th>Quantity</th>
                                     <th class="text-right">Total</th>
@@ -143,20 +141,7 @@ export default {
                                     </td>
                                     <td>
                                         <template v-if="item.product && item.product.variable_price">
-                                            <template v-if="orderGroup[0].deliverer && $page.props.auth.user.id === orderGroup[0].deliverer.id">
-                                                <div class="flex items-center gap-1">
-                                                    <input type="number" v-model="item.weight" min="0" step="0.01"
-                                                           class="input input-bordered input-xs w-20" placeholder="0.00"/>
-                                                    <span class="text-xs text-gray-500">kg</span>
-                                                </div>
-                                                <button class="btn btn-xs btn-primary mt-1" @click="updateWeight(item)">Save</button>
-                                            </template>
-                                            <span v-else class="text-sm">{{ item.weight ? item.weight + ' kg' : '—' }}</span>
-                                        </template>
-                                    </td>
-                                    <td>
-                                        <template v-if="item.product && item.product.variable_price">
-                                            {{ new Intl.NumberFormat('nl-BE', { style: 'currency', currency: 'EUR' }).format(item.product.price) }}/kg
+                                            <span class="text-gray-500">~ {{ new Intl.NumberFormat('nl-BE', { style: 'currency', currency: 'EUR' }).format(item.product.price) }}</span>
                                         </template>
                                         <template v-else-if="item.product">
                                             {{ new Intl.NumberFormat('nl-BE', { style: 'currency', currency: 'EUR' }).format(item.product.price) }}
@@ -164,16 +149,18 @@ export default {
                                         <span v-else class="text-gray-400">—</span>
                                     </td>
                                     <td width="10%">{{ item.quantity }}</td>
-                                    <td width="10%" class="font-bold text-right">{{
-                                            new Intl.NumberFormat('nl-BE', {
-                                                style: 'currency',
-                                                currency: 'EUR'
-                                            }).format(item.total)
-                                        }}
+                                    <td width="15%" class="text-right">
+                                        <div v-if="item.product && item.product.variable_price && ((orderGroup[0].deliverer && $page.props.auth.user.id === orderGroup[0].deliverer.id) || item.user_id === $page.props.auth.user.id)"
+                                             class="flex items-center justify-end gap-1">
+                                            <input type="number" v-model="item.total" min="0" step="0.01"
+                                                   class="input input-bordered input-xs w-24 text-right" placeholder="0.00"/>
+                                            <button class="btn btn-xs btn-primary" @click="updatePrice(item)">Save</button>
+                                        </div>
+                                        <span v-else class="font-bold">{{ new Intl.NumberFormat('nl-BE', { style: 'currency', currency: 'EUR' }).format(item.total) }}</span>
                                     </td>
                                 </tr>
                                 <tr class="bg-white border-t border-gray-100">
-                                    <td colspan="4">
+                                    <td colspan="3">
                                         <div class="flex items-center gap-2">
                                             <span class="text-sm font-medium text-gray-600">Runner:</span>
                                         <select class="select select-sm bg-white border border-gray-200"

@@ -169,7 +169,7 @@ final class AnalyzeReceipt
     {
         return $orders->map(fn (Order $order) => [
             'order_id' => $order->id,
-            'product'  => $order->product->name,
+            'product'  => $order->product?->name ?? $order->label,
             'quantity' => $order->quantity,
             'comment'  => $order->comment,
         ])->values()->all();
