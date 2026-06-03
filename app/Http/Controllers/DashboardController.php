@@ -51,6 +51,7 @@ class DashboardController extends Controller
             [
                 'user' => $user,
                 'users' => fn() => $deptAction->execute(),
+                'companyUsers' => fn() => $company->users()->select('id', 'name')->get(),
                 'userCount' => $company->users()->count(),
                 'productCount' => $company->products()->count(),
                 'company' => $company,

@@ -13,7 +13,7 @@ class GetOrdersByDateController extends Controller
         $company = auth()->user()->company;
 
         $orders = $company->orders()
-            ->with(['deliverer', 'user', 'product.store'])
+            ->with(['deliverer', 'user', 'product.store', 'store'])
             ->orderBy('date', 'DESC')
             ->where('date', '>', Carbon::now()->subMonth())
             ->get()

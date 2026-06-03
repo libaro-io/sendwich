@@ -34,7 +34,8 @@ class LocalSeeder extends Seeder
         $ownerRole = Role::firstOrCreate(['name' => 'company-owner']);
         $ownerRole->syncPermissions([$editStore, $editCompany]);
 
-        Role::firstOrCreate(['name' => 'Administrator']);
+        $adminRole = Role::firstOrCreate(['name' => 'Administrator']);
+        $adminRole->syncPermissions([$editStore, $editCompany]);
     }
 
     private function seedCompany(): Company

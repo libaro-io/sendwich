@@ -12,6 +12,7 @@ const props = defineProps({
     products: Array,
     stores: Array,
     users: Array,
+    companyUsers: Array,
     userCount: Number,
     productCount: Number,
     deliveryMoment: String,
@@ -66,6 +67,7 @@ export default {
                 <div class="col-span-2 md:col-span-1 grid-cols-3">
                     <div class="grid grid-cols-3 gap-4">
                         <Orders :orders="orders" :totalPrice="totalPrice" :delivery-moment="deliveryMoment"
+                                :company-users="companyUsers" :stores="stores"
                                 class="col-span-3"></Orders>
                         <DeptList :userCount="userCount" :users='users' :runner='selectedRunner' :company="company"
                                   class="col-span-3"></DeptList>

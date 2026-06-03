@@ -76,7 +76,7 @@ export default {
         getStoreNames(group) {
             const names = Object.values(group.data)
                 .flat()
-                .map(order => order.product?.store?.name)
+                .map(order => order.product?.store?.name || order.store?.name)
                 .filter(Boolean);
             return [...new Set(names)].join(', ');
         },
@@ -124,7 +124,13 @@ export default {
                                 <tbody>
                                 <tr v-for="item in orderGroup" class="bg-white hover:bg-gray-50">
                                     <td width="25%">{{ item.user.name }}</td>
-                                    <td v-if="orderGroup[0].deliverer && $page.props.auth.user.id !== orderGroup[0].deliverer.id">
+                                    <td v-if="!item.product">
+                                        <span class="font-bold text-base">{{ item.label }}</span>
+                                        <span class="badge badge-ghost badge-xs ml-1">extra</span>
+                                        <br>
+                                        <span class="text-gray-500">{{ item.comment }}</span>
+                                    </td>
+                                    <td v-else-if="orderGroup[0].deliverer && $page.props.auth.user.id !== orderGroup[0].deliverer.id">
                                         <span class="font-bold text-base">{{ item.product.name }}</span>
                                         <br>
                                         <span class="text-gray-500">{{ item.comment }}</span>
@@ -136,7 +142,7 @@ export default {
                                         </select>
                                     </td>
                                     <td>
-                                        <template v-if="item.product.variable_price">
+                                        <template v-if="item.product && item.product.variable_price">
                                             <template v-if="orderGroup[0].deliverer && $page.props.auth.user.id === orderGroup[0].deliverer.id">
                                                 <div class="flex items-center gap-1">
                                                     <input type="number" v-model="item.weight" min="0" step="0.01"
@@ -149,12 +155,13 @@ export default {
                                         </template>
                                     </td>
                                     <td>
-                                        <template v-if="item.product.variable_price">
+                                        <template v-if="item.product && item.product.variable_price">
                                             {{ new Intl.NumberFormat('nl-BE', { style: 'currency', currency: 'EUR' }).format(item.product.price) }}/kg
                                         </template>
-                                        <template v-else>
+                                        <template v-else-if="item.product">
                                             {{ new Intl.NumberFormat('nl-BE', { style: 'currency', currency: 'EUR' }).format(item.product.price) }}
                                         </template>
+                                        <span v-else class="text-gray-400">—</span>
                                     </td>
                                     <td width="10%">{{ item.quantity }}</td>
                                     <td width="10%" class="font-bold text-right">{{

@@ -15,6 +15,11 @@ class UpdateOrderController extends Controller
     {
         foreach ($request->input('data') as $orderGroup) {
             foreach ($orderGroup as $newOrder) {
+                // Extra items scanned from a receipt have no product and cannot be reassigned.
+                if (!isset($newOrder['product']['id'])) {
+                    continue;
+                }
+
                 $order = Order::find($newOrder['id']);
 
                 if ($newOrder['product']['id'] !== $order->product_id) {
