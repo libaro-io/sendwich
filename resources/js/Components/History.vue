@@ -52,7 +52,22 @@ export default {
             // Order items (with a product) first, then the extra items.
             return [...orderGroup].sort((a, b) => (a.product ? 0 : 1) - (b.product ? 0 : 1));
         },
-        updateRunner(orderGroup, runnerId) {
+        updateRunner(orderGroup, runnerId, event) {
+            const runnerName = runnerId
+                ? (this.users.find(u => u.id === parseInt(runnerId))?.name || 'deze persoon')
+                : 'geen runner';
+
+            const message = runnerId
+                ? `Weet je zeker dat je de runner wilt aanpassen naar ${runnerName}?`
+                : 'Weet je zeker dat je de runner wilt verwijderen?';
+
+            if (!confirm(message)) {
+                if (event) {
+                    event.target.value = orderGroup[0] ? orderGroup[0].paid_by : '';
+                }
+                return;
+            }
+
             const orderIds = orderGroup.map(order => order.id);
             const parsedRunnerId = runnerId ? parseInt(runnerId) : null;
             axios.post(route('history.update-runner'), {
@@ -360,7 +375,7 @@ export default {
                                     <span class="text-sm font-medium text-gray-600">Runner:</span>
                                     <select class="select select-sm bg-white border border-gray-200"
                                             :value="group.data[0] ? group.data[0].paid_by : null"
-                                            @change="updateRunner(group.data, $event.target.value)">
+                                            @change="updateRunner(group.data, $event.target.value, $event)">
                                         <option :value="null">No runner</option>
                                         <option v-for="user in users" :key="user.id" :value="user.id">
                                             {{ user.id === $page.props.auth.user.id ? 'You (' + user.name + ')' : user.name }}
