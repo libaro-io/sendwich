@@ -97,11 +97,11 @@ export default {
                         <div class="text-sm font-medium text-gray-900 flex-1">
                             <span class="text-gray-500 inline-block mr-4">{{ order.store_name }}</span>{{ order.product ? order.product.name : order.label }} <span v-if="order.comment">({{ order.comment }})</span>
                         </div>
-                        <div class="mt-1 text-sm text-gray-600 sm:flex sm:items-center gap-2 flex-wrap">
+                        <div class="mt-1 text-sm text-gray-600 flex items-center gap-2 flex-wrap">
                             <span class="badge badge-outline badge-success">{{ formatMoney(order.total) }}</span>
-                            <span class="hidden sm:inline" aria-hidden="true">&middot;</span>
+                            <span aria-hidden="true">&middot;</span>
                             <span class="badge badge-info">{{ order.user.name }}</span>
-                            <span class="hidden sm:inline" aria-hidden="true">&middot;</span>
+                            <span aria-hidden="true">&middot;</span>
                             <span :class="statusBadgeClass(order)" class="badge">{{ statusLabel(order) }}</span>
                         </div>
                         <div class="card-actions justify-end w-full">

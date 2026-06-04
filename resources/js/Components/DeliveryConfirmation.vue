@@ -3,6 +3,7 @@ import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 import {useToast} from "vue-toastification";
 import {router} from "@inertiajs/vue3";
 import {useHelpers} from "@/Composables/helpers";
+import CatalogueUpdate from "@/Components/CatalogueUpdate.vue";
 
 const helper = useHelpers();
 const toast = useToast();
@@ -11,7 +12,7 @@ const invalidPrice = (value) => value === null || value === '' || isNaN(Number(v
 
 export default {
     name: "DeliveryConfirmation",
-    components: {FontAwesomeIcon},
+    components: {FontAwesomeIcon, CatalogueUpdate},
     props: {
         orders: Array,
         companyUsers: Array,
@@ -76,9 +77,21 @@ export default {
             return store.products.some(p => (p.name || '').trim().toLowerCase() === needle);
         },
         computeNewItems() {
-            return this.extraItems.filter(e => e.label && !this.productExistsInStore(e.label, e.store_id));
+            const seen = new Set();
+            const result = [];
+            for (const e of this.extraItems) {
+                if (!e.label || this.productExistsInStore(e.label, e.store_id)) {
+                    continue;
+                }
+                const key = e.label.trim().toLowerCase() + '|' + e.store_id;
+                if (seen.has(key)) {
+                    continue;
+                }
+                seen.add(key);
+                result.push(e);
+            }
+            return result;
         },
-        // Fixed-price ordered products whose price the runner changed → suggest updating the catalogue price.
         computePriceChanges() {
             const cents = (value) => Math.round(Number(value) * 100);
             const seen = new Set();
@@ -112,7 +125,6 @@ export default {
                 const {data} = await axios.post(route('order.receipt.store'), {name: this.receiptStore.store_name});
                 this.extraStores.push({id: data.id, name: data.name, products: []});
                 this.receiptStore.store_id = data.id;
-                // Tag the just-scanned (yet unassigned) extras with the new store.
                 this.extraItems.forEach(e => { if (e.store_id === null) { e.store_id = data.id; } });
                 toast.success(`Store "${data.name}" added.`);
             } catch (error) {
@@ -134,12 +146,9 @@ export default {
                     headers: {'Content-Type': 'multipart/form-data'},
                 });
                 this.receiptStore = data.store || {store_id: null, store_name: null};
-                // Only trust the detected store if it matches one of our stores.
                 const recognisedStoreId = (this.receiptStore.store_id && this.allStores.some(s => s.id === this.receiptStore.store_id))
                     ? this.receiptStore.store_id
                     : null;
-                // Apply prices additively — only to orders of this ticket's recognised store, so a
-                // second ticket (other store) never overwrites the first ticket's prices.
                 let matched = 0;
                 (data.prices || []).forEach(p => {
                     if (p.total === null || p.total === undefined) {
@@ -226,209 +235,203 @@ export default {
 <template>
     <Teleport to="body">
         <div v-if="!showCatalogue" class="modal modal-open modal-bottom sm:modal-middle">
-            <div class="modal-box w-11/12 max-w-4xl">
-                <h3 class="text-xl font-bold mb-4">Confirm delivery</h3>
+            <div class="modal-box w-full sm:max-w-4xl rounded-t-3xl sm:rounded-2xl p-4 sm:p-6 max-h-[90vh] flex flex-col">
+                <h3 class="text-xl font-bold mb-4 shrink-0">Confirm delivery</h3>
 
-                <div class="form-control mb-4">
-                    <label class="label py-1">
-                        <span class="label-text">Add a photo of the receipt (optional) — the prices are read automatically</span>
-                    </label>
-                    <input type="file" accept="image/*" capture="environment"
-                           class="file-input file-input-bordered file-input-sm w-full"
-                           :disabled="analyzing"
-                           @change="analyzeReceipt"/>
-                    <span v-if="analyzing" class="text-xs text-gray-500 mt-2 flex items-center gap-2">
-                        <span class="loading loading-spinner loading-xs"></span>
-                        Scanning ticket with AI…
-                    </span>
-                </div>
+                <div class="flex-grow overflow-y-auto pr-1">
+                    <div class="form-control mb-4">
+                        <label class="label py-1">
+                            <span class="label-text">Add a photo of the receipt (optional) — the prices are read automatically</span>
+                        </label>
+                        <input type="file" accept="image/*" capture="environment"
+                               class="file-input file-input-bordered file-input-sm w-full"
+                               :disabled="analyzing"
+                               @change="analyzeReceipt"/>
+                        <span v-if="analyzing" class="text-xs text-gray-500 mt-2 flex items-center gap-2">
+                            <span class="loading loading-spinner loading-xs"></span>
+                            Scanning ticket with AI…
+                        </span>
+                    </div>
 
-                <div v-if="receiptStore.store_name" class="mb-4 text-xs">
-                    <p v-if="detectedStoreName" class="text-gray-500">
-                        Last ticket recognised as <span class="font-medium">{{ detectedStoreName }}</span> — its prices were filled in for that store's orders. You can scan more tickets for other stores.
-                    </p>
-                    <div v-else class="flex flex-wrap items-center gap-2">
-                        <span class="text-warning">Ticket store "{{ receiptStore.store_name }}" isn't in your stores yet.</span>
-                        <button type="button" class="btn btn-xs btn-outline" :disabled="addingStore" @click="addDetectedStore">
-                            <span v-if="addingStore" class="loading loading-spinner loading-xs"></span>
-                            + Add "{{ receiptStore.store_name }}"
-                        </button>
+                    <div v-if="receiptStore.store_name" class="mb-4 text-xs">
+                        <p v-if="detectedStoreName" class="text-gray-500">
+                            Last ticket recognised as <span class="font-medium">{{ detectedStoreName }}</span> — its prices were filled in for that store's orders. You can scan more tickets for other stores.
+                        </p>
+                        <div v-else class="flex flex-wrap items-center gap-2">
+                            <span class="text-warning">Ticket store "{{ receiptStore.store_name }}" isn't in your stores yet.</span>
+                            <button type="button" class="btn btn-xs btn-outline" :disabled="addingStore" @click="addDetectedStore">
+                                <span v-if="addingStore" class="loading loading-spinner loading-xs"></span>
+                                + Add "{{ receiptStore.store_name }}"
+                            </button>
+                        </div>
+                    </div>
+
+                    <h4 class="font-semibold text-base text-gray-700">Order items</h4>
+                    <p class="text-xs text-gray-400 mb-2">Scanned items that belong to the order — automatically assigned to the person who ordered them.</p>
+                    
+                    <!-- Desktop Table -->
+                    <div class="hidden sm:block">
+                        <table class="table w-full mb-5">
+                            <thead>
+                                <tr>
+                                    <th class="bg-gray-50">Item</th>
+                                    <th class="bg-gray-50">Store</th>
+                                    <th class="bg-gray-50">Person</th>
+                                    <th class="bg-gray-50 text-right">Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="order in deliveryOrders" :key="order.id">
+                                    <td>
+                                        <span class="font-medium">{{ order.product ? order.product.name : order.label }}</span>
+                                        <span v-if="order.comment" class="text-gray-500 text-sm ml-1">({{ order.comment }})</span>
+                                        <div v-if="order.product && order.product.variable_price" class="text-xs text-amber-600 mt-1">
+                                            Indicative price — enter the amount actually paid
+                                        </div>
+                                    </td>
+                                    <td class="text-sm text-gray-500">{{ order.store_name }}</td>
+                                    <td class="text-sm">{{ order.user.name }}</td>
+                                    <td class="text-right">
+                                        <input type="number" v-model="order.total" min="0" step="0.01"
+                                               class="input input-bordered input-sm w-28 text-right" placeholder="0.00"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Mobile List -->
+                    <div class="sm:hidden space-y-3 mb-6">
+                        <div v-for="order in deliveryOrders" :key="order.id" 
+                             class="bg-gray-50 p-3 rounded-xl border border-gray-100 flex flex-col gap-2">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <div class="font-semibold text-gray-900 leading-tight">
+                                        {{ order.product ? order.product.name : order.label }}
+                                    </div>
+                                    <div class="text-xs text-gray-500 mt-0.5">
+                                        {{ order.store_name }} &middot; {{ order.user.name }}
+                                    </div>
+                                </div>
+                                <div class="relative w-28">
+                                    <span class="absolute left-2 top-1.5 text-xs text-gray-400">€</span>
+                                    <input type="number" v-model="order.total" min="0" step="0.01"
+                                           class="input input-bordered input-sm w-full pl-5 text-right font-medium" placeholder="0.00"/>
+                                </div>
+                            </div>
+                            <div v-if="order.comment" class="text-xs text-gray-500 italic">"{{ order.comment }}"</div>
+                            <div v-if="order.product && order.product.variable_price" class="text-[10px] text-amber-600 font-medium uppercase tracking-wider">
+                                Indicative price — enter actual paid
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <h4 class="font-semibold text-base text-gray-700">Extra items</h4>
+                        <button type="button" class="btn btn-xs btn-ghost text-primary" @click="addExtraItem">+ Add item</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-2">Items added during pickup that were not ordered.</p>
+                    
+                    <!-- Desktop Table -->
+                    <div class="hidden sm:block">
+                        <table v-if="extraItems.length" class="table w-full mb-4">
+                            <thead>
+                                <tr>
+                                    <th class="bg-gray-50">Description</th>
+                                    <th class="bg-gray-50">Store</th>
+                                    <th class="bg-gray-50">Assign to</th>
+                                    <th class="bg-gray-50 text-right">Price</th>
+                                    <th class="bg-gray-50"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(extra, index) in extraItems" :key="index">
+                                    <td>
+                                        <input type="text" v-model="extra.label"
+                                               class="input input-bordered input-sm w-full" placeholder="Item name"/>
+                                    </td>
+                                    <td>
+                                        <select v-model="extra.store_id" class="select select-bordered select-sm w-full">
+                                            <option :value="null" disabled>Choose store…</option>
+                                            <option v-for="store in allStores" :key="store.id" :value="store.id">{{ store.name }}</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select v-model="extra.user_id" class="select select-bordered select-sm w-full">
+                                            <option :value="null" disabled>Choose person…</option>
+                                            <option v-for="person in companyUsers" :key="person.id" :value="person.id">
+                                                {{ person.id === $page.props.auth.user.id ? 'You (' + person.name + ')' : person.name }}
+                                            </option>
+                                        </select>
+                                    </td>
+                                    <td class="text-right">
+                                        <input type="number" v-model="extra.total" min="0" step="0.01"
+                                               class="input input-bordered input-sm w-28 text-right" placeholder="0.00"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <button type="button" class="text-error hover:text-red-600" @click="removeExtraItem(index)">
+                                            <FontAwesomeIcon icon="fas-fa fa-trash"/>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Mobile List -->
+                    <div class="sm:hidden space-y-4 mb-4">
+                        <div v-for="(extra, index) in extraItems" :key="index" 
+                             class="bg-gray-50 p-3 rounded-xl border border-gray-100 flex flex-col gap-3">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-bold text-gray-700 uppercase tracking-tight">Extra Item #{{ index + 1 }}</span>
+                                <button type="button" class="btn btn-ghost btn-xs text-error" @click="removeExtraItem(index)">
+                                    Remove
+                                </button>
+                            </div>
+                            <input type="text" v-model="extra.label"
+                                   class="input input-bordered input-sm w-full" placeholder="What is it?"/>
+                            <div class="grid grid-cols-2 gap-2">
+                                <select v-model="extra.store_id" class="select select-bordered select-sm w-full">
+                                    <option :value="null" disabled>Store…</option>
+                                    <option v-for="store in allStores" :key="store.id" :value="store.id">{{ store.name }}</option>
+                                </select>
+                                <select v-model="extra.user_id" class="select select-bordered select-sm w-full">
+                                    <option :value="null" disabled>For who?</option>
+                                    <option v-for="person in companyUsers" :key="person.id" :value="person.id">
+                                        {{ person.id === $page.props.auth.user.id ? 'You' : person.name }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="relative">
+                                <span class="absolute left-2 top-1.5 text-xs text-gray-400">€</span>
+                                <input type="number" v-model="extra.total" min="0" step="0.01"
+                                       class="input input-bordered input-sm w-full pl-5 text-right font-medium" placeholder="0.00"/>
+                            </div>
+                        </div>
+                        <p v-if="!extraItems.length" class="text-xs text-gray-400 italic mb-4">No extra items.</p>
                     </div>
                 </div>
 
-                <h4 class="font-semibold text-base text-gray-700">Order items</h4>
-                <p class="text-xs text-gray-400 mb-2">Scanned items that belong to the order — automatically assigned to the person who ordered them.</p>
-                <table class="table w-full mb-5">
-                    <thead>
-                        <tr>
-                            <th>Item</th>
-                            <th>Store</th>
-                            <th>Person</th>
-                            <th class="text-right">Price</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="order in deliveryOrders" :key="order.id">
-                            <td>
-                                <span class="font-medium">{{ order.product ? order.product.name : order.label }}</span>
-                                <span v-if="order.comment" class="text-gray-500 text-sm ml-1">({{ order.comment }})</span>
-                                <div v-if="order.product && order.product.variable_price" class="text-xs text-amber-600 mt-1">
-                                    Indicative price — enter the amount actually paid
-                                </div>
-                            </td>
-                            <td class="text-sm text-gray-500">{{ order.store_name }}</td>
-                            <td class="text-sm">{{ order.user.name }}</td>
-                            <td class="text-right">
-                                <input type="number" v-model="order.total" min="0" step="0.01"
-                                       class="input input-bordered input-sm w-28 text-right" placeholder="0.00"/>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <div class="flex items-center justify-between">
-                    <h4 class="font-semibold text-base text-gray-700">Extra items</h4>
-                    <button type="button" class="btn btn-xs btn-ghost" @click="addExtraItem">+ Add item</button>
+                <div class="flex justify-between items-center font-bold border-t pt-4 mt-2 shrink-0">
+                    <span class="text-lg">Total</span>
+                    <span class="text-xl text-primary">{{ formatMoney(deliveryTotal) }}</span>
                 </div>
-                <p class="text-xs text-gray-400 mb-2">Items added during pickup that were not ordered — assign each one to a person and store.</p>
-                <table v-if="extraItems.length" class="table w-full mb-4">
-                    <thead>
-                        <tr>
-                            <th>Description</th>
-                            <th>Store</th>
-                            <th>Assign to</th>
-                            <th class="text-right">Price</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="(extra, index) in extraItems" :key="index">
-                            <td>
-                                <input type="text" v-model="extra.label"
-                                       class="input input-bordered input-sm w-full" placeholder="Item name"/>
-                            </td>
-                            <td>
-                                <select v-model="extra.store_id" class="select select-bordered select-sm w-full">
-                                    <option :value="null" disabled>Choose store…</option>
-                                    <option v-for="store in allStores" :key="store.id" :value="store.id">{{ store.name }}</option>
-                                </select>
-                            </td>
-                            <td>
-                                <select v-model="extra.user_id" class="select select-bordered select-sm w-full">
-                                    <option :value="null" disabled>Choose person…</option>
-                                    <option v-for="person in companyUsers" :key="person.id" :value="person.id">
-                                        {{ person.id === $page.props.auth.user.id ? 'You (' + person.name + ')' : person.name }}
-                                    </option>
-                                </select>
-                            </td>
-                            <td class="text-right">
-                                <input type="number" v-model="extra.total" min="0" step="0.01"
-                                       class="input input-bordered input-sm w-28 text-right" placeholder="0.00"/>
-                            </td>
-                            <td class="text-right">
-                                <button type="button" class="text-error hover:text-red-600" @click="removeExtraItem(index)">
-                                    <FontAwesomeIcon icon="fas-fa fa-trash"/>
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <p v-else class="text-xs text-gray-400 italic mb-4">No extra items.</p>
-
-                <div class="flex justify-end items-center gap-2 font-bold border-t pt-3 mb-1">
-                    <span>Total:</span>
-                    <span>{{ formatMoney(deliveryTotal) }}</span>
-                </div>
-                <div class="modal-action">
-                    <button class="btn" :disabled="submitting" @click="$emit('close')">Cancel</button>
-                    <button class="btn btn-success" :disabled="submitting" @click="confirm">
+                <div class="modal-action mt-6 shrink-0">
+                    <button class="btn btn-ghost" :disabled="submitting" @click="$emit('close')">Cancel</button>
+                    <button class="btn btn-success flex-1" :disabled="submitting" @click="confirm">
                         <span v-if="submitting" class="loading loading-spinner loading-xs"></span>
-                        Confirm
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div v-if="showCatalogue" class="modal modal-open modal-bottom sm:modal-middle">
-            <div class="modal-box w-11/12 max-w-3xl">
-                <h3 class="text-xl font-bold mb-1">Update the catalogue</h3>
-                <p class="text-xs text-gray-500 mb-4">
-                    Confirm the changes to your store catalogue before delivering.
-                </p>
-
-                <template v-if="newProducts.length">
-                    <h4 class="font-semibold text-base text-gray-700">Add to store</h4>
-                    <p class="text-xs text-gray-400 mb-2">New items from the receipt that aren't in your stores yet.</p>
-                    <table class="table w-full mb-5">
-                        <thead>
-                            <tr>
-                                <th>Add</th>
-                                <th>Name</th>
-                                <th>Store</th>
-                                <th class="text-right">Price</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(product, index) in newProducts" :key="index">
-                                <td>
-                                    <input type="checkbox" v-model="product.add" class="checkbox checkbox-sm"/>
-                                </td>
-                                <td>
-                                    <input type="text" v-model="product.name" :disabled="!product.add"
-                                           class="input input-bordered input-sm w-full" placeholder="Product name"/>
-                                </td>
-                                <td>
-                                    <select v-model="product.store_id" :disabled="!product.add"
-                                            class="select select-bordered select-sm w-full">
-                                        <option :value="null" disabled>Choose store…</option>
-                                        <option v-for="store in allStores" :key="store.id" :value="store.id">{{ store.name }}</option>
-                                    </select>
-                                </td>
-                                <td class="text-right">
-                                    <input type="number" v-model="product.price" :disabled="!product.add" min="0" step="0.01"
-                                           class="input input-bordered input-sm w-28 text-right" placeholder="0.00"/>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </template>
-
-                <template v-if="priceChanges.length">
-                    <h4 class="font-semibold text-base text-gray-700">Update prices</h4>
-                    <p class="text-xs text-gray-400 mb-2">Products whose price you changed — update the catalogue price for next time.</p>
-                    <table class="table w-full mb-5">
-                        <thead>
-                            <tr>
-                                <th>Update</th>
-                                <th>Product</th>
-                                <th class="text-right">Current</th>
-                                <th class="text-right">New price</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(change, index) in priceChanges" :key="index">
-                                <td>
-                                    <input type="checkbox" v-model="change.apply" class="checkbox checkbox-sm"/>
-                                </td>
-                                <td>{{ change.name }}</td>
-                                <td class="text-right text-gray-500 line-through">{{ formatMoney(change.current_price) }}</td>
-                                <td class="text-right">
-                                    <input type="number" v-model="change.new_price" :disabled="!change.apply" min="0" step="0.01"
-                                           class="input input-bordered input-sm w-28 text-right" placeholder="0.00"/>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </template>
-
-                <div class="modal-action">
-                    <button class="btn" :disabled="submitting" @click="skipCatalogueChanges">Skip</button>
-                    <button class="btn btn-success" :disabled="submitting" @click="finalize">
-                        <span v-if="submitting" class="loading loading-spinner loading-xs"></span>
-                        Confirm changes
+                        Confirm Delivery
                     </button>
                 </div>
             </div>
         </div>
     </Teleport>
+
+    <CatalogueUpdate v-if="showCatalogue"
+                     :new-products="newProducts"
+                     :price-changes="priceChanges"
+                     :stores="allStores"
+                     :submitting="submitting"
+                     @skip="skipCatalogueChanges"
+                     @confirm="finalize"/>
 </template>
