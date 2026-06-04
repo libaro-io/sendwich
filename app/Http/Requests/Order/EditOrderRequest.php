@@ -18,15 +18,13 @@ class EditOrderRequest extends FormRequest
     {
         $companyId = auth()->user()->company->id;
 
-        return [
             'order_id'         => ['required', 'integer', Rule::exists('orders', 'id')],
             'product_id'       => ['nullable', 'integer', Rule::exists('products', 'id')->where('company_id', $companyId)],
-            'label'            => ['nullable', 'string', 'max:255'],
+            'label'            => ['required_without:product_id', 'nullable', 'string', 'max:255'],
             'store_id'         => ['nullable', 'integer', Rule::exists('stores', 'id')->where('company_id', $companyId)],
             'total'            => ['required', 'numeric', 'min:0'],
             'add_to_catalogue' => ['sometimes', 'boolean'],
             'catalogue_price'  => ['nullable', 'numeric', 'min:0'],
-        ];
     }
 
     public function getOrder(): Order

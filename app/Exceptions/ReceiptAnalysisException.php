@@ -13,7 +13,7 @@ class ReceiptAnalysisException extends Exception
 
     public static function requestFailed(int $status, string $body): self
     {
-        return new self("The receipt could not be analysed (Anthropic API responded with status {$status}: {$body}).");
+        return new self("The receipt could not be analysed (Anthropic API responded with status {$status}).");
     }
 
     public static function noResult(): self
