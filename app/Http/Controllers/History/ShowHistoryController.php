@@ -17,6 +17,7 @@ class ShowHistoryController extends Controller
             'company' => $company,
             'products' => $company->getProducts(),
             'users'    => $company->users()->select('id', 'name')->get(),
+            'stores'   => $company->stores()->select('id', 'name')->get(),
         ]);
     }
 }
