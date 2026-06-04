@@ -28,11 +28,11 @@ export default {
                     </p>
                 </div>
 
-                <div class="flex-grow overflow-y-auto pr-1">
+                <div class="grow overflow-y-auto pr-1">
                     <template v-if="newProducts.length">
                         <h4 class="font-semibold text-base text-gray-700">Add to store</h4>
                         <p class="text-xs text-gray-400 mb-2">New items from the receipt that aren't in your stores yet.</p>
-                        
+
                         <!-- Desktop Table -->
                         <div class="hidden sm:block">
                             <table class="table w-full mb-5">
@@ -71,7 +71,7 @@ export default {
 
                         <!-- Mobile Cards (Matching project style) -->
                         <div class="sm:hidden flex flex-col gap-2 mb-6">
-                            <div v-for="(product, index) in newProducts" :key="index" 
+                            <div v-for="(product, index) in newProducts" :key="index"
                                  class="card card-compact bg-gray-50 shadow-sm border border-gray-100">
                                 <div class="card-body">
                                     <div class="flex items-center justify-between mb-2">
@@ -101,7 +101,7 @@ export default {
                     <template v-if="priceChanges.length">
                         <h4 class="font-semibold text-base text-gray-700">Update prices</h4>
                         <p class="text-xs text-gray-400 mb-2">Products whose price you changed — update the catalogue price for next time.</p>
-                        
+
                         <!-- Desktop Table -->
                         <div class="hidden sm:block">
                             <table class="table w-full mb-5">
@@ -131,7 +131,7 @@ export default {
 
                         <!-- Mobile Cards -->
                         <div class="sm:hidden flex flex-col gap-2 mb-6">
-                            <div v-for="(change, index) in priceChanges" :key="index" 
+                            <div v-for="(change, index) in priceChanges" :key="index"
                                  class="card card-compact bg-gray-50 shadow-sm border border-gray-100">
                                 <div class="card-body">
                                     <div class="flex items-center justify-between mb-2">

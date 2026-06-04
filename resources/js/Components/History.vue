@@ -266,9 +266,9 @@ export default {
                         </thead>
                         <tbody>
                         <tr v-for="item in sortedGroup(group.data)" :key="item.id" class="bg-white hover:bg-gray-50">
-                            <td width="18%">{{ item.user.name }}</td>
+                            <td style="width: 18%">{{ item.user.name }}</td>
 
-                            <td width="14%" class="text-gray-500">
+                            <td style="width: 14%" class="text-gray-500">
                                 <select v-if="editingId === item.id" v-model="item.editStoreId" @change="onStoreChange(item)"
                                         class="select select-bordered select-sm w-full max-w-xs">
                                     <option :value="null">—</option>
@@ -305,9 +305,9 @@ export default {
                                 <span v-else class="text-gray-400">—</span>
                             </td>
 
-                            <td width="8%">{{ item.quantity }}</td>
+                            <td style="width: 8%">{{ item.quantity }}</td>
 
-                            <td width="12%" class="text-right">
+                            <td style="width: 12%" class="text-right">
                                 <input v-if="editingId === item.id" type="number" v-model="item.total" min="0" step="0.01"
                                        class="input input-bordered input-sm w-24 text-right" placeholder="0.00"/>
                                 <span v-else class="font-bold">{{ money(item.total) }}</span>
