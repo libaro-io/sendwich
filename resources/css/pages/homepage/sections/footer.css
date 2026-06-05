@@ -1,0 +1,20 @@
+@reference "@css/app.css";
+
+.homepage-footer {
+    @apply max-w-[76rem] mx-auto px-6 pt-8 pb-28;
+
+    .foot-grid { @apply grid grid-cols-[1.6fr_1fr_1fr] gap-8 border-t-[3px] border-ink pt-10 max-[700px]:grid-cols-2; }
+    .foot-logo { @apply block h-12 w-auto; }
+    .foot-by {
+        @apply mt-4 text-ink-soft font-bold;
+
+        a { @apply text-teal-deep font-extrabold; }
+    }
+    .foot-label { @apply font-display font-semibold uppercase tracking-[0.1em] text-[0.72rem] text-teal-deep mb-[0.3rem]; }
+    .foot-col {
+        @apply flex flex-col gap-2;
+
+        a { @apply text-ink no-underline font-bold w-fit; }
+        a:hover { @apply text-coral; }
+    }
+}

@@ -27,10 +27,17 @@
         "@fortawesome/vue-fontawesome": "^3.2",
         "@headlessui/vue": "^1.7",
         "@heroicons/vue": "^2.2",
+        "@libaro-io/laravel-frontend-conventions": "^6.1.0",
+        "@libaro-io/libaro-utilities": "^2.0.1",
         "daisyui": "^5.5",
         "laravel-permission-to-vuejs": "^3.0",
         "mitt": "^3.0",
         "moment": "^2.30",
         "vue-toastification": "^2.0.0-rc.5"
+    },
+    "overrides": {
+        "@libaro-io/libaro-utilities": {
+            "vite": "$vite"
+        }
     }
 }

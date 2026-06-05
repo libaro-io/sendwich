@@ -1,0 +1,22 @@
+@reference "@css/app.css";
+
+.homepage-order-ticket {
+    @apply max-w-[70rem] mx-auto px-6 py-16;
+
+    .scene-grid { @apply grid grid-cols-2 gap-12 items-center max-[820px]:grid-cols-1; }
+    .scene-title { @apply font-display font-bold text-ink text-[clamp(1.9rem,4.5vw,2.8rem)] leading-[1.04] mt-4 mb-0; }
+    .scene-lede { @apply mt-[1.1rem] text-[1.08rem] leading-[1.7] text-ink-soft; }
+    .scene-punch { @apply mt-[1.3rem] font-script text-coral text-[1.7rem] leading-[1.1]; }
+
+    .ticket { @apply bg-paper border-[3px] border-ink rounded-2xl shadow-[8px_8px_0_var(--color-ink)] overflow-hidden; }
+    .ticket-head { @apply flex items-center gap-2 px-[1.2rem] py-4 bg-teal-soft border-b-[3px] border-dashed border-ink font-display font-semibold; }
+    .ticket-dot { @apply inline-block w-[11px] h-[11px] rounded-full bg-teal border-2 border-ink; }
+    .order-list { @apply list-none m-0 px-[1.2rem] py-[0.6rem]; }
+    .order-row { @apply flex items-center gap-[0.9rem] py-[0.8rem] border-b border-dashed border-[#e3d4b4] last:border-b-0; }
+    .order-av { @apply w-[2.8rem] h-[2.8rem] rounded-full object-cover border-2 border-ink; }
+    .order-body { @apply flex flex-col flex-1; }
+    .order-name { @apply font-display font-semibold text-[0.95rem]; }
+    .order-text { @apply text-ink-soft text-[0.95rem]; }
+    .order-note { @apply font-display text-coral border-2 border-coral rounded-[0.4rem] px-[0.45rem] py-[0.1rem] text-[0.85rem] rotate-[5deg]; }
+    .ticket-foot { @apply px-[1.2rem] py-[0.9rem] border-t-[3px] border-dashed border-ink text-[0.9rem] text-ink-soft; }
+}

@@ -1,0 +1,9 @@
+@reference "@css/app.css";
+
+.homepage-nav {
+    @apply flex items-center justify-between max-w-[76rem] mx-auto px-6 py-[1.4rem];
+
+    .logo { @apply block h-14 w-auto; }
+    .nav-right { @apply flex items-center gap-4; }
+    .navlink { @apply text-ink no-underline font-extrabold hover:text-teal-deep; }
+}

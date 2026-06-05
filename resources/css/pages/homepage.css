@@ -1,0 +1,28 @@
+@reference "@css/app.css";
+
+/* =============================================================================
+   Sendwich landing page shell — reference design for the app-wide restyle.
+
+   Sections live under resources/js/Pages/Homepage/sections/ with matching
+   CSS under resources/css/pages/homepage/sections/.
+   Shared primitives (.chunk, .sec-*, .tint-*, .reveal) and the design tokens
+   live in resources/css/app.css.
+   ============================================================================= */
+
+#page-homepage {
+    @apply relative min-h-screen text-ink font-sans font-semibold overflow-x-clip;
+    background:
+        radial-gradient(75% 55% at 15% 6%, rgba(45,190,156,0.12), transparent 60%),
+        radial-gradient(70% 50% at 92% 14%, rgba(255,111,89,0.12), transparent 60%),
+        radial-gradient(80% 60% at 80% 96%, rgba(255,194,60,0.14), transparent 60%),
+        var(--color-cream);
+
+    /* lift the section components above the decorative grain layer */
+    > header, > section, > footer { @apply relative z-2; }
+
+    /* grain — the data-URI noise texture stays raw CSS */
+    .grain {
+        @apply fixed inset-0 z-1 pointer-events-none opacity-50 mix-blend-multiply;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.12'/%3E%3C/svg%3E");
+    }
+}
