@@ -27,8 +27,7 @@ export default {
             }
 
             // get the substring and return it
-            const substring = name.substring(start, end);
-            return substring;
+            return name.substring(start, end);
         },
     }
 }
@@ -39,7 +38,7 @@ export default {
             <h2>Runners</h2>
             <table v-if="userCount" class="mt-5 table w-full">
                 <tbody>
-                <tr v-for="(user, index) in users" class="text-sm">
+                <tr v-for="(user) in users" class="text-sm">
                     <td class="text-sm">
                         {{ shortenName(user.name, 0,15) }}
                     </td>
@@ -83,6 +82,3 @@ export default {
         </div>
     </div>
 </template>
-<style scoped>
-
-</style>

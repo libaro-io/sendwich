@@ -18,6 +18,7 @@ import {
     faBasketShopping,
     faShield,
     faClock,
+    faPen,
 } from '@fortawesome/free-solid-svg-icons';
 
 /* Import permissions */
@@ -29,6 +30,7 @@ library.add(
     faBasketShopping,
     faShield,
     faClock,
+    faPen,
 );
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';

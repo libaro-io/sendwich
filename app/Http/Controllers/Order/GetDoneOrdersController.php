@@ -17,7 +17,7 @@ class GetDoneOrdersController extends Controller
 
         $formattedOrders = collect();
 
-        $orders = Order::getOrders($company, (new DeliverySchedule())->deliveryDate(), false, true)
+        $orders = Order::getOrders($company, new DeliverySchedule()->deliveryDate(), false, true)
             ->get()
             ->groupBy('paid_by');
 
