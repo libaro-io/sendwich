@@ -26,10 +26,18 @@ class ConfirmDeliveryController extends Controller
         $deliveryDate = new DeliverySchedule()->deliveryDate();
 
         DB::transaction(function () use ($request, $user, $companyId, $deliveryDate) {
-            // 1. Correct the prices of the ordered items.
+            // 1. Correct the prices of the ordered items. Scope to this runner's undelivered
+            //    orders for the active delivery date so older/already-paid orders can't be touched.
             foreach ($request->getPrices() as $price) {
                 Order::query()
                     ->where('id', '=', $price['order_id'])
+                    ->where('company_id', '=', $companyId)
+                    ->where('paid_by', '=', $user->id)
+                    ->whereNull('delivered_at')
+                    ->whereBetween('date', [
+                        $deliveryDate->copy()->startOfDay(),
+                        $deliveryDate->copy()->endOfDay(),
+                    ])
                     ->update(['total' => $price['total']]);
             }
 

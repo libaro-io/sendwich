@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Order;
 
+use App\Actions\DeliverySchedule;
 use App\Models\Order;
+use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -20,10 +22,17 @@ class ConfirmDeliveryRequest extends FormRequest
             return false;
         }
 
+        $deliveryDate = $this->deliveryDate();
+
         $owned = once(fn () => Order::query()
             ->whereIn('id', $orderIds->all())
             ->where('company_id', '=', auth()->user()->company->id)
             ->where('paid_by', '=', auth()->id())
+            ->whereNull('delivered_at')
+            ->whereBetween('date', [
+                $deliveryDate->copy()->startOfDay(),
+                $deliveryDate->copy()->endOfDay(),
+            ])
             ->count());
 
         return $owned === $orderIds->count();
@@ -53,6 +62,11 @@ class ConfirmDeliveryRequest extends FormRequest
             'price_updates.*.product_id' => ['required', 'integer', Rule::exists('products', 'id')->where('company_id', $companyId)],
             'price_updates.*.price'      => ['required', 'numeric', 'min:0'],
         ];
+    }
+
+    public function deliveryDate(): Carbon
+    {
+        return once(fn () => new DeliverySchedule()->deliveryDate());
     }
 
     /**
