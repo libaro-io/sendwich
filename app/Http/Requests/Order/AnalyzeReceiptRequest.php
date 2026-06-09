@@ -31,7 +31,16 @@ class AnalyzeReceiptRequest extends FormRequest
         return once(function () {
             $deliveryDate = new DeliverySchedule()->deliveryDate();
 
+            return Order::query()
+                ->where('company_id', '=', auth()->user()->company->id)
+                ->where('paid_by', '=', auth()->id())
+                ->whereNull('delivered_at')
+                ->whereBetween('date', [
+                    $deliveryDate->copy()->startOfDay(),
+                    $deliveryDate->copy()->endOfDay(),
+                ])
                 ->with('product:id,name,price,variable_price,store_id')
+                ->get();
         });
     }
 }
