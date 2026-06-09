@@ -27,6 +27,7 @@ import {
     faChevronDown,
     faBars,
     faStore,
+    faPen,
 } from '@fortawesome/free-solid-svg-icons';
 
 /* Import permissions */
@@ -47,6 +48,7 @@ library.add(
     faChevronDown,
     faBars,
     faStore,
+    faPen,
 );
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';

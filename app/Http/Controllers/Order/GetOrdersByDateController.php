@@ -13,15 +13,12 @@ class GetOrdersByDateController extends Controller
         $company = auth()->user()->company;
 
         $orders = $company->orders()
-            ->with(['deliverer', 'user', 'product.store'])
+            ->with(['deliverer', 'user', 'product.store', 'store'])
             ->orderBy('date', 'DESC')
             ->where('date', '>', Carbon::now()->subMonth())
             ->get()
-            ->groupBy([
-                fn ($order) => Carbon::parse($order->date)->format('Ymd'),
-                'paid_by',
-            ])
-            ->map(fn ($value, $key) => ['date' => $key, 'data' => $value])
+            ->groupBy(fn ($order) => Carbon::parse($order->date)->format('Ymd'))
+            ->map(fn ($value, $key) => ['date' => $key, 'data' => $value->values()])
             ->values();
 
         return response()->json($orders);

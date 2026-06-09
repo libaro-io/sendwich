@@ -1,12 +1,12 @@
 <script>
+import Checkbox from "@/Components/ui/Checkbox.vue";
 import {useHelpers} from "@/Composables/helpers";
-import Modal from "@/Components/ui/Modal.vue";
 
 const helper = useHelpers();
 export default {
     name: "productCard",
-    components: {
-        Modal,
+    components : {
+      Checkbox,
     },
     mounted() {
         this.product.options.forEach(( option ) => option['selected'] = false)
@@ -17,7 +17,6 @@ export default {
     data() {
         return {
             comment: '',
-            showModal: false,
         };
     },
     computed:{
@@ -33,76 +32,70 @@ export default {
         order(){
             this.$emit('ordered', this.product, this.comment);
             this.comment = '';
-            this.showModal = false;
+            this.closeModal();
         },
+        closeModal(){
+            document.getElementById('option-modal-'+this.product.id).checked = false;
+        }
     },
 }
 </script>
 <template>
-<div class="product-card">
-    <div class="product-card__info">
-        <div class="product-card__name">{{ product.name }}</div>
-        <div class="product-card__per-kg" v-if="product.variable_price">
-            <span class="product-card__per-kg-label">Price per kg</span>
+<div class="card-body flex justify-between align-middle">
+    <div class="flex flex-end flex-row justify-between sm:flex sm:items-start">
+        <div class="mt-3 sm:mt-0 ">
+            <div class="text-sm font-medium text-gray-900">{{ product.name }}</div>
+            <div class="mt-1">
+                <span v-if="product.variable_price" class="text-xs text-gray-400">Indicative price</span>
+            </div>
+        </div>
+        <div class="card-actions justify-end mt-2">
+            <label
+                :for="'option-modal-'+product.id"
+                class="btn btn-sm btn-success modal-button">
+                Order
+                <div class="badge bg-white text-success font-bold border-0 ml-3">
+                    {{ product.variable_price ? '≈ ' : '' }}{{ formatMoney(product.price) }}
+                </div>
+            </label>
+            <input type="checkbox" :id="'option-modal-'+product.id" class="modal-toggle" />
+
+            <label :for="'option-modal-'+product.id" class="modal modal-bottom sm:modal-middle cursor-pointer">
+                <label class="modal-box relative" for="">
+                    <h3 class="text-lg font-bold">{{product.name}}
+                        <span class="ml-2 badge badge-warning badge-outline p-1">
+                            {{ product.variable_price ? '≈ ' + formatMoney(product.price) : formatMoney(product.price) }}
+                        </span>
+                    </h3>
+                    <div v-if="product.variable_price" class="mt-3 p-3 bg-amber-50 rounded-lg text-sm text-amber-700">
+                        This price is indicative ({{ formatMoney(product.price) }}) — the final price is filled in after pickup.
+                    </div>
+                    <div v-if="options.length >=0">
+                        <p v-if="options.length" class="py-4">Choose your options</p>
+                        <div class="flex flex-wrap gap-2">
+                            <div v-for="option in options" class="flex">
+                                <div class="btn btn-sm" :class="option.selected? 'btn-success':'btn-outline'" @click="toggleOption(option)">{{ option.name }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <textarea
+                            v-model="comment"
+                            class="textarea textarea-bordered w-full"
+                            placeholder="Extra comment (e.g. without egg please)"
+                            rows="1"
+                        ></textarea>
+                    </div>
+                    <div class="flex justify-end mt-4">
+                        <button class="btn btn-success" @click.stop="order">Place Order</button>
+                    </div>
+                </label>
+            </label>
         </div>
     </div>
-    <div>
-        <button
-            type="button"
-            @click="showModal = true"
-            class="chunk chunk--teal chunk--sm product-card__btn">
-            Order
-            <span class="tag tag--sun tag--bold">
-                {{ formatMoney(product.price) }}{{ product.variable_price ? '/kg' : '' }}
-            </span>
-        </button>
 
-        <Modal :open="showModal" :title="product.name" @close="showModal = false">
-            <div class="product-card__price-row">
-                <span class="tag tag--sun tag--semibold">
-                    Price: {{ product.variable_price ? formatMoney(product.price) + '/kg' : formatMoney(product.price) }}
-                </span>
-            </div>
-
-            <div v-if="product.variable_price" class="callout callout--warning product-card__note">
-                The price is determined by the runner based on the weight ({{ formatMoney(product.price) }}/kg).
-            </div>
-
-            <div v-if="options.length" class="product-card__options">
-                <p class="product-card__options-title">Choose your options</p>
-                <div class="product-card__options-grid">
-                    <button
-                        v-for="option in options"
-                        :key="option.id"
-                        type="button"
-                        class="chunk chunk--sm"
-                        :class="option.selected ? 'chunk--teal' : 'chunk--cream'"
-                        @click="toggleOption(option)"
-                    >
-                        {{ option.name }}
-                    </button>
-                </div>
-            </div>
-
-            <div class="product-card__comments">
-                <label class="field-label">Comments</label>
-                <textarea
-                    v-model="comment"
-                    class="field-textarea"
-                    placeholder="Extra comment (e.g. without egg please)"
-                    rows="2"
-                ></textarea>
-            </div>
-
-            <template #actions>
-                <button class="chunk chunk--teal" @click.stop="order">Place Order</button>
-                <button class="chunk chunk--ghost" @click="showModal = false">Cancel</button>
-            </template>
-        </Modal>
-    </div>
 </div>
 </template>
-
 <style scoped>
-@import "@css/pages/dashboard/sections/product-card.css";
+
 </style>

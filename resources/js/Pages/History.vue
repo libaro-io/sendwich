@@ -8,6 +8,7 @@ const props = defineProps({
     company: Object,
     products: Array,
     users: Array,
+    stores: Array,
 });
 </script>
 
@@ -19,7 +20,7 @@ const props = defineProps({
                 <div class="page">
                     <div class="page-container">
                         <div class="history-page__grid">
-                            <History :products="products" :users="users" />
+                            <History :products="products" :users="users" :stores="stores" />
                         </div>
                     </div>
                 </div>

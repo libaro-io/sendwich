@@ -12,6 +12,7 @@ const props = defineProps({
     products: Array,
     stores: Array,
     users: Array,
+    companyUsers: Array,
     userCount: Number,
     productCount: Number,
     deliveryMoment: String,
@@ -66,6 +67,7 @@ export default {
                 <div class="dashboard__left">
                     <div class="dashboard__stack">
                         <Orders :orders="orders" :totalPrice="totalPrice" :delivery-moment="deliveryMoment"
+                                :company-users="companyUsers" :stores="stores"
                                 class="dashboard__full"></Orders>
                         <DeptList :userCount="userCount" :users='users' :runner='selectedRunner' :company="company"
                                   class="dashboard__full"></DeptList>
