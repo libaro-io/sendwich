@@ -1,7 +1,7 @@
 <script setup>
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
 import {Head} from '@inertiajs/vue3';
-import History from '@/Components/History.vue'
+import History from '@/Pages/History/sections/HistoryTable.vue'
 
 const props = defineProps({
     deliveryMoment: String,
@@ -9,17 +9,17 @@ const props = defineProps({
     products: Array,
     users: Array,
 });
-
 </script>
+
 <template>
     <Head title="History"/>
     <BreezeAuthenticatedLayout>
-        <div class="min-h-screen">
-            <div class="font-sans text-gray-900 antialiased">
-                <div class="py-12">
-                    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                        <div class="grid grid-cols-1 gap-4">
-                            <History :products="products" :users="users"></History>
+        <div class="history-page">
+            <div class="history-page__body">
+                <div class="page">
+                    <div class="page-container">
+                        <div class="history-page__grid">
+                            <History :products="products" :users="users" />
                         </div>
                     </div>
                 </div>
@@ -27,3 +27,7 @@ const props = defineProps({
         </div>
     </BreezeAuthenticatedLayout>
 </template>
+
+<style scoped>
+@import "@css/pages/history.css";
+</style>

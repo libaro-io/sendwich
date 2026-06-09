@@ -1,25 +1,6 @@
 @import "tailwindcss";
 
 @plugin "@tailwindcss/forms";
-@plugin "daisyui" {
-    themes: cupcake --default, sendwich;
-}
-
-@plugin "daisyui/theme" {
-    name: "sendwich";
-    --color-primary: #abfce4;
-    --color-secondary: #51db83;
-    --color-accent: #e0ed84;
-    --color-neutral: #242D42;
-    --color-base-100: #324667;
-    --color-info: #6682EB;
-    --color-success: #62EA9F;
-    --color-warning: #FAD233;
-    --color-error: #FB0931;
-    --radius-box: 1rem;
-    --radius-field: 0.5rem;
-    --radius-selector: 1.9rem;
-}
 
 @theme {
     --font-sans: "Nunito", ui-sans-serif, system-ui, sans-serif;
@@ -27,85 +8,43 @@
 
     /* Sendwich brand tokens — the app-wide restyle palette.
        Reference design: resources/js/Pages/Homepage/6.vue (+ matching 6.css). */
-    --color-cream: #fdf5e8;       /* page background */
-    --color-paper: #fffaf0;       /* card / surface background */
-    --color-ink: #2a2724;         /* primary text & borders */
-    --color-ink-soft: #6f655a;    /* secondary text */
-    --color-teal: #2dbe9c;        /* primary accent */
-    --color-teal-deep: #1f9a7e;   /* accent text on light surfaces */
-    --color-teal-soft: #d2f3ea;   /* accent tint */
-    --color-teal-ink: #06251e;    /* text on teal surfaces */
-    --color-coral: #ff6f59;       /* secondary accent */
+    --color-cream: #fdf5e8; /* page background */
+    --color-paper: #fffaf0; /* card / surface background */
+    --color-ink: #000000; /* primary text & borders */
+    --color-ink-soft: #555555; /* secondary text */
+    --color-teal: #2dbe9c; /* primary accent */
+    --color-teal-deep: #1f9a7e; /* accent text on light surfaces */
+    --color-teal-soft: #d2f3ea; /* accent tint */
+    --color-teal-ink: #06251e; /* text on teal surfaces */
+    --color-coral: #ff6f59; /* secondary accent */
     --color-coral-soft: #ffe1da;
-    --color-sun: #ffc23c;         /* tertiary accent */
+    --color-sun: #ffc23c; /* tertiary accent */
     --color-sun-soft: #fff0cf;
-    --font-display: 'Fredoka', sans-serif;
-    --font-script: 'Caveat', cursive;
+    --font-display: "Fredoka", sans-serif;
+    --font-script: "Caveat", cursive;
 }
 
 @source "../views";
 @source "../js";
 
 @keyframes tilt {
-    0%, 50%, 100% { transform: rotate(0deg); }
-    25% { transform: rotate(1deg); }
-    75% { transform: rotate(-1deg); }
+    0%,
+    50%,
+    100% {
+        transform: rotate(0deg);
+    }
+    25% {
+        transform: rotate(1deg);
+    }
+    75% {
+        transform: rotate(-1deg);
+    }
 }
 
-.bg-rainbow {
-    background: #f12711;
-    background: -webkit-linear-gradient(to right, #f5af19, #f12711);
-    background: linear-gradient(to right, #f5af19, #f12711);
-}
-
-@keyframes gradient {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
-.bg-white-fix {
-    background-color: rgb(255 255 255);
-}
-
-.bg-white {
-    background-color: rgb(255 255 255 / 0.7);
-}
-
-h1, .card.title {
-    @apply text-2xl leading-6 font-bold text-primary mb-5;
-}
-
-h2 {
-    @apply text-xl leading-6 font-medium text-gray-800 mb-5;
-}
-
-h3 {
-    @apply text-lg leading-6 font-medium text-gray-800 mb-5;
-}
-
-.btn-success {
-    @apply text-white font-bold;
-}
-
-.landing h1 {
-    @apply mt-10 text-4xl font-bold tracking-tight leading-tight sm:text-6xl sm:leading-tight mb-0;
-}
-
-.landing p {
-    @apply text-lg leading-8;
-}
-
-.card-body {
-    @apply px-4 py-5 sm:p-6;
-}
-
-.action-button {
-    @apply rounded-lg btn btn-success shadow-md;
-}
-
-.modal-box {
-    overflow: hidden;
+/* Root background so the browser overscroll/rubber-band area matches the app
+   (no white showing beyond the page bounds). */
+html {
+    background-color: var(--color-cream);
 }
 
 /* =============================================================================
@@ -114,32 +53,305 @@ h3 {
    ============================================================================= */
 
 /* chunky button — the restyle's replacement for daisyUI's `btn` */
+/* every interactive button shows the pointer cursor (browsers default <button> to default) */
+button:not(:disabled),
+[type="button"]:not(:disabled),
+[type="submit"]:not(:disabled),
+[type="reset"]:not(:disabled),
+[role="button"]:not(:disabled) {
+    @apply cursor-pointer;
+}
+
 .chunk {
     @apply inline-block no-underline font-display font-semibold text-ink py-[0.7rem] px-[1.3rem]
-        border-[3px] border-ink rounded-full shadow-[4px_4px_0_var(--color-ink)] transition duration-150;
+        border-[3px] border-ink rounded-full shadow-[4px_4px_0_var(--color-ink)] transition duration-150 cursor-pointer;
 }
-.chunk:hover { @apply -translate-x-0.5 -translate-y-0.5 shadow-[6px_6px_0_var(--color-ink)]; }
-.chunk:active { @apply translate-x-0.5 translate-y-0.5 shadow-[1px_1px_0_var(--color-ink)]; }
-.chunk--teal { @apply bg-teal text-teal-ink; }
-.chunk--cream { @apply bg-paper; }
-.chunk--sm { @apply text-[0.9rem] py-[0.55rem] px-[1.1rem] shadow-[3px_3px_0_var(--color-ink)]; }
-.chunk--lg { @apply text-[1.15rem] py-[0.95rem] px-[1.7rem] shadow-[5px_5px_0_var(--color-ink)]; }
+.chunk:hover {
+    @apply -translate-x-0.5 -translate-y-0.5 shadow-[6px_6px_0_var(--color-ink)];
+}
+.chunk:active {
+    @apply translate-x-0.5 translate-y-0.5 shadow-[1px_1px_0_var(--color-ink)];
+}
+.chunk--teal {
+    @apply bg-teal text-teal-ink;
+}
+.chunk--cream {
+    @apply bg-paper;
+}
+.chunk--sm {
+    @apply text-[0.9rem] py-[0.55rem] px-[1.1rem] shadow-[3px_3px_0_var(--color-ink)];
+}
+.chunk--lg {
+    @apply text-[1.15rem] py-[0.95rem] px-[1.7rem] shadow-[5px_5px_0_var(--color-ink)];
+}
+.chunk--sun {
+    @apply bg-sun text-ink;
+}
+
+/* panel heading + shared content helpers */
+.panel-title {
+    @apply font-display font-bold text-2xl text-ink mb-4;
+}
+.empty-action {
+    @apply w-full flex flex-col items-center my-6;
+}
 
 /* section head */
-.sec-head { @apply max-w-[46rem] mx-auto text-center px-6 pt-20 pb-10; }
-.sec-tab { @apply inline-block bg-ink text-paper font-extrabold uppercase tracking-[0.14em] text-[0.72rem] px-4 py-[0.4rem] rounded-full -rotate-[1.5deg]; }
-.sec-tab--teal { @apply bg-teal text-teal-ink; }
-.sec-title { @apply font-display font-bold text-ink text-[clamp(2rem,5vw,3.2rem)] leading-[1.02] mt-4 mb-0; }
-.sec-sub { @apply mt-[0.9rem] text-[1.1rem] text-ink-soft font-semibold; }
+.sec-head {
+    @apply max-w-[46rem] mx-auto text-center px-6 pt-20 pb-10;
+}
+.sec-tab {
+    @apply inline-block bg-ink text-paper font-extrabold uppercase tracking-[0.14em] text-[0.72rem] px-4 py-[0.4rem] rounded-full -rotate-[1.5deg];
+}
+.sec-tab--teal {
+    @apply bg-teal text-teal-ink;
+}
+.sec-title {
+    @apply font-display font-bold text-ink text-[clamp(2rem,5vw,3.2rem)] leading-[1.02] mt-4 mb-0;
+}
+.sec-sub {
+    @apply mt-[0.9rem] text-[1.1rem] text-ink-soft font-semibold;
+}
 
 /* colour tints */
-.tint-teal { @apply bg-teal-soft; }
-.tint-coral { @apply bg-coral-soft; }
-.tint-sun { @apply bg-sun-soft; }
+.tint-teal {
+    @apply bg-teal-soft;
+}
+.tint-coral {
+    @apply bg-coral-soft;
+}
+.tint-sun {
+    @apply bg-sun-soft;
+}
 
 /* reveal-on-scroll (applied by the v-reveal directive, see resources/js/Directives/reveal.ts) */
-.reveal { @apply opacity-0 [transform:translateY(24px)_scale(0.97)] [transition:opacity_0.5s_ease,transform_0.6s_cubic-bezier(0.34,1.56,0.64,1)]; }
-.reveal.is-in { @apply opacity-100 transform-none; }
+.reveal {
+    @apply opacity-0 [transform:translateY(24px)_scale(0.97)] [transition:opacity_0.5s_ease,transform_0.6s_cubic-bezier(0.34,1.56,0.64,1)];
+}
+.reveal.is-in {
+    @apply opacity-100 transform-none;
+}
 @media (prefers-reduced-motion: reduce) {
-    .reveal { @apply opacity-100 transform-none transition-none; }
+    .reveal {
+        @apply opacity-100 transform-none transition-none;
+    }
+}
+
+/* surface */
+.panel {
+    @apply bg-paper border-[3px] border-ink rounded-2xl shadow-[6px_6px_0_var(--color-ink)] p-6;
+}
+.panel--flat {
+    @apply shadow-[3px_3px_0_var(--color-ink)] p-4;
+}
+
+/* extra button variants */
+.chunk--coral {
+    @apply bg-coral text-paper;
+}
+.chunk--ghost {
+    @apply bg-transparent;
+}
+.chunk:disabled {
+    @apply opacity-50 pointer-events-none;
+}
+
+/* status tag (daisyUI `badge` replacement) */
+.tag {
+    @apply inline-flex items-center gap-1 font-display text-[0.85rem] border-2 border-ink rounded-full px-3 py-0.5 bg-paper text-ink;
+}
+.tag--teal {
+    @apply bg-teal-soft;
+}
+.tag--coral {
+    @apply bg-coral-soft;
+}
+.tag--sun {
+    @apply bg-sun-soft;
+}
+.tag--ink {
+    @apply bg-ink text-paper;
+}
+.tag--bold {
+    @apply font-bold;
+}
+.tag--semibold {
+    @apply font-semibold;
+}
+
+/* form fields */
+.field-label {
+    @apply block font-display font-semibold text-ink mb-1;
+}
+.field-input,
+.field-select,
+.field-textarea {
+    @apply w-full bg-paper text-ink border-2 border-ink rounded-lg px-3 py-2
+        focus:outline-none focus:border-teal focus:ring-2 focus:ring-teal-soft;
+}
+.field-error {
+    @apply text-coral text-sm mt-1;
+}
+.field-checkbox {
+    @apply w-5 h-5 rounded border-2 border-ink text-teal bg-paper cursor-pointer focus:ring-2 focus:ring-teal-soft focus:ring-offset-0 focus:outline-none transition duration-150;
+}
+.field-checkbox:checked {
+    @apply bg-teal border-ink;
+}
+
+/* form scaffolding (shared across auth & settings forms) */
+.form-field + .form-field {
+    @apply mt-4;
+}
+.form-title {
+    @apply font-display font-bold text-lg text-ink mb-4;
+}
+.form-title--spaced {
+    @apply mt-6;
+}
+.form-prose {
+    @apply font-sans text-ink-soft leading-relaxed mb-4;
+}
+.form-hint {
+    @apply text-sm text-ink-soft leading-relaxed mb-4;
+}
+.form-status {
+    @apply font-display font-semibold text-sm text-teal-deep mb-4;
+}
+.form-actions {
+    @apply flex items-center justify-between mt-6;
+}
+.form-actions--end {
+    @apply justify-end;
+}
+.form-link {
+    @apply text-sm font-display font-semibold text-teal-deep underline transition-colors hover:text-teal;
+}
+.form-link--danger {
+    @apply text-coral hover:text-coral/80;
+}
+.form-check {
+    @apply flex items-center gap-2 mt-4;
+}
+.form-check-label {
+    @apply font-sans text-sm text-ink;
+}
+
+/* top navigation links (Authenticated layout) */
+.nav-link {
+    @apply inline-flex items-center px-1 pt-1 border-b-4 border-transparent text-sm font-display font-semibold leading-5 text-ink-soft transition duration-150 hover:text-ink hover:border-teal/40 focus:outline-none focus:text-ink focus:border-teal/40;
+}
+.nav-link-active {
+    @apply inline-flex items-center px-1 pt-1 border-b-4 border-teal text-sm font-display font-bold leading-5 text-ink transition duration-150 focus:outline-none focus:border-teal;
+}
+.nav-link-mobile {
+    @apply block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-display font-semibold text-ink-soft transition duration-150 hover:text-ink hover:bg-cream hover:border-teal/40 focus:outline-none focus:text-ink focus:bg-cream focus:border-teal/40;
+}
+.nav-link-mobile-active {
+    @apply block pl-3 pr-4 py-2 border-l-4 border-teal text-base font-display font-bold text-ink bg-teal-soft transition duration-150 focus:outline-none focus:text-ink focus:bg-teal-soft focus:border-teal;
+}
+.dropdown-link {
+    @apply block w-full px-4 py-2 text-left text-sm font-display font-semibold leading-5 text-ink transition duration-150 hover:bg-cream focus:outline-none focus:bg-cream;
+}
+
+/* shared ambient page background — the same layered glow as the landing page */
+.brand-canvas {
+    background:
+        radial-gradient(
+            75% 55% at 15% 6%,
+            rgba(45, 190, 156, 0.12),
+            transparent 60%
+        ),
+        radial-gradient(
+            70% 50% at 92% 14%,
+            rgba(255, 111, 89, 0.12),
+            transparent 60%
+        ),
+        radial-gradient(
+            80% 60% at 80% 96%,
+            rgba(255, 194, 60, 0.14),
+            transparent 60%
+        ),
+        var(--color-cream);
+    background-attachment: fixed;
+}
+
+/* authenticated page shell */
+.app-page {
+    @apply min-h-screen font-sans text-ink;
+}
+.page {
+    @apply py-12;
+}
+.page-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+/* small circular icon button (neo-brutalist) */
+.icon-btn {
+    @apply w-8 h-8 rounded-full border-2 border-ink bg-paper shadow-[2px_2px_0_var(--color-ink)]
+        flex items-center justify-center transition duration-150 cursor-pointer focus:outline-none
+        hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[3px_3px_0_var(--color-ink)]
+        active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0_var(--color-ink)];
+}
+.icon-btn--danger {
+    @apply text-coral;
+}
+.icon-btn__icon {
+    @apply w-4 h-4;
+}
+
+/* toggle (daisyUI `toggle` replacement) — checkbox styled as a switch */
+.switch {
+    @apply relative inline-block w-12 h-7 appearance-none cursor-pointer rounded-full
+    border-2 border-ink bg-cream bg-none transition duration-150 checked:bg-teal checked:bg-none;
+}
+.switch::before {
+    @apply content-[''] absolute top-1/2 left-0.5 -translate-y-1/2 w-4 h-4 rounded-full
+    bg-paper border-2 border-ink transition duration-150;
+}
+.switch:checked::before {
+    @apply translate-x-6 -translate-y-1/2;
+}
+
+/* table */
+.table-brut {
+    @apply w-full border-collapse;
+}
+.table-brut th {
+    @apply font-display font-semibold text-left text-ink border-b-[3px] border-ink px-3 py-2;
+}
+.table-brut td {
+    @apply border-b-2 border-ink px-3 py-2;
+}
+.table-brut tbody tr:hover {
+    @apply bg-cream;
+}
+
+/* inline notice (daisyUI `alert` replacement) */
+.callout {
+    @apply flex items-center gap-3 border-2 border-ink rounded-xl px-4 py-3 bg-paper font-semibold;
+}
+.callout--warning {
+    @apply bg-sun-soft;
+}
+.callout--error {
+    @apply bg-coral-soft;
+}
+.callout--info {
+    @apply bg-teal-soft;
+}
+
+/* toast overrides (vue-toastification) */
+.Vue-Toastification__toast {
+    @apply font-sans font-semibold border-[3px] border-ink rounded-xl shadow-[4px_4px_0_var(--color-ink)];
+}
+.Vue-Toastification__toast--success {
+    @apply bg-teal text-teal-ink;
+}
+.Vue-Toastification__toast--error {
+    @apply bg-coral text-paper;
+}
+.Vue-Toastification__toast--info {
+    @apply bg-ink text-paper;
 }

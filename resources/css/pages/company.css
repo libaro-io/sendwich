@@ -1,0 +1,31 @@
+@reference "@css/app.css";
+
+.company__grid {
+    @apply grid grid-cols-1 gap-6;
+}
+.company__head {
+    @apply flex items-center justify-between mb-6;
+}
+.company__title {
+    @apply font-display font-bold text-3xl text-ink m-0;
+}
+.company__scroll {
+    @apply overflow-x-auto;
+}
+.company__num {
+    @apply text-right;
+}
+.company__cell-name {
+    @apply text-ink font-medium;
+}
+.company__cell-email {
+    @apply text-ink-soft;
+}
+.company__remove {
+    @apply flex justify-end;
+}
+
+/* flat — invite modal content is teleported to <body> */
+.company__form {
+    @apply space-y-4;
+}

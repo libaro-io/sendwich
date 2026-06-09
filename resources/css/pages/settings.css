@@ -1,0 +1,90 @@
+@reference "@css/app.css";
+
+.settings__grid {
+    @apply grid grid-cols-1 gap-6;
+}
+.settings__title {
+    @apply font-display font-bold text-3xl text-ink m-0;
+}
+.settings__section-title {
+    @apply font-display font-bold text-xl text-ink mb-6;
+}
+
+.settings__runner-grid {
+    @apply grid grid-cols-1 md:grid-cols-5 gap-4 items-start;
+}
+.settings__time {
+    @apply max-w-xs;
+}
+.settings__hint {
+    @apply md:col-span-4 text-sm text-ink-soft;
+}
+.settings__error-wide {
+    @apply col-span-5;
+}
+
+.settings__row {
+    @apply flex items-center justify-between mt-6 border-t-2 border-ink pt-6;
+}
+.settings__row-start {
+    @apply flex justify-between items-start mb-4;
+}
+.settings__label {
+    @apply font-display font-bold text-ink;
+}
+.settings__desc {
+    @apply text-ink-soft text-sm mt-1;
+}
+
+.settings__save {
+    @apply flex justify-end mt-6;
+}
+.settings__save--bordered {
+    @apply mt-8 border-t-2 border-ink pt-6;
+}
+
+.settings__block {
+    @apply mb-8;
+}
+.settings__block-head {
+    @apply flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-6;
+}
+.settings__empty {
+    @apply text-ink-soft text-sm italic;
+}
+.settings__callout {
+    @apply text-sm mb-3;
+}
+.settings__channel {
+    @apply flex items-center justify-between mb-3;
+}
+.settings__channel-info {
+    @apply flex items-center gap-3;
+}
+.settings__switch-sm {
+    @apply scale-90;
+}
+.settings__channel-actions {
+    @apply flex items-center gap-2;
+}
+.settings__btn-danger {
+    @apply text-coral;
+}
+
+.settings__divider {
+    @apply border-t-2 border-ink my-8;
+}
+.settings__subtitle {
+    @apply font-display font-bold text-lg text-ink mb-4;
+}
+.settings__detail {
+    @apply space-y-6 mt-6 border-t-2 border-ink pt-6;
+}
+.settings__days {
+    @apply flex flex-wrap gap-2 mt-2;
+}
+
+/* flat — channel modal content is teleported to <body> */
+.settings__modal-form {
+    @apply space-y-4;
+}

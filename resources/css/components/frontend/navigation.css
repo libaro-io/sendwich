@@ -1,0 +1,58 @@
+@reference "@css/app.css";
+
+.site-nav {
+    @apply absolute inset-x-0 top-0 z-50;
+
+    .site-nav__bar {
+        @apply flex items-center justify-between p-6 lg:px-8;
+    }
+    .site-nav__brand-wrap {
+        @apply flex lg:flex-1;
+    }
+    .site-nav__brand {
+        @apply -m-1.5 p-1.5;
+    }
+    .site-nav__logo {
+        @apply h-12 w-auto;
+    }
+
+    .site-nav__burger-wrap {
+        @apply flex lg:hidden;
+    }
+    .site-nav__icon-btn {
+        @apply -m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-ink focus:outline-none;
+    }
+    .site-nav__icon {
+        @apply h-6 w-6;
+    }
+
+    .site-nav__actions {
+        @apply hidden lg:flex lg:flex-1 lg:justify-end lg:items-center gap-x-6;
+    }
+    .site-nav__login {
+        @apply font-display font-semibold text-sm leading-6 text-ink transition-colors hover:text-teal;
+    }
+
+    /* mobile menu */
+    .site-nav__mobile {
+        @apply lg:hidden;
+    }
+    .site-nav__backdrop {
+        @apply fixed inset-0 z-50 bg-ink/40;
+    }
+    .site-nav__panel {
+        @apply fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-paper border-l-4 border-ink px-6 py-6 sm:max-w-sm;
+    }
+    .site-nav__panel-head {
+        @apply flex items-center justify-between;
+    }
+    .site-nav__panel-body {
+        @apply mt-6 flex flex-col gap-4;
+    }
+    .site-nav__mobile-login {
+        @apply font-display font-semibold text-base leading-7 text-ink transition-colors hover:text-teal;
+    }
+    .site-nav__mobile-cta {
+        @apply text-center;
+    }
+}

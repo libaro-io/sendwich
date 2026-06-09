@@ -4,7 +4,8 @@ import Authenticated from "@/Layouts/Authenticated.vue";
 import {useForm} from '@inertiajs/vue3';
 import {ref} from 'vue';
 import {router} from '@inertiajs/vue3';
-
+import Modal from "@/Components/ui/Modal.vue";
+import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 
 const props = defineProps({
     user: Object,
@@ -51,91 +52,102 @@ const deleteUser = (user) => {
 </script>
 <template>
     <Authenticated>
-        <div class="min-h-screen">
-            <div class="font-sans text-gray-900 antialiased">
-                <div class="py-12">
-                    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                        <div class="grid grid-cols-1 gap-4">
-                            <div class="bg-white shadow-sm sm:rounded-lg">
-                                <div class="px-4 py-5 sm:p-6 relative">
-                                    <div class="flex items-center justify-between mb-5">
-                                        <h1 class="m-0">Users</h1>
-                                        <label for="create-modal" class="modal-button action-button shadow-md">
-                                            Invite new user
-                                        </label>
-                                    </div>
-                                    <div class="flex justify-between items-center">
-                                        <input type="checkbox" id="create-modal" class="modal-toggle" v-model="toggle"/>
-                                        <label for="create-modal" class="modal modal-bottom sm:modal-middle cursor-pointer">
-                                            <label class="modal-box relative" for="">
-                                                <form @submit.prevent="invite">
-                                                    <h3 class="text-lg font-bold mb-4">Invite new user</h3>
-                                                    <div class="grid-cols-1 space-y-4">
-                                                        <input type="text"
-                                                               v-model="form.name"
-                                                               placeholder="name"
-                                                               class="input input-bordered w-full"
-                                                        />
-                                                        <div v-if="form.errors.name">{{ form.errors.name }}</div>
-                                                        <input type="email"
-                                                               v-model="form.email"
-                                                               placeholder="email"
-                                                               class="input input-bordered w-full"
-                                                        />
-                                                        <div v-if="form.errors.email">{{ form.errors.email }}</div>
-                                                    </div>
-                                                    <div class="flex justify-end mt-4">
-                                                        <button type="submit"
-                                                                class="btn btn-success"
-                                                                :disabled="form.processing"
-                                                        >Send Invitation
-                                                        </button>
-                                                    </div>
-                                                </form>
-                                            </label>
-                                        </label>
-                                    </div>
-                                    <div class="overflow-x-auto mb-5">
-                                        <table class="table w-full">
-                                            <!-- head -->
-                                            <thead>
-                                            <tr>
-                                                <th>Name</th>
-                                                <th>Email</th>
-                                                <th>Edit stores</th>
-                                                <th>Edit users</th>
-                                                <th>Remove</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <tr v-for="user in users">
-                                                <td>{{ user.name }}</td>
-                                                <td>
-                                                    {{ user.email }}
-                                                </td>
-                                                <td>
-                                                    <input type="checkbox" v-model="user.canEditStore" class="checkbox" @change="togglePermission('edit-store', user)"/>
-                                                </td>
-                                                <td>
-                                                    <input type="checkbox" v-model="user.canEditCompany" class="checkbox" @change="togglePermission('edit-company', user)"/>
-                                                </td>
-                                                <td>
-                                                    <button v-if="$page.props.auth.user.id !== user.id" class="btn btn-accent btn-circle btn-xs" @click="deleteUser(user)">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                                                        </svg>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
+        <div class="app-page">
+            <div class="page">
+                <div class="page-container">
+                    <div class="company__grid">
+                        <div class="panel">
+                            <div class="company__head">
+                                <h1 class="company__title">Users</h1>
+                                <button type="button" @click="toggle = true" class="chunk chunk--teal">
+                                    Invite new user
+                                </button>
+                            </div>
+
+                            <div class="company__scroll">
+                                <table class="table-brut">
+                                    <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Edit stores</th>
+                                        <th>Edit users</th>
+                                        <th class="company__num">Remove</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr v-for="user in users" :key="user.id">
+                                        <td class="company__cell-name">{{ user.name }}</td>
+                                        <td class="company__cell-email">{{ user.email }}</td>
+                                        <td>
+                                            <input type="checkbox" v-model="user.canEditStore"
+                                                   class="field-checkbox"
+                                                   @change="togglePermission('edit-store', user)"/>
+                                        </td>
+                                        <td>
+                                            <input type="checkbox" v-model="user.canEditCompany"
+                                                   class="field-checkbox"
+                                                   @change="togglePermission('edit-company', user)"/>
+                                        </td>
+                                        <td class="company__num">
+                                            <div class="company__remove">
+                                                <button v-if="$page.props.auth.user.id !== user.id"
+                                                        type="button"
+                                                        class="icon-btn icon-btn--danger"
+                                                        @click="deleteUser(user)">
+                                                    <FontAwesomeIcon icon="fa-solid fa-xmark" class="icon-btn__icon" />
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
+
+                    <Modal :open="toggle" title="Invite new user" @close="toggle = false">
+                        <form id="invite-user-form" @submit.prevent="invite">
+                            <div class="company__form">
+                                <div>
+                                    <span class="field-label">Name</span>
+                                    <input type="text"
+                                           v-model="form.name"
+                                           placeholder="Name"
+                                           class="field-input"
+                                           required
+                                    />
+                                    <div v-if="form.errors.name" class="field-error">{{ form.errors.name }}</div>
+                                </div>
+
+                                <div>
+                                    <span class="field-label">Email</span>
+                                    <input type="email"
+                                           v-model="form.email"
+                                           placeholder="Email"
+                                           class="field-input"
+                                           required
+                                    />
+                                    <div v-if="form.errors.email" class="field-error">{{ form.errors.email }}</div>
+                                </div>
+                            </div>
+                        </form>
+                        <template #actions>
+                            <button type="submit"
+                                    form="invite-user-form"
+                                    class="chunk chunk--teal"
+                                    :disabled="form.processing"
+                            >Send Invitation
+                            </button>
+                            <button type="button" @click="toggle = false" class="chunk chunk--ghost">Cancel</button>
+                        </template>
+                    </Modal>
                 </div>
             </div>
         </div>
     </Authenticated>
 </template>
+
+<style scoped>
+@import "@css/pages/company.css";
+</style>

@@ -1,30 +1,32 @@
 <script setup>
-import mitt from 'mitt'
-import UsersWithOrders from "@/Components/UsersWithOrders.vue";
-import SelectedRunner from "@/Components/SelectedRunner.vue";
-import {Link} from '@inertiajs/vue3';
+import UsersWithOrders from "@/Pages/Display/sections/UsersWithOrders.vue";
+import SelectedRunner from "@/Pages/Display/sections/SelectedRunner.vue";
 
 const props = defineProps({
     deliveryMoment: String,
     company: Object
 });
-
 </script>
+
 <template>
-<div class="min-h-screen bg-gray-100">
-    <div class="font-sans text-gray-900 antialiased">
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <UsersWithOrders :delivery-moment="deliveryMoment" :company="company"></UsersWithOrders>
-                    </div>
-                    <div>
-                        <SelectedRunner :company="company" class="fill-current text-gray-500" />
+    <div class="display-page brand-canvas">
+        <div class="display-page__body">
+            <div class="page">
+                <div class="page-container">
+                    <div class="display-page__grid">
+                        <div>
+                            <UsersWithOrders :delivery-moment="deliveryMoment" :company="company" />
+                        </div>
+                        <div>
+                            <SelectedRunner :company="company" />
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 </template>
+
+<style scoped>
+@import "@css/pages/display.css";
+</style>

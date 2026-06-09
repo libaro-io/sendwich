@@ -1,0 +1,12 @@
+@reference "@css/app.css";
+
+.validation-errors {
+    @apply mb-4;
+
+    .validation-errors__title {
+        @apply font-display font-semibold text-coral;
+    }
+    .validation-errors__list {
+        @apply mt-2 list-disc list-inside text-sm text-coral font-medium;
+    }
+}

@@ -1,0 +1,12 @@
+@reference "@css/app.css";
+
+.guest-layout {
+    @apply min-h-screen flex flex-col items-center p-4 sm:justify-center sm:pt-0;
+
+    .guest-layout__logo {
+        @apply h-20 text-ink fill-current;
+    }
+    .guest-layout__card {
+        @apply w-full mt-6 sm:max-w-md;
+    }
+}

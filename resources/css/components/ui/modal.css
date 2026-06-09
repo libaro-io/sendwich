@@ -1,0 +1,58 @@
+@reference "@css/app.css";
+
+.modal-root {
+    @apply relative z-50;
+}
+.modal-backdrop {
+    @apply fixed inset-0 bg-ink/40 transition-opacity;
+}
+.modal-scroll {
+    @apply fixed inset-0 z-10 w-screen overflow-y-auto;
+}
+.modal-center {
+    @apply flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0;
+}
+.modal-panel {
+    @apply relative transform transition-all sm:my-8 sm:w-full sm:max-w-lg;
+}
+.modal-card {
+    @apply text-left;
+}
+.modal-close {
+    @apply absolute top-4 right-4 text-ink-soft transition-colors hover:text-ink focus:outline-none;
+}
+.modal-close-icon {
+    @apply w-5 h-5;
+}
+.modal-body {
+    @apply mt-2;
+}
+.modal-title {
+    @apply font-display text-xl font-bold text-ink mb-4;
+}
+.modal-content {
+    @apply text-ink;
+}
+.modal-actions {
+    @apply mt-6 flex flex-row-reverse gap-3;
+}
+
+/* Headless UI transition phases */
+.modal-trans-enter {
+    @apply ease-out duration-300;
+}
+.modal-trans-leave {
+    @apply ease-in duration-200;
+}
+.modal-fade-from {
+    @apply opacity-0;
+}
+.modal-fade-to {
+    @apply opacity-100;
+}
+.modal-panel-from {
+    @apply opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95;
+}
+.modal-panel-to {
+    @apply opacity-100 translate-y-0 sm:scale-100;
+}

@@ -14,6 +14,10 @@ export default defineConfig({
             "@components": path.resolve(__dirname, "resources/js/components"),
         },
     },
+    server: {
+        host: '0.0.0.0',
+        hmr: { host: 'localhost'}
+    },
     plugins: [
         tailwindReferencePlugin(),
         laravel({

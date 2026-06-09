@@ -1,0 +1,22 @@
+@reference "@css/app.css";
+
+.legal-page {
+    @apply bg-cream min-h-screen text-ink flex flex-col justify-between pt-24;
+
+    .legal-page__body {
+        @apply mx-auto max-w-4xl px-6 pb-24 flex flex-col;
+    }
+    .legal-page__title {
+        @apply font-display font-bold text-5xl text-ink mb-12;
+    }
+    .legal-page__heading {
+        @apply font-display font-bold text-2xl text-ink mt-8 mb-4;
+    }
+    .legal-page__list {
+        @apply list-disc list-inside space-y-2 text-ink-soft mb-6 pl-4;
+    }
+
+    p {
+        @apply text-ink-soft mb-6 leading-relaxed;
+    }
+}

@@ -29,7 +29,6 @@
         "@heroicons/vue": "^2.2",
         "@libaro-io/laravel-frontend-conventions": "^6.1.0",
         "@libaro-io/libaro-utilities": "^2.0.1",
-        "daisyui": "^5.5",
         "laravel-permission-to-vuejs": "^3.0",
         "mitt": "^3.0",
         "moment": "^2.30",

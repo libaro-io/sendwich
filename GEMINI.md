@@ -1,6 +1,6 @@
-# CLAUDE.md
+# GEMINI.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Gemini when working with code in this repository.
 
 > Last verified against the codebase: 2026-06-05.
 
@@ -326,13 +326,13 @@ render Vue pages.
 - **Layouts** → `resources/js/Layouts/` (`Authenticated.vue`, `Guest.vue`, `Landing.vue` — the latter only used by the Legal pages).
 - **Composables** → `resources/js/Composables/`; **directives** → `resources/js/Directives/` (e.g. the `v-reveal` scroll-reveal in `reveal.ts`).
 - **Shared Inertia prop types** → `resources/js/types.d.ts` (augments `@inertiajs/core` `PageProps` and exposes Ziggy's `route()` to TS templates); page-specific interfaces under `resources/js/interfaces/` (e.g. `homepage.ts`).
-- **Marketing landing page** → `Pages/Homepage.vue` (thin composition page + `resources/css/pages/homepage.css` shell), served by `HomepageController` at `/` (route name `home`; authenticated users are redirected to the dashboard). Its sections live under `Pages/Homepage/sections/` (`Navigation`, `Hero`, `Complaints`, `OrderTicket`, `Perks`, `Steps`, `CallToAction`, `Footer`), each with a matching stylesheet under `resources/css/pages/homepage/sections/`. It replaced the old `Home.vue` landing and is the reference design for the app-wide restyle. (`Pages/Welcome.vue` is unreferenced legacy.)
+- **Marketing landing page** → `Pages/Welcome.vue` (thin composition page + `resources/css/pages/homepage.css` shell), served by `HomepageController` at `/` (route name `home`; authenticated users are redirected to the dashboard). Its sections live under `Pages/Homepage/sections/` (`Navigation`, `Hero`, `Complaints`, `OrderTicket`, `Perks`, `Steps`, `CallToAction`, `Footer`), each with a matching stylesheet under `resources/css/pages/homepage/sections/`.
 
 ### Scaffolding Vue files — `@libaro-io/laravel-frontend-conventions`
 
 New Vue files are scaffolded with the `libaro-create` CLI — don't hand-roll the file pair. Renaming goes through `libaro-rename`, never by hand.
 
-- `npx libaro-create -c|-p|-s|-l -n <name>` creates a **c**omponent, **p**age, **s**ection or **l**ayout. Anything not passed as a flag is asked interactively; the target-folder picker is *always* interactive, so the user has to run this command in a terminal themselves (Claude: ask the user to run it, e.g. via the `!` prefix, then build on the generated files).
+- `npx libaro-create -c|-p|-s|-l -n <name>` creates a **c**omponent, **p**age, **s**ection or **l**ayout. Anything not passed as a flag is asked interactively; the target-folder picker is *always* interactive, so the user has to run this command in a terminal themselves (ask the user to run it, then build on the generated files).
 - Each run generates a **pair of files**: a kebab-case `.vue` file under `resources/js/<type>/…` and a matching kebab-case stylesheet under `resources/css/<same path>/…`, imported in the SFC's `<style scoped>` via the `@css` alias (Tailwind v4) or `@scss` (v3).
 - The generated root element carries a selector derived from type + folder path + name — keep it on the root element and put the styles inside that block in the matching CSS file:
   - components & sections → `<section class="component-<path>-<name>-component">` + a `.class` block;
@@ -347,9 +347,19 @@ New Vue files are scaffolded with the `libaro-create` CLI — don't hand-roll th
 - Use the shared `Toast` (vue-toastification) and the global `emitter` (mitt, available as `this.emitter` / `globalProperties.emitter`) that are already registered in `app.js` — don't spin up new instances.
 - Icons come from **Font Awesome** (`@fortawesome/vue-fontawesome`): register icons in the `library` in `app.js`, import `FontAwesomeIcon` locally, and use string names (`icon="fa-solid fa-trash"`). Never hand-roll inline SVGs.
 - Tailwind CSS v4 (via `@tailwindcss/vite`). Style with utility classes.
-- **daisyUI is legacy and being phased out.** Existing pages still depend on it (`btn`, `card`, `modal`, the `sendwich`/`cupcake` themes, helper classes like `.action-button` in `app.css`), so the plugin stays installed for now — but **never use daisyUI classes in new or restyled code**. Once the last page is restyled, drop the `@plugin "daisyui"` blocks from `app.css` and remove the npm package.
-- **App restyle (in progress, daisyUI-free):** the Sendwich brand tokens (`cream`, `paper`, `ink`, `ink-soft`, `teal`, `teal-deep`, `teal-soft`, `teal-ink`, `coral(-soft)`, `sun(-soft)` + `font-display`/`font-script`) live in the `@theme` block of `resources/css/app.css` and are available everywhere as utilities (`bg-cream`, `text-ink`, `font-display`, …). `Pages/Homepage.vue` (+ its section components) forms the reference design. The design-system primitives are **already promoted app-wide** in `app.css`: `.chunk` buttons (the restyle's `btn` replacement), `.sec-head`/`.sec-tab`/`.sec-title`/`.sec-sub`, `.tint-*`, and `.reveal` (paired with the `v-reveal` directive).
-- While daisyUI is still installed, avoid class names that collide with its global components (`card`, `tab`, `menu`, `steps`, `step`, `hero`, `footer`, `badge`, `avatar`, `list`, `label`, …) — a colliding name silently pulls daisyUI styling onto the element. The Homepage sections use `pin-card`/`sec-tab`/`step-card` for exactly this reason.
+- **daisyUI has been completely removed and uninstalled.** The application is entirely custom-styled.
+- **App restyle (completed, daisyUI-free):** the Sendwich brand tokens (`cream`, `paper`, `ink`, `ink-soft`, `teal', `teal-deep`, `teal-soft`, `teal-ink`, `coral(-soft)`, `sun(-soft)` + `font-display`/`font-script`) live in the `@theme` block of `resources/css/app.css` and are available everywhere as utilities (`bg-cream`, `text-ink`, `font-display`, …). `Pages/Welcome.vue` (+ its section components) forms the reference design. The design-system primitives are **already promoted app-wide** in `app.css`:
+  - `.chunk` buttons (the restyle's replacement for `btn`)
+  - `.panel` (the restyle's replacement for `card`)
+  - `.tag` (the restyle's replacement for `badge`)
+  - `.switch` (the restyle's replacement for `toggle`)
+  - `.field-label` / `.field-input` / `.field-select` / `.field-textarea` (inputs & forms)
+  - `.table-brut` (restyle's table style)
+  - `.callout` (restyle's replacement for `alert`)
+  - `.sec-head`/`.sec-tab`/`.sec-title`/`.sec-sub` (section headers)
+  - `.tint-*` (tints)
+  - `.reveal` (scroll-reveal directive wrapper)
+  - `ui/Modal.vue` (the reusable HeadlessUI-based modal)
 
 ### Routes & middleware (Inertia side)
 - Page routes live in `routes/web.php`, API/JSON endpoints in `routes/api.php`.

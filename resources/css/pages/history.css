@@ -1,0 +1,12 @@
+@reference "@css/app.css";
+
+.history-page {
+    @apply min-h-screen;
+
+    .history-page__body {
+        @apply font-sans text-ink;
+    }
+    .history-page__grid {
+        @apply grid grid-cols-1 gap-4;
+    }
+}

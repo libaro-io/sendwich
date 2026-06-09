@@ -1,14 +1,24 @@
 @reference "@css/app.css";
 
 .homepage-complaints {
-    .cards { @apply flex flex-wrap justify-center gap-[2.4rem] max-w-[70rem] mx-auto px-6 pt-4 pb-8; }
+    .cards {
+        @apply flex flex-wrap justify-center gap-[2.4rem] max-w-[70rem] mx-auto px-6 pt-4 pb-8;
+    }
     .pin-card {
         @apply relative w-[18rem] max-w-[84vw] border-[3px] border-ink rounded-[1.2rem] p-6
             shadow-[7px_7px_0_var(--color-ink)] transform-[rotate(var(--r))] transition duration-200;
 
-        &:hover { @apply [transform:rotate(0)_translateY(-6px)]; }
+        &:hover {
+            @apply [transform:rotate(0)_translateY(-6px)];
+        }
     }
-    .tape { @apply absolute -top-[0.7rem] left-1/2 -translate-x-1/2 -rotate-3 w-20 h-6 bg-sun/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.4)]; }
-    .pin-av { @apply block mx-auto w-[4.4rem] h-[4.4rem] rounded-full object-cover border-[3px] border-ink bg-white; }
-    .pin-text { @apply mt-4 font-display font-medium text-[1.08rem] leading-[1.35]; }
+    .tape {
+        @apply absolute -top-[0.7rem] left-1/2 -translate-x-1/2 -rotate-3 w-20 h-6 bg-sun/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.4)];
+    }
+    .pin-av {
+        @apply block mx-auto w-[4.4rem] h-[4.4rem] rounded-full object-cover border-[3px] border-ink bg-white;
+    }
+    .pin-text {
+        @apply mt-4 font-display font-medium text-[1.08rem] leading-[1.35];
+    }
 }

@@ -1,0 +1,27 @@
+@reference "@css/app.css";
+
+/* flat — modal content is teleported to <body> */
+.payback__table {
+    @apply mb-6;
+}
+.payback__num {
+    @apply text-right;
+}
+.payback__name {
+    @apply text-ink font-medium;
+}
+.payback__amount {
+    @apply text-right font-semibold text-ink;
+}
+.payback__total-row {
+    @apply border-t-[3px] border-ink;
+}
+.payback__total-label {
+    @apply font-display font-bold text-ink pt-3;
+}
+.payback__total-value {
+    @apply text-right font-display font-bold text-ink pt-3;
+}
+.payback__note {
+    @apply text-sm font-semibold mb-4;
+}

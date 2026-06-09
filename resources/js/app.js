@@ -20,6 +20,13 @@ import {
     faClock,
     faUtensils,
     faArrowRight,
+    faXmark,
+    faArrowLeft,
+    faPaperPlane,
+    faPersonRunning,
+    faChevronDown,
+    faBars,
+    faStore,
 } from '@fortawesome/free-solid-svg-icons';
 
 /* Import permissions */
@@ -33,10 +40,24 @@ library.add(
     faClock,
     faUtensils,
     faArrowRight,
+    faXmark,
+    faArrowLeft,
+    faPaperPlane,
+    faPersonRunning,
+    faChevronDown,
+    faBars,
+    faStore,
 );
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 const emitter = mitt()
+
+// On mobile most action buttons sit at the bottom of the screen, so show toasts
+// at the top there to avoid covering them. (Matches vue-toastification's 600px
+// full-width mobile breakpoint; evaluated once at load.)
+const toastPosition = window.matchMedia('(max-width: 600px)').matches
+    ? POSITION.TOP_CENTER
+    : POSITION.BOTTOM_LEFT;
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
@@ -47,7 +68,7 @@ createInertiaApp({
             .use(ZiggyVue, Ziggy)
             .use(LaravelPermissionToVueJS)
             .use(Toast, {
-                position: POSITION.BOTTOM_LEFT,
+                position: toastPosition,
             });
 
         VueApp.config.globalProperties.emitter = emitter;

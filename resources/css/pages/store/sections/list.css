@@ -1,0 +1,8 @@
+@reference "@css/app.css";
+
+.list-card__head {
+    @apply flex items-center justify-between mb-6;
+}
+.list-card__title {
+    @apply font-display font-bold text-2xl text-ink m-0;
+}

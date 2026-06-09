@@ -12,13 +12,29 @@
 #page-homepage {
     @apply relative min-h-screen text-ink font-sans font-semibold overflow-x-clip;
     background:
-        radial-gradient(75% 55% at 15% 6%, rgba(45,190,156,0.12), transparent 60%),
-        radial-gradient(70% 50% at 92% 14%, rgba(255,111,89,0.12), transparent 60%),
-        radial-gradient(80% 60% at 80% 96%, rgba(255,194,60,0.14), transparent 60%),
+        radial-gradient(
+            75% 55% at 15% 6%,
+            rgba(45, 190, 156, 0.12),
+            transparent 60%
+        ),
+        radial-gradient(
+            70% 50% at 92% 14%,
+            rgba(255, 111, 89, 0.12),
+            transparent 60%
+        ),
+        radial-gradient(
+            80% 60% at 80% 96%,
+            rgba(255, 194, 60, 0.14),
+            transparent 60%
+        ),
         var(--color-cream);
 
     /* lift the section components above the decorative grain layer */
-    > header, > section, > footer { @apply relative z-2; }
+    > header,
+    > section,
+    > footer {
+        @apply relative z-2;
+    }
 
     /* grain — the data-URI noise texture stays raw CSS */
     .grain {

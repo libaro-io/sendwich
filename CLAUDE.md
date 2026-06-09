@@ -322,11 +322,15 @@ render Vue pages.
 
 ### Structure
 - **Pages** → `resources/js/Pages/` (resolved by name from the controller's `Inertia::render('Dashboard')`). Subfolders mirror feature areas (`Pages/Store/`, `Pages/Auth/`, `Pages/Legal/`).
-- **Reusable components** → `resources/js/Components/`. **Only genuinely reusable Vue files belong here.** As a general rule: a Vue file that is merely a *section* of a page (used by exactly one page) belongs under `Pages/`, next to its page: `Pages/<Page>/sections/<Section>.vue` (+ matching CSS under `resources/css/pages/<page>/sections/`). This mirrors what `libaro-create -s` generates. The remaining `Components/frontend/` files (`Navigation`, `Footer`) are genuinely shared (Legal pages + `Authenticated` layout).
+- **Reusable components** → `resources/js/Components/`, grouped by role:
+  - `Components/ui/` — design-system widgets reused across pages: `Modal` (Headless UI), `Dropdown`, `DropdownLink`, and the Breeze form primitives `Input`, `Label`, `Checkbox`, `InputError`, `ValidationErrors`, `Title`.
+  - `Components/layout/` — app-shell pieces used by the `Authenticated`/`Guest` layouts: `ApplicationLogo`, `NavLink`, `ResponsiveNavLink`, `FlashMessages`.
+  - `Components/frontend/` — shared marketing chrome: `Navigation`, `Footer` (Legal pages + `Authenticated` layout).
+- **Only genuinely reusable Vue files belong in `Components/`.** A Vue file that is merely a *section* of one page lives next to its page: `Pages/<Page>/sections/<Section>.vue` (+ matching CSS under `resources/css/pages/<page>/sections/`). This mirrors `libaro-create -s`. Current section sets: `Pages/Dashboard/sections/` (`Orders`, `Products`, `ProductCard`, `Menu`, `DeptList`, `PayBack`), `Pages/History/sections/HistoryTable.vue`, `Pages/Display/sections/` (`UsersWithOrders`, `SelectedRunner`), `Pages/Store/sections/` (`List`, `ListItem`), `Pages/Homepage/sections/`.
 - **Layouts** → `resources/js/Layouts/` (`Authenticated.vue`, `Guest.vue`, `Landing.vue` — the latter only used by the Legal pages).
 - **Composables** → `resources/js/Composables/`; **directives** → `resources/js/Directives/` (e.g. the `v-reveal` scroll-reveal in `reveal.ts`).
 - **Shared Inertia prop types** → `resources/js/types.d.ts` (augments `@inertiajs/core` `PageProps` and exposes Ziggy's `route()` to TS templates); page-specific interfaces under `resources/js/interfaces/` (e.g. `homepage.ts`).
-- **Marketing landing page** → `Pages/Homepage.vue` (thin composition page + `resources/css/pages/homepage.css` shell), served by `HomepageController` at `/` (route name `home`; authenticated users are redirected to the dashboard). Its sections live under `Pages/Homepage/sections/` (`Navigation`, `Hero`, `Complaints`, `OrderTicket`, `Perks`, `Steps`, `CallToAction`, `Footer`), each with a matching stylesheet under `resources/css/pages/homepage/sections/`. It replaced the old `Home.vue` landing and is the reference design for the app-wide restyle. (`Pages/Welcome.vue` is unreferenced legacy.)
+- **Marketing landing page** → `Pages/Welcome.vue` (thin composition page + `resources/css/pages/homepage.css` shell), served by `HomepageController` at `/` (route name `home`; authenticated users are redirected to the dashboard). Its sections live under `Pages/Homepage/sections/` (`Navigation`, `Hero`, `Complaints`, `OrderTicket`, `Perks`, `Steps`, `CallToAction`, `Footer`), each with a matching stylesheet under `resources/css/pages/homepage/sections/`.
 
 ### Scaffolding Vue files — `@libaro-io/laravel-frontend-conventions`
 
@@ -346,10 +350,22 @@ New Vue files are scaffolded with the `libaro-create` CLI — don't hand-roll th
 - Use **`laravel-permission-to-vuejs`** for permission checks in Vue (`can`/`is`) instead of duplicating permission logic. Server-side authorization still goes through `can:` middleware / Policies — the frontend check is UX only.
 - Use the shared `Toast` (vue-toastification) and the global `emitter` (mitt, available as `this.emitter` / `globalProperties.emitter`) that are already registered in `app.js` — don't spin up new instances.
 - Icons come from **Font Awesome** (`@fortawesome/vue-fontawesome`): register icons in the `library` in `app.js`, import `FontAwesomeIcon` locally, and use string names (`icon="fa-solid fa-trash"`). Never hand-roll inline SVGs.
-- Tailwind CSS v4 (via `@tailwindcss/vite`). Style with utility classes.
-- **daisyUI is legacy and being phased out.** Existing pages still depend on it (`btn`, `card`, `modal`, the `sendwich`/`cupcake` themes, helper classes like `.action-button` in `app.css`), so the plugin stays installed for now — but **never use daisyUI classes in new or restyled code**. Once the last page is restyled, drop the `@plugin "daisyui"` blocks from `app.css` and remove the npm package.
-- **App restyle (in progress, daisyUI-free):** the Sendwich brand tokens (`cream`, `paper`, `ink`, `ink-soft`, `teal`, `teal-deep`, `teal-soft`, `teal-ink`, `coral(-soft)`, `sun(-soft)` + `font-display`/`font-script`) live in the `@theme` block of `resources/css/app.css` and are available everywhere as utilities (`bg-cream`, `text-ink`, `font-display`, …). `Pages/Homepage.vue` (+ its section components) forms the reference design. The design-system primitives are **already promoted app-wide** in `app.css`: `.chunk` buttons (the restyle's `btn` replacement), `.sec-head`/`.sec-tab`/`.sec-title`/`.sec-sub`, `.tint-*`, and `.reveal` (paired with the `v-reveal` directive).
-- While daisyUI is still installed, avoid class names that collide with its global components (`card`, `tab`, `menu`, `steps`, `step`, `hero`, `footer`, `badge`, `avatar`, `list`, `label`, …) — a colliding name silently pulls daisyUI styling onto the element. The Homepage sections use `pin-card`/`sec-tab`/`step-card` for exactly this reason.
+- Tailwind CSS v4 (via `@tailwindcss/vite`). **daisyUI has been completely removed and uninstalled** — the app is entirely custom-styled.
+- **Styling lives in CSS, not in templates.** A `.vue` file's markup carries **only defined class names** (design-system classes or per-file semantic classes) — never bare Tailwind utilities like `flex`, `mt-4`, `text-ink`. Every utility is defined inside a class via `@apply`, in one of:
+  - the **design system** in `resources/css/app.css` (shared, app-wide primitives), or
+  - a **per-file CSS pair** co-located by path and imported in the SFC's `<style scoped>` via `@import "@css/<same path>.css";` — e.g. `Components/Orders.vue` ↔ `resources/css/components/orders.css`, `Pages/Settings.vue` ↔ `resources/css/pages/settings.css`. (`tailwindReferencePlugin` auto-injects `@reference`, so `@apply` works; standalone CSS files still start with `@reference "@css/app.css";`.)
+  - **Gotcha:** content rendered through a teleport/portal (e.g. inside `ui/Modal.vue`) is not reached by descendant selectors — use **flat** BEM classes (`.orders__weight-input`, not `.orders .weight-input`) so scoped styling still applies.
+- **Reference design:** `Pages/Homepage.vue` (+ `Pages/Homepage/sections/*`) and the design-system block of `app.css`. Brand tokens live in the `@theme` block (`cream`, `paper`, `ink`, `ink-soft`, `teal(-deep/-soft/-ink)`, `coral(-soft)`, `sun(-soft)`, `font-display` Fredoka, `font-script` Caveat) and are available as utilities (`bg-cream`, `text-ink`, `font-display`, …) — use those inside `@apply`, never raw hex.
+- **App-wide primitives in `app.css`** (the daisyUI replacements):
+  - buttons → `.chunk` (+ `--teal`/`--cream`/`--coral`/`--sun`/`--ghost`/`--sm`/`--lg`, `:disabled`)
+  - surface → `.panel` (+ `--flat`); section headers → `.sec-head`/`.sec-tab(--teal)`/`.sec-title`/`.sec-sub`; `.panel-title`
+  - status → `.tag` (+ `--teal`/`--coral`/`--sun`/`--ink`/`--bold`/`--semibold`); tints → `.tint-teal`/`-coral`/`-sun`
+  - forms → `.field-label`/`.field-input`/`.field-select`/`.field-textarea`/`.field-error`/`.field-checkbox`; form scaffolding → `.form-field`/`.form-actions(--end)`/`.form-link(--danger)`/`.form-status`/`.form-hint`/`.form-prose`/`.form-check(-label)`/`.form-title(--spaced)`
+  - toggle → `.switch`; table → `.table-brut`; inline notice → `.callout` (+ `--warning`/`--error`/`--info`)
+  - nav → `.nav-link(-active)`/`.nav-link-mobile(-active)`/`.dropdown-link`
+  - page shell → `.app-page`/`.page`/`.page-container`; helpers → `.icon-btn`(`--danger`/`__icon`), `.empty-action`, `.reveal` (paired with the `v-reveal` directive)
+  - behavioural components → `ui/Modal.vue` (Headless UI dialog), `Components/Dropdown.vue`
+  - toast styling → the `.Vue-Toastification__toast*` overrides in `app.css`
 
 ### Routes & middleware (Inertia side)
 - Page routes live in `routes/web.php`, API/JSON endpoints in `routes/api.php`.

@@ -1,0 +1,23 @@
+@reference "@css/app.css";
+
+.menu__list {
+    @apply flex flex-col gap-4;
+}
+.menu__row {
+    @apply flex justify-between items-center gap-4;
+}
+.menu__info {
+    @apply flex-1;
+}
+.menu__name {
+    @apply text-sm font-display font-semibold text-ink;
+}
+.menu__count {
+    @apply mt-1 text-xs text-ink-soft;
+}
+.menu__btn {
+    @apply flex items-center gap-2;
+}
+.menu__icon {
+    @apply mr-2;
+}

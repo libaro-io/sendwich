@@ -1,0 +1,88 @@
+@reference "@css/app.css";
+
+.orders__header {
+    @apply flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6;
+}
+.orders__title {
+    @apply font-display font-bold text-2xl text-ink;
+}
+.orders__actions {
+    @apply flex gap-2;
+}
+.orders__list {
+    @apply mb-5 flex flex-col gap-4;
+}
+.orders__row {
+    @apply flex flex-col sm:flex-row sm:items-center justify-between gap-4;
+}
+.orders__row-main {
+    @apply flex-1;
+}
+.orders__product {
+    @apply text-sm font-medium text-ink;
+}
+.orders__store {
+    @apply text-ink-soft font-semibold inline-block mr-4;
+}
+.orders__comment {
+    @apply text-ink-soft;
+}
+.orders__meta {
+    @apply mt-2 text-sm text-ink-soft flex items-center gap-2 flex-wrap;
+}
+.orders__sep {
+    @apply hidden sm:inline;
+}
+.orders__row-actions {
+    @apply flex items-center justify-end;
+}
+.orders__delete {
+    @apply text-coral transition-colors hover:text-coral/80;
+}
+.orders__empty {
+    @apply font-display font-semibold text-ink-soft text-center py-4;
+}
+.orders__total {
+    @apply font-display font-bold text-xl text-ink pl-4 mt-6;
+}
+
+/* flat — delivery modal content is teleported to <body> */
+.orders__table {
+    @apply mb-4;
+}
+.orders__num {
+    @apply text-right;
+}
+.orders__cell-name {
+    @apply font-medium text-ink;
+}
+.orders__cell-comment {
+    @apply text-ink-soft text-sm ml-1;
+}
+.orders__weight-row {
+    @apply flex items-center gap-2 mt-1;
+}
+.orders__weight-input {
+    @apply py-1 px-2 text-xs w-24;
+}
+.orders__weight-unit {
+    @apply text-xs text-ink-soft;
+}
+.orders__weight-calc {
+    @apply text-xs font-semibold text-ink;
+}
+.orders__cell-person {
+    @apply text-sm text-ink;
+}
+.orders__cell-price {
+    @apply text-right font-semibold text-ink;
+}
+.orders__total-row {
+    @apply border-t-[3px] border-ink;
+}
+.orders__total-label {
+    @apply font-display font-bold text-ink pt-3;
+}
+.orders__total-value {
+    @apply text-right font-display font-bold text-ink pt-3;
+}

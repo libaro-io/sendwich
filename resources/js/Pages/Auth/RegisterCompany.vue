@@ -1,13 +1,11 @@
 <script setup>
-import BreezeButton from '@/Components/Button.vue';
+import BreezeCheckbox from '@/Components/ui/Checkbox.vue';
 import BreezeGuestLayout from '@/Layouts/Guest.vue';
-import BreezeInput from '@/Components/Input.vue';
-import BreezeLabel from '@/Components/Label.vue';
-import BreezeTitle from '@/Components/Title.vue';
-import BreezeValidationErrors from '@/Components/ValidationErrors.vue';
+import BreezeInput from '@/Components/ui/Input.vue';
+import BreezeLabel from '@/Components/ui/Label.vue';
+import BreezeTitle from '@/Components/ui/Title.vue';
+import BreezeValidationErrors from '@/Components/ui/ValidationErrors.vue';
 import {Head, Link, useForm} from '@inertiajs/vue3';
-import Label from "@/Components/Label.vue";
-
 
 const form = useForm({
     name: '',
@@ -18,10 +16,7 @@ const form = useForm({
     terms: false,
 });
 
-
-
 const submit = () => {
-    console.log('Form data',form.data);
     form.post(route('company.register.store'), {
         onFinish: () => form.reset('password', 'password_confirmation'),
     });
@@ -31,55 +26,48 @@ const submit = () => {
 <template>
     <BreezeGuestLayout>
         <Head title="Register"/>
-        <BreezeValidationErrors class="mb-4"/>
+        <BreezeValidationErrors />
         <form @submit.prevent="submit">
-            <BreezeTitle value="About your company or group"></BreezeTitle>
-            <div>
+            <BreezeTitle value="About your company or group" />
+            <div class="form-field">
                 <BreezeLabel for="companyName" value="Name"/>
-                <BreezeInput id="companyName" type="text" class="mt-1 block w-full" v-model="form.companyName" required autofocus
-                             autocomplete="companyName"/>
+                <BreezeInput id="companyName" type="text" v-model="form.companyName" required autofocus autocomplete="companyName"/>
             </div>
-            <BreezeTitle class="mt-4" value="About you"></BreezeTitle>
-            <div>
+            <BreezeTitle class="form-title--spaced" value="About you" />
+            <div class="form-field">
                 <BreezeLabel for="name" value="Name"/>
-                <BreezeInput id="name" type="text" class="mt-1 block w-full" v-model="form.name" required autofocus
-                             autocomplete="name"/>
+                <BreezeInput id="name" type="text" v-model="form.name" required autofocus autocomplete="name"/>
             </div>
 
-            <div class="mt-4">
+            <div class="form-field">
                 <BreezeLabel for="email" value="Email"/>
-                <BreezeInput id="email" type="email" class="mt-1 block w-full" v-model="form.email" required
-                             autocomplete="username"/>
+                <BreezeInput id="email" type="email" v-model="form.email" required autocomplete="username"/>
             </div>
 
-            <div class="mt-4">
+            <div class="form-field">
                 <BreezeLabel for="password" value="Password"/>
-                <BreezeInput id="password" type="password" class="mt-1 block w-full" v-model="form.password" required
-                             autocomplete="new-password"/>
+                <BreezeInput id="password" type="password" v-model="form.password" required autocomplete="new-password"/>
             </div>
 
-            <div class="mt-4">
+            <div class="form-field">
                 <BreezeLabel for="password_confirm" value="Confirm Password"/>
-                <BreezeInput id="password_confirmation" type="password" class="mt-1 block w-full"
-                             v-model="form.password_confirmation" required autocomplete="new-password"/>
+                <BreezeInput id="password_confirmation" type="password" v-model="form.password_confirmation" required autocomplete="new-password"/>
             </div>
 
-            <div class="mt-4 flex items-center">
-                <BreezeInput id="terms" type="checkbox" class="block mr-2" v-model="form.terms" required
-                             autocomplete="new-password"/>
-                <label for="terms" class="block font-medium text-sm text-gray-700">
-                    I accept the <a :href="route('legal.general')" target="_blank" class="underline">terms and conditions</a>
+            <div class="form-check">
+                <BreezeCheckbox id="terms" v-model:checked="form.terms" required />
+                <label for="terms" class="form-check-label">
+                    I accept the <a :href="route('legal.general')" target="_blank" class="form-link">terms and conditions</a>
                 </label>
             </div>
 
-            <div class="flex items-center justify-end mt-4">
-                <Link :href="route('login')" class="underline text-sm text-gray-600 hover:text-gray-900">
+            <div class="form-actions">
+                <Link :href="route('login')" class="form-link">
                     Already registered?
                 </Link>
-                <BreezeLabel/>
-                <BreezeButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                <button type="submit" class="chunk chunk--teal" :disabled="form.processing">
                     Register
-                </BreezeButton>
+                </button>
             </div>
         </form>
     </BreezeGuestLayout>
