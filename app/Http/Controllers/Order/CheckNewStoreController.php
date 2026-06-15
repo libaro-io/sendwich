@@ -8,7 +8,7 @@ use App\Http\Requests\Order\AddRequest;
 use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\Response;
 
 class CheckNewStoreController extends Controller
 {
@@ -26,7 +26,7 @@ class CheckNewStoreController extends Controller
 
         $deliveryDate = new DeliverySchedule()->deliveryDate();
         $stores = Order::getOrders($user->company, $deliveryDate)
-            ->whereNull('delivered_at')
+            ->whereNull('delivery_runs.delivered_at')
             ->get()
             ->map(fn (Order $order) => $order->product->store_id);
 

@@ -81,6 +81,16 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasMany(Order::class, 'paid_by');
     }
 
+    public function settlementsPaid(): HasMany
+    {
+        return $this->hasMany(Settlement::class, 'payer_id');
+    }
+
+    public function settlementsReceived(): HasMany
+    {
+        return $this->hasMany(Settlement::class, 'receiver_id');
+    }
+
     public function canAccessPanel(Panel $panel): bool
     {
         return $this->hasRole('Administrator');
