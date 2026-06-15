@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -57,10 +58,16 @@ class DeliveryRun extends Model
         $to = $date->copy()->endOfDay();
 
         DB::transaction(function () use ($companyId, $from, $to) {
+            // Only process orders that are not yet in a delivered run.
+            // Orders already in a delivered run are historical records and must not be re-linked.
             $orders = Order::query()
                 ->where('company_id', '=', $companyId)
                 ->whereBetween('date', [$from, $to])
                 ->where(fn ($query) => $query->whereNull('product_id')->orWhere('product_id', '!=', Order::PAYOUT_PRODUCT_ID))
+                ->where(fn ($query) => $query
+                    ->whereNull('delivery_run_id')
+                    ->orWhereHas('deliveryRun', fn (Builder $run) => $run->whereNull('delivered_at'))
+                )
                 ->get();
 
             $keptRunIds = [];
@@ -71,6 +78,7 @@ class DeliveryRun extends Model
                 $run = self::query()
                     ->where('company_id', '=', $companyId)
                     ->whereBetween('date', [$from, $to])
+                    ->whereNull('delivered_at')
                     ->when(
                         $runnerId === null,
                         fn ($query) => $query->whereNull('runner_id'),
@@ -88,10 +96,12 @@ class DeliveryRun extends Model
                 $keptRunIds[] = $run->id;
             }
 
-            // Drop runs for this day that no longer have any (non-payout) orders.
+            // Drop undelivered runs for this day that no longer have any (non-payout) orders.
+            // Delivered runs are historical records and must never be removed.
             self::query()
                 ->where('company_id', '=', $companyId)
                 ->whereBetween('date', [$from, $to])
+                ->whereNull('delivered_at')
                 ->when(count($keptRunIds) > 0, fn ($query) => $query->whereNotIn('id', $keptRunIds))
                 ->delete();
         });

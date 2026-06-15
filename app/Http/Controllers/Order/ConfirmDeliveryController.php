@@ -62,7 +62,6 @@ class ConfirmDeliveryController extends Controller
                     'description'    => null,
                     'price'          => $product['price'],
                     'variable_price' => false,
-                    'company_id'     => $companyId,
                     'store_id'       => $product['store_id'],
                 ]);
             }

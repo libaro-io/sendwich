@@ -18,7 +18,6 @@ use Carbon\Carbon;
  * @property int|null $paid_by
  * @property float $total
  * @property string $comment
- * @property Carbon|null $delivered_at
  * @property string $date
  * @property Carbon $created_at
  * @property Carbon $updated_at
@@ -49,8 +48,6 @@ class Order extends Model
         'quantity',
         'weight',
         'date',
-        'delivered_at',
-        'departed_at',
     ];
 
     // departed_at and delivered_at are virtual attributes selected from delivery_runs via getOrders().

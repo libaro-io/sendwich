@@ -37,7 +37,10 @@ class UsersWithDept
                     ->orHas('settlementsPaid')
                     ->orHas('settlementsReceived');
             })
-            ->withSum(['payments AS payments_sum' => fn (Builder $query) => $this->excludePayouts($query)], 'total')
+            ->withSum(['payments AS payments_sum' => function (Builder $query) {
+                $this->excludePayouts($query);
+                $this->excludeUndelivered($query);
+            }], 'total')
             ->withSum('settlementsPaid AS settlements_paid_sum', 'amount')
             ->when($this->withOrdersForToday, function ($q) {
                 $q->whereHas('orders', function ($q2) {
@@ -48,6 +51,7 @@ class UsersWithDept
             ->withSum(['orders AS orders_dept' => function (Builder $query) {
                 $query->whereNotNull('paid_by');
                 $this->excludePayouts($query);
+                $this->excludeUndelivered($query);
                 if ($this->date) {
                     $query->where('date', '>=', Carbon::now()->startOfDay());
                 }
@@ -82,6 +86,16 @@ class UsersWithDept
     {
         $query->where(function (Builder $query) {
             $query->whereNull('product_id')->orWhere('product_id', '!=', Order::PAYOUT_PRODUCT_ID);
+        });
+    }
+
+    // Exclude orders that are in an active (not yet delivered) delivery run.
+    // Orders without a run (historical data) and orders in a delivered run are kept.
+    private function excludeUndelivered(Builder $query): void
+    {
+        $query->where(function (Builder $query) {
+            $query->whereNull('delivery_run_id')
+                ->orWhereHas('deliveryRun', fn (Builder $run) => $run->whereNotNull('delivered_at'));
         });
     }
 
