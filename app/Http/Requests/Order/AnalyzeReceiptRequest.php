@@ -4,6 +4,7 @@ namespace App\Http\Requests\Order;
 
 use App\Actions\DeliverySchedule;
 use App\Models\Order;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -33,12 +34,14 @@ class AnalyzeReceiptRequest extends FormRequest
 
             return Order::query()
                 ->where('company_id', '=', auth()->user()->company->id)
-                ->where('paid_by', '=', auth()->id())
-                ->whereNull('delivered_at')
-                ->whereBetween('date', [
-                    $deliveryDate->copy()->startOfDay(),
-                    $deliveryDate->copy()->endOfDay(),
-                ])
+                ->whereHas('deliveryRun', fn (Builder $query) => $query
+                    ->where('runner_id', '=', auth()->id())
+                    ->whereNull('delivered_at')
+                    ->whereBetween('date', [
+                        $deliveryDate->copy()->startOfDay(),
+                        $deliveryDate->copy()->endOfDay(),
+                    ])
+                )
                 ->with('product:id,name,price,variable_price,store_id')
                 ->get();
         });

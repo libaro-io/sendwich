@@ -6,9 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
-
+use Carbon\Carbon;
 /**
  * @property int $id
  * @property int $user_id
@@ -33,6 +31,13 @@ class Order extends Model
 {
     use HasFactory;
 
+    /**
+     * Pseudo-product id used by PayoutController for settlement orders. These are not
+     * deliveries, so they are excluded from delivery runs (and become Settlements in a
+     * later phase).
+     */
+    public const PAYOUT_PRODUCT_ID = 65;
+
     protected $fillable = [
         'product_id',
         'store_id',
@@ -48,10 +53,13 @@ class Order extends Model
         'departed_at',
     ];
 
+    // departed_at and delivered_at are virtual attributes selected from delivery_runs via getOrders().
     protected $casts = [
-        'delivered_at' => 'datetime',
         'departed_at'  => 'datetime',
+        'delivered_at' => 'datetime',
     ];
+
+    protected $appends = ['store_name'];
 
     public function user(): BelongsTo
     {
@@ -61,6 +69,11 @@ class Order extends Model
     public function company(): BelongsTo
     {
         return $this->belongsTo(Company::class);
+    }
+
+    public function deliveryRun(): BelongsTo
+    {
+        return $this->belongsTo(DeliveryRun::class);
     }
 
     public function deliverer(): BelongsTo
@@ -76,6 +89,18 @@ class Order extends Model
     public function store(): BelongsTo
     {
         return $this->belongsTo(Store::class);
+    }
+
+    public function getStoreNameAttribute(): ?string
+    {
+        $product = $this->relationLoaded('product') ? $this->product : null;
+        if ($product && $product->relationLoaded('store') && $product->store) {
+            return $product->store->name;
+        }
+
+        $store = $this->relationLoaded('store') ? $this->store : null;
+
+        return $store?->name;
     }
 
     /**
@@ -98,36 +123,48 @@ class Order extends Model
                 'orders.user_id',
                 'orders.company_id',
                 'orders.product_id',
+                'orders.store_id',
                 'orders.label',
-                'quantity',
-                'weight',
-                'paid_by',
-                'total',
-                'comment',
-                'delivered_at',
-                'departed_at',
-                'date',
-                DB::raw('COALESCE(product_stores.name, order_stores.name) as store_name'),
+                'orders.quantity',
+                'orders.weight',
+                'orders.total',
+                'orders.comment',
+                'orders.date',
+                'orders.delivery_run_id',
+                'delivery_runs.runner_id as paid_by',
+                'delivery_runs.departed_at as departed_at',
+                'delivery_runs.delivered_at as delivered_at',
             )
-            ->leftJoin('products', 'orders.product_id', '=', 'products.id')
-            ->leftJoin('stores as product_stores', 'products.store_id', '=', 'product_stores.id')
-            ->leftJoin('stores as order_stores', 'orders.store_id', '=', 'order_stores.id')
-            ->where('orders.company_id', $company->id)
-            ->whereBetween('date', [$from, $to])
-            ->with(['user' => function ($query) {
-                $query->select('id', 'name');
-            }, 'product' => function ($query) {
-                $query->select('id', 'name', 'price', 'variable_price', 'store_id');
-            }, 'deliverer' => function ($query) {
-                $query->select('id', 'name');
-            }]);
+            ->leftJoin('delivery_runs', 'orders.delivery_run_id', '=', 'delivery_runs.id')
+            ->where('orders.company_id', '=', $company->id)
+            ->whereBetween('orders.date', [$from, $to])
+            ->with([
+                'user:id,name',
+                'product:id,name,price,variable_price,store_id',
+                'product.store:id,name',
+                'store:id,name',
+            ]);
 
         if ($doneOrders === true) {
-            $query->whereNotNull('paid_by');
+            $query->whereNotNull('delivery_runs.runner_id');
         } elseif ($doneOrders === false) {
-            $query->whereNull('paid_by');
+            $query->whereNull('delivery_runs.runner_id');
         }
 
         return $query;
+    }
+
+    public static function assignedRunnerId(Company $company, Carbon $deliveryDate): ?int
+    {
+        return DeliveryRun::query()
+            ->where('company_id', '=', $company->id)
+            ->whereNotNull('runner_id')
+            ->whereNull('departed_at')
+            ->whereNull('delivered_at')
+            ->whereBetween('date', [
+                $deliveryDate->copy()->startOfDay(),
+                $deliveryDate->copy()->endOfDay(),
+            ])
+            ->value('runner_id');
     }
 }

@@ -5,6 +5,8 @@ namespace App\Http\Requests\Order;
 use App\Actions\DeliverySchedule;
 use App\Models\Order;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -27,12 +29,14 @@ class ConfirmDeliveryRequest extends FormRequest
         $owned = once(fn () => Order::query()
             ->whereIn('id', $orderIds->all())
             ->where('company_id', '=', auth()->user()->company->id)
-            ->where('paid_by', '=', auth()->id())
-            ->whereNull('delivered_at')
-            ->whereBetween('date', [
-                $deliveryDate->copy()->startOfDay(),
-                $deliveryDate->copy()->endOfDay(),
-            ])
+            ->whereHas('deliveryRun', fn (Builder $query) => $query
+                ->where('runner_id', '=', auth()->id())
+                ->whereNull('delivered_at')
+                ->whereBetween('date', [
+                    $deliveryDate->copy()->startOfDay(),
+                    $deliveryDate->copy()->endOfDay(),
+                ])
+            )
             ->count());
 
         return $owned === $orderIds->count();
@@ -41,6 +45,7 @@ class ConfirmDeliveryRequest extends FormRequest
     public function rules(): array
     {
         $companyId = auth()->user()->company->id;
+        $storeIds = once(fn () => auth()->user()->company->stores()->pluck('id'));
 
         return [
             'prices'            => ['required', 'array'],
@@ -59,7 +64,7 @@ class ConfirmDeliveryRequest extends FormRequest
             'new_products.*.store_id' => ['required', 'integer', Rule::exists('stores', 'id')->where('company_id', $companyId)],
 
             'price_updates'              => ['sometimes', 'array'],
-            'price_updates.*.product_id' => ['required', 'integer', Rule::exists('products', 'id')->where('company_id', $companyId)],
+            'price_updates.*.product_id' => ['required', 'integer', Rule::exists('products', 'id')->where(fn (QueryBuilder $query) => $query->whereIn('store_id', $storeIds))],
             'price_updates.*.price'      => ['required', 'numeric', 'min:0'],
         ];
     }
