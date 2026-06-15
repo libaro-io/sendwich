@@ -6,6 +6,7 @@ use App\Actions\NotifyCompany;
 use App\Models\Company;
 use App\Notifications\PlaceOrderReminder;
 use Illuminate\Console\Command;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Log;
 
 class SendReminderNotifications extends Command
@@ -23,7 +24,7 @@ class SendReminderNotifications extends Command
             ->when(!$this->option('test-for-company'), fn ($q) => $q
                 ->where('reminder_enabled', true)
                 ->where('reminder_time', now()->format('H:i'))
-                ->whereJsonContains('reminder_days', now()->dayOfWeek)
+                ->whereHas('reminderDays', fn (Builder $query) => $query->where('day', '=', now()->dayOfWeek))
             )
             ->get();
 

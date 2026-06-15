@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Order;
 use App\Actions\DeliverySchedule;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Order\ConfirmDeliveryRequest;
+use App\Models\DeliveryRun;
 use App\Models\Order;
 use App\Models\Product;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Throwable;
@@ -26,18 +28,22 @@ class ConfirmDeliveryController extends Controller
         $deliveryDate = new DeliverySchedule()->deliveryDate();
 
         DB::transaction(function () use ($request, $user, $companyId, $deliveryDate) {
-            // 1. Correct the prices of the ordered items. Scope to this runner's undelivered
-            //    orders for the active delivery date so older/already-paid orders can't be touched.
+            $run = DeliveryRun::query()
+                ->where('company_id', '=', $companyId)
+                ->where('runner_id', '=', $user->id)
+                ->whereNull('delivered_at')
+                ->whereBetween('date', [
+                    $deliveryDate->copy()->startOfDay(),
+                    $deliveryDate->copy()->endOfDay(),
+                ])
+                ->firstOrFail();
+
+            // 1. Correct the prices of the ordered items. Scoped to this runner's run so
+            //    orders from other runs/dates cannot be touched.
             foreach ($request->getPrices() as $price) {
                 Order::query()
                     ->where('id', '=', $price['order_id'])
-                    ->where('company_id', '=', $companyId)
-                    ->where('paid_by', '=', $user->id)
-                    ->whereNull('delivered_at')
-                    ->whereBetween('date', [
-                        $deliveryDate->copy()->startOfDay(),
-                        $deliveryDate->copy()->endOfDay(),
-                    ])
+                    ->where('delivery_run_id', '=', $run->id)
                     ->update(['total' => $price['total']]);
             }
 
@@ -45,7 +51,7 @@ class ConfirmDeliveryController extends Controller
             foreach ($request->getPriceUpdates() as $update) {
                 Product::query()
                     ->where('id', '=', $update['product_id'])
-                    ->where('company_id', '=', $companyId)
+                    ->whereHas('store', fn (Builder $query) => $query->where('company_id', '=', $companyId))
                     ->update(['price' => $update['price']]);
             }
 
@@ -76,15 +82,9 @@ class ConfirmDeliveryController extends Controller
                 ]);
             }
 
-            // 5. Mark this runner's undelivered orders for the date as delivered (incl. the new extras).
-            Order::query()
-                ->where('paid_by', '=', $user->id)
-                ->whereNull('delivered_at')
-                ->whereBetween('date', [
-                    $deliveryDate->copy()->startOfDay(),
-                    $deliveryDate->copy()->endOfDay(),
-                ])
-                ->update(['delivered_at' => now()]);
+            // 5. Link the newly created extra items to the run, then mark the run delivered.
+            DeliveryRun::syncDay($companyId, $deliveryDate);
+            $run->update(['delivered_at' => now()]);
         });
 
         return redirect()->back()->with(['success' => 'Orders confirmed and marked as delivered']);
