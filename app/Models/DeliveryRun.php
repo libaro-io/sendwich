@@ -96,8 +96,6 @@ class DeliveryRun extends Model
                 $keptRunIds[] = $run->id;
             }
 
-            // Drop undelivered runs for this day that no longer have any (non-payout) orders.
-            // Delivered runs are historical records and must never be removed.
             self::query()
                 ->where('company_id', '=', $companyId)
                 ->whereBetween('date', [$from, $to])
