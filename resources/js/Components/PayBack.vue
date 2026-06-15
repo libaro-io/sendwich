@@ -2,6 +2,7 @@
 import axios from "axios";
 import {useToast} from "vue-toastification";
 import {useHelpers} from "@/Composables/helpers";
+import {router} from "@inertiajs/vue3";
 
 const helper = useHelpers();
 const toast = useToast();
@@ -65,6 +66,7 @@ export default {
             }).then(response => {
                 document.getElementById('modal-payback').checked = false;
                 toast.success(response.data.message);
+                router.reload();
             }).catch(error => {
                 console.log(error);
             });
