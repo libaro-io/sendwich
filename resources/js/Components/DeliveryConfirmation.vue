@@ -222,7 +222,7 @@ export default {
                     .filter(p => p.apply && p.product_id && !invalidPrice(p.new_price))
                     .map(p => ({product_id: p.product_id, price: Number(p.new_price)})),
             }, {
-                only: ['orders', 'totalPrice', 'flash'],
+                only: ['orders', 'totalPrice', 'flash', 'users'],
                 preserveScroll: true,
                 onSuccess: () => { this.$emit('close'); },
                 onError: () => { toast.error('Could not confirm the delivery. Please try again.'); },
