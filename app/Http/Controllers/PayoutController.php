@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\UsersWithDept;
 use App\Mail\InformPaymentReceivedMail;
-use App\Models\Order;
+use App\Models\Settlement;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -32,14 +32,12 @@ class PayoutController extends Controller
                     $user_id = $payout['id'];
                     $paid_by = $userWithBalance->id;
                 }
-                Order::query()->create([
-                    'user_id' => $user_id,
-                    'paid_by' => $paid_by,
-                    'company_id' => $user->company->id,
-                    'product_id' => 65,
-                    'quantity' => 1,
-                    'total' => $payout['paysBack'],
-                    'date' => now()
+                Settlement::query()->create([
+                    'company_id'  => $user->company->id,
+                    'payer_id'    => $paid_by,
+                    'receiver_id' => $user_id,
+                    'amount'      => $payout['paysBack'],
+                    'date'        => now(),
                 ]);
                 $this->notifyUsers($paid_by, $user_id, $payout['paysBack']);
             }

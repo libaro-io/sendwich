@@ -5,6 +5,7 @@ namespace App\Actions;
 
 use App\Mail\SelectedAsRunner;
 use App\Models\Company;
+use App\Models\DeliveryRun;
 use App\Models\Order;
 use App\Models\User;
 use Carbon\Carbon;
@@ -30,9 +31,18 @@ final class ChooseRunner
         $orders = Order::getOrders($this->company, Carbon::now(), $this->addTomorrow)->get();
         if ($orders->count() > 0) {
             $this->setOrdersAppointed($orders, $victim);
+            $this->syncRuns($orders);
             $this->sendMission($victim, $orders);
         }
         return $victim;
+    }
+
+    private function syncRuns($orders): void
+    {
+        $orders->pluck('date')
+            ->map(fn ($date) => Carbon::parse($date)->toDateString())
+            ->unique()
+            ->each(fn ($day) => DeliveryRun::syncDay($this->company->id, Carbon::parse($day)));
     }
 
     public function getSimulatedRunner()
