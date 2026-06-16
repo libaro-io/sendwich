@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Order;
 
 use App\Models\Order;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -17,10 +18,11 @@ class EditOrderRequest extends FormRequest
     public function rules(): array
     {
         $companyId = auth()->user()->company->id;
+        $storeIds = once(fn () => auth()->user()->company->stores()->pluck('id'));
 
         return [
             'order_id'         => ['required', 'integer', Rule::exists('orders', 'id')],
-            'product_id'       => ['nullable', 'integer', Rule::exists('products', 'id')->where('company_id', $companyId)],
+            'product_id'       => ['nullable', 'integer', Rule::exists('products', 'id')->where(fn (QueryBuilder $query) => $query->whereIn('store_id', $storeIds))],
             'label'            => ['required_without:product_id', 'nullable', 'string', 'max:255'],
             'store_id'         => ['nullable', 'integer', Rule::exists('stores', 'id')->where('company_id', $companyId)],
             'total'            => ['required', 'numeric', 'min:0'],

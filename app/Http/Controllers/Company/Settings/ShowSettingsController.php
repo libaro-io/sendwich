@@ -12,7 +12,8 @@ class ShowSettingsController extends Controller
     public function __invoke(): Response
     {
         $company = Auth::user()->company;
-        $company->load('notificationChannels');
+        $company->load('notificationChannels', 'reminderDays');
+        $company->reminder_days = $company->reminderDays->pluck('day')->values()->all();
 
         return inertia('Settings', [
             'company' => $company,

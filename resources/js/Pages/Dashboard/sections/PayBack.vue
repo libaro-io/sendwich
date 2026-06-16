@@ -1,7 +1,7 @@
 <script>
 import axios from "axios";
 import {useToast} from "vue-toastification";
-import {useHelpers} from "../../../Composables/helpers";
+import {useHelpers} from "@/Composables/helpers";
 import Modal from "@/Components/ui/modal-component.vue";
 import {router} from "@inertiajs/vue3";
 
@@ -71,7 +71,7 @@ export default {
             }).then(response => {
                 app.$emit('close');
                 toast.success(response.data.message);
-                router.reload({ only: ['users'] });
+                router.reload();
             }).catch(error => {
                 console.log(error);
             });

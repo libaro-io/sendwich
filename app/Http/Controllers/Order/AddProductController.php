@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Order;
 use App\Actions\DeliverySchedule;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Order\AddRequest;
+use App\Models\DeliveryRun;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductOption;
@@ -26,12 +27,15 @@ class AddProductController extends Controller
             abort(400);
         }
 
+        $deliveryDate = new DeliverySchedule()->deliveryDate();
+
         $order = new Order();
         $order->user_id = $user->id;
         $order->company_id = $user->company->id;
-        $order->date = new DeliverySchedule()->deliveryDate();
+        $order->date = $deliveryDate;
         $order->quantity = 1;
         $order->product_id = $product->id;
+        $order->paid_by = Order::assignedRunnerId($user->company, $deliveryDate);
         $order->total = $product->price * $order->quantity;
 
         /** @var ProductOption[]|Collection $options */
@@ -49,6 +53,8 @@ class AddProductController extends Controller
         }
         $order->comment = $comment ?: null;
         $order->save();
+
+        DeliveryRun::syncDay($user->company->id, $deliveryDate);
 
         return redirect()->back()->with(['success' => 'Order placed!']);
     }

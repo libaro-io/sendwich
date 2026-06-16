@@ -32,7 +32,6 @@ class ProductsRelationManager extends RelationManager
                 TextInput::make('name')->required(),
                 Textarea::make('description'),
                 TextInput::make('price')->numeric()->minValue(0)->step(0.01)->required(),
-                Select::make('company_id')->relationship('company', 'name')->required(),
 
                 Repeater::make('options')->relationship('options')
                     ->schema([
@@ -51,7 +50,6 @@ class ProductsRelationManager extends RelationManager
             ->columns([
                 TextColumn::make('name')->searchable()->sortable(),
                 TextColumn::make('price')->money('EUR')->searchable()->sortable(),
-                TextColumn::make('company.name')->searchable()->sortable(),
             ])
             ->filters([
                 //

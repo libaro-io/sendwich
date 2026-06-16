@@ -3,6 +3,7 @@
 namespace App\Actions;
 
 use App\Models\Company;
+use App\Models\Order;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Contracts\Database\Eloquent\Builder;
@@ -31,9 +32,16 @@ class UsersWithDept
         $query = User::query()
             ->where('company_id', '=', $company->id)
             ->where(function ($query) {
-                $query->has('orders')->orHas('payments');
+                $query->has('orders')
+                    ->orHas('payments')
+                    ->orHas('settlementsPaid')
+                    ->orHas('settlementsReceived');
             })
-            ->withSum('payments AS payments_sum', 'total')
+            ->withSum(['payments AS payments_sum' => function (Builder $query) {
+                $this->excludePayouts($query);
+                $this->excludeUndelivered($query);
+            }], 'total')
+            ->withSum('settlementsPaid AS settlements_paid_sum', 'amount')
             ->when($this->withOrdersForToday, function ($q) {
                 $q->whereHas('orders', function ($q2) {
                     $q2->where('date', '>=', Carbon::now()->startOfDay());
@@ -42,10 +50,17 @@ class UsersWithDept
             })
             ->withSum(['orders AS orders_dept' => function (Builder $query) {
                 $query->whereNotNull('paid_by');
+                $this->excludePayouts($query);
+                $this->excludeUndelivered($query);
                 if ($this->date) {
                     $query->where('date', '>=', Carbon::now()->startOfDay());
                 }
-            }], 'total');
+            }], 'total')
+            ->withSum(['settlementsReceived AS settlements_received_sum' => function (Builder $query) {
+                if ($this->date) {
+                    $query->where('date', '>=', Carbon::now()->startOfDay());
+                }
+            }], 'amount');
 
         if ($this->user !== null) {
             $query->where('users.id', $this->user->id);
@@ -55,14 +70,35 @@ class UsersWithDept
         return $this->calculateDept();
     }
 
-    public function calculateDept()
+    public function calculateDept(): Collection
     {
         foreach ($this->users as $user) {
-            $user->dept = round($user->payments_sum - $user->orders_dept, 2);
+            $paid = ($user->payments_sum ?? 0) + ($user->settlements_paid_sum ?? 0);
+            $owed = ($user->orders_dept ?? 0) + ($user->settlements_received_sum ?? 0);
+            $user->dept = round($paid - $owed, 2);
         }
 
         $usersSorted = $this->users->sortBy('dept');
         return new Collection($usersSorted->values()->all());
+    }
+
+    private function excludePayouts(Builder $query): void
+    {
+        $query->where(function (Builder $query) {
+            $query->whereNull('product_id')->orWhere('product_id', '!=', Order::PAYOUT_PRODUCT_ID);
+        });
+    }
+
+    // Exclude orders that are in an active (not yet delivered) delivery run.
+    private function excludeUndelivered(Builder $query): void
+    {
+        $query->where(function (Builder $query) {
+            $query->whereNull('delivery_run_id')
+                ->orWhereHas('deliveryRun', function (Builder $run) {
+                    $run->whereNotNull('delivered_at')
+                        ->orWhere('date', '<', Carbon::now()->startOfDay());
+                });
+        });
     }
 
     public function setWithOrdersForToday($withOrdersForToday): void

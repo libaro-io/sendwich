@@ -30,11 +30,10 @@ final class AddTemplateToStore
     {
         foreach ($this->products as $product) {
             Product::create([
-                'name' => $product['name'],
+                'name'        => $product['name'],
                 'description' => $product['description'],
-                'price' => $product['price'],
-                'company_id' => $this->company->id,
-                'store_id' => $this->store->id
+                'price'       => $product['price'],
+                'store_id'    => $this->store->id,
             ]);
         }
 

@@ -3,7 +3,7 @@
 namespace App\Http\Requests\Order;
 
 use App\Actions\DeliverySchedule;
-use App\Models\Order;
+use App\Models\DeliveryRun;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -14,7 +14,7 @@ class AddRequest extends FormRequest
         $schedule = new DeliverySchedule();
         $deliveryDate = $schedule->deliveryDate();
 
-        return !Order::query()
+        return !DeliveryRun::query()
             ->where('company_id', '=', auth()->user()->company->id)
             ->whereNotNull('departed_at')
             ->whereNull('delivered_at')

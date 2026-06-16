@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use App\Http\Controllers\OrderController;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,9 +16,13 @@ class Company extends Model
 
     protected $casts = [
         'reminder_enabled' => 'boolean',
-        'reminder_days' => 'array',
         'auto_assign_runner' => 'boolean',
     ];
+
+    public function reminderDays(): HasMany
+    {
+        return $this->hasMany(CompanyReminderDay::class);
+    }
 
     /**
      * @return HasMany
@@ -35,12 +40,9 @@ class Company extends Model
         return $this->hasMany(User::class);
     }
 
-    /**
-     * @return HasMany
-     */
-    public function products()
+    public function products(): HasManyThrough
     {
-        return $this->hasMany(Product::class);
+        return $this->hasManyThrough(Product::class, Store::class);
     }
 
     /**

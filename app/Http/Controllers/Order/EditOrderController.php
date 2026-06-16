@@ -6,7 +6,10 @@ use App\Actions\AddCustomItemToCatalogue;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Order\EditOrderRequest;
 use App\Jobs\NotifyOnHistoryEdit;
+use App\Models\DeliveryRun;
 use App\Models\Product;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Throwable;
@@ -29,7 +32,7 @@ class EditOrderController extends Controller
             $oldProduct = $order->product;
             $newProduct = Product::query()
                 ->where('id', '=', $productId)
-                ->where('company_id', '=', $order->company_id)
+                ->whereHas('store', fn (Builder $query) => $query->where('company_id', '=', $order->company_id))
                 ->first();
 
             if ($newProduct) {
@@ -40,10 +43,14 @@ class EditOrderController extends Controller
         $order->total = $request->input('total');
         $order->save();
 
+        // An edit can change whether the order is a delivery (e.g. its product), so keep
+        // the day's run in sync.
+        DeliveryRun::syncDay($order->company_id, Carbon::parse($order->date));
+
         // Optionally add the custom item to the chosen store's catalogue.
         if ($order->product_id === null && $request->boolean('add_to_catalogue') && $order->label && $order->store_id) {
             $cataloguePrice = (float) ($request->input('catalogue_price') ?? $order->total);
-            new AddCustomItemToCatalogue()->execute($order->company_id, $order->store_id, $order->label, $cataloguePrice);
+            new AddCustomItemToCatalogue()->execute($order->store_id, $order->label, $cataloguePrice);
         }
 
         // Best-effort notification — a mail failure must never break the edit itself.
