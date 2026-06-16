@@ -90,10 +90,6 @@ class UsersWithDept
     }
 
     // Exclude orders that are in an active (not yet delivered) delivery run.
-    // Kept: orders without a run (historical data), orders in a delivered run,
-    // and orders in a past run. Backfilled historical runs never received a
-    // delivered_at, so a run dated before today is treated as settled — only
-    // today's in-flight, not-yet-delivered run is excluded from the balance.
     private function excludeUndelivered(Builder $query): void
     {
         $query->where(function (Builder $query) {
