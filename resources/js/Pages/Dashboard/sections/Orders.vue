@@ -1,61 +1,54 @@
-<script>
+<script setup lang="ts">
+import {ref, computed} from "vue";
+import {Link, usePage} from "@inertiajs/vue3";
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
-import {Link} from "@inertiajs/vue3"
-import {useHelpers} from "../../../Composables/helpers";
+import {useHelpers} from "@/Composables/helpers";
 import DeliveryConfirmation from "@/Pages/Dashboard/sections/DeliveryConfirmation.vue";
+import type {Order, User, Store} from '@interfaces/dashboard';
 
-const helper = useHelpers();
+const props = defineProps<{
+    deliveryMoment: string;
+    orders: Order[];
+    totalPrice: number;
+    companyUsers: User[];
+    stores: Store[];
+}>();
 
-export default {
-    name: "Orders",
-    components: {
-        FontAwesomeIcon, Link, DeliveryConfirmation
-    },
-    data() {
-        return {
-            showConfirmation: false,
-        };
-    },
-    computed: {
-        hasPendingOrders() {
-            return this.orders.some(o => o.paid_by === null);
-        },
-        isRunner() {
-            const userId = this.$page.props.auth.user.id;
-            return this.orders.some(o => o.paid_by === userId && o.delivered_at === null);
-        },
-        hasRunnerDeparted() {
-            const userId = this.$page.props.auth.user.id;
-            return this.orders.some(o => o.paid_by === userId && o.departed_at !== null && o.delivered_at === null);
-        },
-        isRunnerNotDeparted() {
-            const userId = this.$page.props.auth.user.id;
-            return this.orders.some(o => o.paid_by === userId && o.departed_at === null && o.delivered_at === null);
-        },
-    },
-    methods: {
-        formatMoney: helper.formatMoney,
-        statusLabel(order) {
-            if (order.delivered_at) return 'Delivered';
-            if (order.departed_at) return 'On the way';
-            if (order.paid_by) return `Assigned to ${order.deliverer?.name ?? 'runner'}`;
-            return 'Open';
-        },
-        statusTagClass(order) {
-            if (order.delivered_at) return 'tag--teal';
-            if (order.departed_at) return 'tag--sun';
-            if (order.paid_by) return 'tag--ink';
-            return '';
-        },
-    },
-    props: {
-        deliveryMoment: String,
-        orders: Array,
-        totalPrice: Number,
-        companyUsers: Array,
-        stores: Array,
-    },
-}
+const page = usePage();
+const {formatMoney} = useHelpers();
+
+const showConfirmation = ref(false);
+
+const hasPendingOrders = computed(() => props.orders.some(o => o.paid_by === null));
+
+const isRunner = computed(() => {
+    const userId = page.props.auth.user?.id;
+    return props.orders.some(o => o.paid_by === userId && o.delivered_at === null);
+});
+
+const hasRunnerDeparted = computed(() => {
+    const userId = page.props.auth.user?.id;
+    return props.orders.some(o => o.paid_by === userId && o.departed_at !== null && o.delivered_at === null);
+});
+
+const isRunnerNotDeparted = computed(() => {
+    const userId = page.props.auth.user?.id;
+    return props.orders.some(o => o.paid_by === userId && o.departed_at === null && o.delivered_at === null);
+});
+
+const statusLabel = (order: Order): string => {
+    if (order.delivered_at) return 'Delivered';
+    if (order.departed_at) return 'On the way';
+    if (order.paid_by) return `Assigned to ${order.deliverer?.name ?? 'runner'}`;
+    return 'Open';
+};
+
+const statusTagClass = (order: Order): string => {
+    if (order.delivered_at) return 'tag--teal';
+    if (order.departed_at) return 'tag--sun';
+    if (order.paid_by) return 'tag--ink';
+    return '';
+};
 </script>
 <template>
 <div>

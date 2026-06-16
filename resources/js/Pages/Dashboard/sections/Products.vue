@@ -1,90 +1,76 @@
-<script>
-import Checkbox from '@/Components/ui/checkbox-component.vue';
-import {useToast} from "vue-toastification";
-import ProductCard from "@/Pages/Dashboard/sections/ProductCard.vue";
-import Modal from "@/Components/ui/modal-component.vue";
+<script setup lang="ts">
+import {ref, computed} from "vue";
+import {router, Link} from "@inertiajs/vue3";
+import axios from "axios";
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
-import {Link} from "@inertiajs/vue3";
+import Modal from "@/Components/ui/modal-component.vue";
+import ProductCard from "@/Pages/Dashboard/sections/ProductCard.vue";
+import type {Product, DashboardFilters} from '@interfaces/dashboard';
 
-const toast = useToast();
+const props = defineProps<{
+    products: Product[];
+    filters: DashboardFilters;
+    productCount: number;
+    orderingBlocked?: boolean;
+}>();
 
-export default {
-    name: "Products",
-    components: {
-        ProductCard,
-        Checkbox,
-        Modal,
-        FontAwesomeIcon,
-        Link,
-    },
-    props: {
-        products: Array,
-        filters : Object,
-        productCount : Number,
-        orderingBlocked: Boolean,
-    },
-    mounted() {
-        this.searchedProducts = this.products
-    },
-    computed: {
-        filteredProducts() {
-            if (!this.search) {
-                return this.products;
-            }
-            const searchTerm = this.search.toLowerCase();
-            return this.products.filter(product =>
-                product.name.toLowerCase().includes(searchTerm) ||
-                (product.description && product.description.toLowerCase().includes(searchTerm))
-            );
-        }
-    },
-    data() {
-        return {
-            selectedOptions: [],
-            search: this.filters.search,
-            searchedProducts: null,
-            toggle: false,
-            selectedProduct: null,
-            selectedDescription: null,
-        };
-    },
-    methods: {
-        addProduct(product, comment) {
-            var app = this;
-            var options = app.getSelectedOptionIdsForProduct(product)
-            axios.post(route('order.check-new-store'), {
-                product_id: product.id,
-                options: options,
-            }).then(function(response){
-                app.confirmOrder(product, options, comment);
-            }).catch(function (error){
-                app.showConfirmationModal(product, options, comment);
-            });
-        },
+defineEmits<{
+    unsetStore: [];
+}>();
 
-        confirmOrder(product, options, comment) {
-            this.toggle = false;
-            this.$inertia.post(route('order.add-product'), {
-                product_id: product.id,
-                options: options,
-                comment: comment || null,
-            },{
-                only:['orders','totalPrice','flash','selectedRunner']
-            });
-        },
+const selectedOptions = ref<number[]>([]);
+const search = ref(props.filters.search ?? '');
+const toggle = ref(false);
+const selectedProduct = ref<Product | null>(null);
+const selectedDescription = ref<string | null>(null);
 
-        showConfirmationModal(product, options, comment){
-            this.selectedProduct = product;
-            this.selectedOptions = options;
-            this.selectedDescription = comment;
-            this.toggle = true;
-        },
-
-        getSelectedOptionIdsForProduct(product) {
-            return product.options.filter(option => option.selected === true).map(option => option.id);
-        },
+const filteredProducts = computed(() => {
+    if (!search.value) {
+        return props.products;
     }
-}
+    const searchTerm = search.value.toLowerCase();
+    return props.products.filter(product =>
+        product.name.toLowerCase().includes(searchTerm) ||
+        (product.description && product.description.toLowerCase().includes(searchTerm))
+    );
+});
+
+const getSelectedOptionIdsForProduct = (product: Product): number[] => {
+    return product.options.filter(option => option.selected === true).map(option => option.id);
+};
+
+const confirmOrder = (product: Product | null, options: number[], comment: string | null): void => {
+    if (!product) {
+        return;
+    }
+    toggle.value = false;
+    router.post(route('order.add-product'), {
+        product_id: product.id,
+        options: options,
+        comment: comment || null,
+    }, {
+        only: ['orders', 'totalPrice', 'flash', 'selectedRunner'],
+    });
+};
+
+const showConfirmationModal = (product: Product, options: number[], comment: string | null): void => {
+    selectedProduct.value = product;
+    selectedOptions.value = options;
+    selectedDescription.value = comment;
+    toggle.value = true;
+};
+
+const addProduct = (product: Product, comment: string): void => {
+    const options = getSelectedOptionIdsForProduct(product);
+    axios.post(route('order.check-new-store'), {
+        product_id: product.id,
+        options: options,
+    }).then(() => {
+        confirmOrder(product, options, comment);
+    }).catch(() => {
+        showConfirmationModal(product, options, comment);
+    });
+};
 </script>
 <template>
     <div class="panel">

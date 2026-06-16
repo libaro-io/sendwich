@@ -1,42 +1,37 @@
-<script>
-import {useHelpers} from "../../../Composables/helpers";
+<script setup lang="ts">
+import {ref, computed, onMounted} from "vue";
+import {useHelpers} from "@/Composables/helpers";
 import Modal from "@/Components/ui/modal-component.vue";
+import type {Product, ProductOption} from '@interfaces/dashboard';
 
-const helper = useHelpers();
-export default {
-    name: "productCard",
-    components: {
-        Modal,
-    },
-    mounted() {
-        this.product.options.forEach(( option ) => option['selected'] = false)
-    },
-    props: {
-        product : Object,
-    },
-    data() {
-        return {
-            comment: '',
-            showModal: false,
-        };
-    },
-    computed:{
-        options(){
-            return this.product.options;
-        },
-    },
-    methods:{
-        formatMoney: helper.formatMoney,
-        toggleOption(option){
-            option.selected = !option.selected;
-        },
-        order(){
-            this.$emit('ordered', this.product, this.comment);
-            this.comment = '';
-            this.showModal = false;
-        },
-    },
-}
+const props = defineProps<{
+    product: Product;
+}>();
+
+const emit = defineEmits<{
+    ordered: [product: Product, comment: string];
+}>();
+
+const {formatMoney} = useHelpers();
+
+const comment = ref('');
+const showModal = ref(false);
+
+const options = computed(() => props.product.options);
+
+onMounted(() => {
+    props.product.options.forEach((option) => { option.selected = false; });
+});
+
+const toggleOption = (option: ProductOption): void => {
+    option.selected = !option.selected;
+};
+
+const order = (): void => {
+    emit('ordered', props.product, comment.value);
+    comment.value = '';
+    showModal.value = false;
+};
 </script>
 <template>
 <div class="product-card">

@@ -1,40 +1,40 @@
-<script setup>
-import {Head} from '@inertiajs/vue3';
+<script setup lang="ts">
+import {Head, router} from '@inertiajs/vue3';
+import {onMounted, onUnmounted, ref, computed} from "vue";
 import Orders from "@/Pages/Dashboard/sections/Orders.vue";
 import Products from "@/Pages/Dashboard/sections/Products.vue";
 import Menu from "@/Pages/Dashboard/sections/Menu.vue";
 import DeptList from "@/Pages/Dashboard/sections/DeptList.vue";
-import {onMounted, onUnmounted, ref, computed} from "vue";
-import {router} from '@inertiajs/vue3'
+import type {Order, Product, Store, User, Company, DashboardFilters} from '@interfaces/dashboard';
 
-const props = defineProps({
-    selectedRunner: Object,
-    products: Array,
-    stores: Array,
-    users: Array,
-    companyUsers: Array,
-    userCount: Number,
-    productCount: Number,
-    deliveryMoment: String,
-    company: Object,
-    orders: Array,
-    totalPrice: Number,
-    filters: Object,
-});
+const props = defineProps<{
+    selectedRunner?: User | null;
+    products: Product[];
+    stores: Store[];
+    users: User[];
+    companyUsers: User[];
+    userCount: number;
+    productCount: number;
+    deliveryMoment: string;
+    company: Company;
+    orders: Order[];
+    totalPrice: number;
+    filters: DashboardFilters;
+}>();
 
-let interval;
+let interval: ReturnType<typeof setInterval>;
 
-let selectedStore = ref();
+const selectedStore = ref<Store | null>();
 
 const orderingBlocked = computed(() => props.orders.some(o => o.departed_at !== null && o.delivered_at === null));
 
-const selectStore = (store) => {
+const selectStore = (store: Store): void => {
     selectedStore.value = store;
-}
+};
 
-const unsetStore = () => {
+const unsetStore = (): void => {
     selectedStore.value = null;
-}
+};
 
 onMounted(() => {
     interval = setInterval(() => {
@@ -46,18 +46,15 @@ onMounted(() => {
                 only: ['orders', 'selectedRunner', 'deliveryMoment', 'flash', 'totalPrice']
             })
     }, 60 * 1000);
-})
+});
 onUnmounted(() => clearInterval(interval));
-
-
 </script>
-<script>
-import BreezeAuthenticatedLayout from '@layouts/Authenticated.vue';
+<script lang="ts">
+import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
 
 export default {
-    export: {BreezeAuthenticatedLayout},
     layout: BreezeAuthenticatedLayout,
-}
+};
 </script>
 <template>
     <Head title="Dashboard"/>

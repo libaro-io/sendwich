@@ -1,13 +1,13 @@
 <script setup>
 
-import Authenticated from "@layouts/Authenticated.vue";
+import Authenticated from "@/Layouts/Authenticated.vue";
 import {useForm} from '@inertiajs/vue3';
 import {ref} from 'vue';
 import {router} from '@inertiajs/vue3';
-import Modal from "@components/ui/modal-component.vue";
+import { Modal } from '@/Components/ui/modal-component.vue';
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 
-const props = defineProps({
+ const props = defineProps({
     user: Object,
     company: Object,
     users: Array,

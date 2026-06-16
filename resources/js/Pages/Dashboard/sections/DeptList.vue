@@ -1,38 +1,29 @@
-<script>
+<script setup lang="ts">
+import {ref} from "vue";
 import PayBack from "@/Pages/Dashboard/sections/PayBack.vue";
-import {useHelpers} from "../../../Composables/helpers";
+import {useHelpers} from "@/Composables/helpers";
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
+import type {Company, User} from '@interfaces/dashboard';
 
-const helper = useHelpers();
-export default {
-    name: "DeptList",
-    components: {
-        PayBack,
-        FontAwesomeIcon,
-    },
-    props: {
-        company: Object,
-        users: Array,
-        runner: Object,
-        simulated: Boolean,
-        userCount: Number,
-    },
-    data() {
-        return {
-            isPaybackOpen: false,
-        };
-    },
-    methods: {
-        formatMoney: helper.formatMoney,
-        shortenName(name, start, end) {
-            let lastSpaceIndex = name.lastIndexOf(" ", end);
-            if (lastSpaceIndex > end - 10) {
-                end = lastSpaceIndex + 1;
-            }
-            return name.substring(start, end);
-        },
+defineProps<{
+    company?: Company;
+    users: User[];
+    runner?: User | null;
+    simulated?: boolean;
+    userCount: number;
+}>();
+
+const {formatMoney} = useHelpers();
+
+const isPaybackOpen = ref(false);
+
+const shortenName = (name: string, start: number, end: number): string => {
+    const lastSpaceIndex = name.lastIndexOf(" ", end);
+    if (lastSpaceIndex > end - 10) {
+        end = lastSpaceIndex + 1;
     }
-}
+    return name.substring(start, end);
+};
 </script>
 <template>
     <div class="panel">

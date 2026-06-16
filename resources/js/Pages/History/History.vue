@@ -1,5 +1,5 @@
 <script setup>
-import BreezeAuthenticatedLayout from '@layouts/Authenticated.vue';
+import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
 import {Head} from '@inertiajs/vue3';
 import History from '@/Pages/History/sections/HistoryTable.vue'
 

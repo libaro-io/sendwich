@@ -1,83 +1,78 @@
-<script>
+<script setup lang="ts">
+import {ref, onMounted} from "vue";
 import axios from "axios";
 import {useToast} from "vue-toastification";
+import {router} from "@inertiajs/vue3";
 import {useHelpers} from "@/Composables/helpers";
 import Modal from "@/Components/ui/modal-component.vue";
-import {router} from "@inertiajs/vue3";
+import type {User} from '@interfaces/dashboard';
 
-const helper = useHelpers();
+const props = defineProps<{
+    user: User;
+    users: User[];
+    open: boolean;
+}>();
+
+const emit = defineEmits<{
+    close: [];
+}>();
+
+const {formatMoney} = useHelpers();
 const toast = useToast();
-export default {
-    name: "PayBack",
-    components: {
-        Modal,
-    },
-    mounted() {
-        if (this.user.dept > 0) {
-            this.buildPayBackList();
-        } else {
-            this.buildGiveBackList();
+
+const payBackList = ref<User[]>([]);
+const counter = ref(0);
+const calculatedDept = ref(0);
+
+const buildGiveBackList = (): void => {
+    calculatedDept.value = props.user.dept * -1;
+    counter.value = props.users.length - 1;
+    while (calculatedDept.value > 0) {
+        const user = props.users[counter.value];
+        if (user.dept > 0) {
+            const paybackUserDept = user.dept;
+            payBackList.value.push(user);
+            const paysBack = calculatedDept.value > paybackUserDept ? paybackUserDept : calculatedDept.value;
+            user.paysBack = paysBack;
+            calculatedDept.value -= paysBack;
         }
-    },
-    props: {
-        user: Object,
-        users: Array,
-        open: Boolean,
-    },
-    emits: ["close"],
-    data() {
-        return {
-            payBackList: [],
-            counter: 0,
-            calculatedDept: 0,
-        };
-    },
-    methods: {
-        formatMoney: helper.formatMoney,
-        buildGiveBackList() {
-            this.calculatedDept = this.user.dept * -1;
-            this.counter = this.users.length - 1;
-            while (this.calculatedDept > 0) {
-                const user = this.users[this.counter];
-                if (user.dept > 0) {
-                    const paybackUserDept = user.dept
-                    this.payBackList.push(user);
-                    if (this.calculatedDept > paybackUserDept) {
-                        user.paysBack = paybackUserDept;
-                    } else {
-                        user.paysBack = this.calculatedDept
-                    }
-                    this.calculatedDept -= user.paysBack;
-                }
-                this.counter--;
-            }
-        },
-        buildPayBackList() {
-            this.calculatedDept = this.user.dept;
-            for (let i = this.counter; i < this.users.length && this.calculatedDept > 0; i++) {
-                const user = this.users[i];
-                if (user.dept < 0) {
-                    const paybackUserDept = -user.dept;
-                    this.payBackList.push(user);
-                    user.paysBack = Math.min(paybackUserDept, this.calculatedDept);
-                    this.calculatedDept -= user.paysBack;
-                }
-            }
-        },
-        handlePayouts() {
-            const app = this;
-            axios.post('/api/payouts/handle', {
-                'payouts': this.payBackList
-            }).then(response => {
-                app.$emit('close');
-                toast.success(response.data.message);
-                router.reload();
-            }).catch(error => {
-                console.log(error);
-            });
-        },
+        counter.value--;
     }
-}
+};
+
+const buildPayBackList = (): void => {
+    calculatedDept.value = props.user.dept;
+    for (let i = counter.value; i < props.users.length && calculatedDept.value > 0; i++) {
+        const user = props.users[i];
+        if (user.dept < 0) {
+            const paybackUserDept = -user.dept;
+            payBackList.value.push(user);
+            const paysBack = Math.min(paybackUserDept, calculatedDept.value);
+            user.paysBack = paysBack;
+            calculatedDept.value -= paysBack;
+        }
+    }
+};
+
+const handlePayouts = (): void => {
+    axios.post('/api/payouts/handle', {
+        payouts: payBackList.value,
+    }).then(response => {
+        emit('close');
+        toast.success(response.data.message);
+        router.reload();
+    }).catch(error => {
+        console.log(error);
+    });
+};
+
+onMounted(() => {
+    if (props.user.dept > 0) {
+        buildPayBackList();
+    } else {
+        buildGiveBackList();
+    }
+});
 </script>
 <template>
     <Modal :open="open" :title="user ? `Balance: ${formatMoney(user.dept)}` : 'Payback details'" @close="$emit('close')">

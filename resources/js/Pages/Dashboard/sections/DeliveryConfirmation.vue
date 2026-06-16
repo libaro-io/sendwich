@@ -1,236 +1,262 @@
-<script>
-import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
+<script setup lang="ts">
+import {ref, computed} from "vue";
+import {router, usePage} from "@inertiajs/vue3";
+import axios from "axios";
 import {useToast} from "vue-toastification";
-import {router} from "@inertiajs/vue3";
-import {useHelpers} from "../../../Composables/helpers";
+import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
+import {useHelpers} from "@/Composables/helpers";
 import CatalogueUpdate from "@/Components/catalogue-update-component.vue";
+import type {Order, Product, Store, User} from '@interfaces/dashboard';
+import type {NewProduct, PriceChange} from '@interfaces/catalogue-update';
 
-const helper = useHelpers();
+interface DeliveryOrder extends Order {
+    originalTotal: number;
+}
+
+interface ExtraItem {
+    label: string;
+    total: number | null;
+    user_id: number | null;
+    store_id: number | null;
+}
+
+interface ReceiptStore {
+    store_id: number | null;
+    store_name: string | null;
+}
+
+const invalidPrice = (value: number | string | null): boolean =>
+    value === null || value === '' || isNaN(Number(value)) || Number(value) < 0;
+
+const props = defineProps<{
+    orders: Order[];
+    companyUsers: User[];
+    stores: Store[];
+}>();
+
+const emit = defineEmits<{
+    close: [];
+}>();
+
+const page = usePage();
+const {formatMoney} = useHelpers();
 const toast = useToast();
 
-const invalidPrice = (value) => value === null || value === '' || isNaN(Number(value)) || Number(value) < 0;
+const deliveryOrders = ref<DeliveryOrder[]>([]);
+const extraItems = ref<ExtraItem[]>([]);
+const analyzing = ref(false);
+const receiptStore = ref<ReceiptStore>({store_id: null, store_name: null});
+const extraStores = ref<Store[]>([]);
+const addingStore = ref(false);
+const submitting = ref(false);
+const showCatalogue = ref(false);
+const newProducts = ref<NewProduct[]>([]);
+const priceChanges = ref<PriceChange[]>([]);
 
-export default {
-    name: "DeliveryConfirmation",
-    components: {FontAwesomeIcon, CatalogueUpdate},
-    props: {
-        orders: Array,
-        companyUsers: Array,
-        stores: Array,
-    },
-    emits: ['close'],
-    data() {
-        return {
-            deliveryOrders: [],
-            extraItems: [],
-            analyzing: false,
-            receiptStore: {store_id: null, store_name: null},
-            extraStores: [],
-            addingStore: false,
-            submitting: false,
-            showCatalogue: false,
-            newProducts: [],
-            priceChanges: [],
-        };
-    },
-    created() {
-        const userId = this.$page.props.auth.user.id;
-        this.deliveryOrders = this.orders
-            .filter(o => o.paid_by === userId && !o.delivered_at)
-            .map(o => ({...o, total: Number(o.total), originalTotal: Number(o.total)}));
-    },
-    computed: {
-        deliveryTotal() {
-            const orders = this.deliveryOrders.reduce((sum, o) => sum + (Number(o.total) || 0), 0);
-            const extras = this.extraItems.reduce((sum, e) => sum + (Number(e.total) || 0), 0);
-            return orders + extras;
-        },
-        runStoreId() {
-            const ids = [...new Set(this.deliveryOrders.map(o => o.product ? o.product.store_id : null).filter(Boolean))];
-            return ids.length === 1 ? ids[0] : null;
-        },
-        allStores() {
-            return [...(this.stores || []), ...this.extraStores];
-        },
-        detectedStoreName() {
-            const store = this.allStores.find(s => s.id === this.receiptStore.store_id);
-            return store ? store.name : null;
-        },
-    },
-    methods: {
-        formatMoney: helper.formatMoney,
-        addExtraItem() {
-            this.extraItems.push({label: '', total: null, user_id: null, store_id: this.runStoreId});
-        },
-        removeExtraItem(index) {
-            this.extraItems.splice(index, 1);
-        },
-        storeById(id) {
-            return this.allStores.find(s => s.id === id) || null;
-        },
-        productExistsInStore(label, storeId) {
-            const store = this.storeById(storeId);
-            if (!store || !store.products) {
-                return false;
-            }
-            const needle = (label || '').trim().toLowerCase();
-            return store.products.some(p => (p.name || '').trim().toLowerCase() === needle);
-        },
-        computeNewItems() {
-            const seen = new Set();
-            const result = [];
-            for (const e of this.extraItems) {
-                if (!e.label || this.productExistsInStore(e.label, e.store_id)) {
-                    continue;
-                }
-                const key = e.label.trim().toLowerCase() + '|' + e.store_id;
-                if (seen.has(key)) {
-                    continue;
-                }
-                seen.add(key);
-                result.push(e);
-            }
-            return result;
-        },
-        computePriceChanges() {
-            const cents = (value) => Math.round(Number(value) * 100);
-            const seen = new Set();
-            const changes = [];
-            for (const order of this.deliveryOrders) {
-                if (!order.product || order.product.variable_price) {
-                    continue;
-                }
-                if (cents(order.total) === cents(order.originalTotal) || seen.has(order.product.id)) {
-                    continue;
-                }
-                seen.add(order.product.id);
-                const unit = order.quantity ? Number(order.total) / order.quantity : Number(order.total);
-                changes.push({
-                    product_id:    order.product.id,
-                    name:          order.product.name,
-                    store_id:      order.product.store_id,
-                    current_price: Number(order.product.price),
-                    new_price:     Math.round(unit * 100) / 100,
-                    apply:         true,
-                });
-            }
-            return changes;
-        },
-        async addDetectedStore() {
-            if (!this.receiptStore.store_name) {
-                return;
-            }
-            this.addingStore = true;
-            try {
-                const {data} = await axios.post(route('order.receipt.store'), {name: this.receiptStore.store_name});
-                this.extraStores.push({id: data.id, name: data.name, products: []});
-                this.receiptStore.store_id = data.id;
-                this.extraItems.forEach(e => { if (e.store_id === null) { e.store_id = data.id; } });
-                toast.success(`Store "${data.name}" added.`);
-            } catch (error) {
-                toast.error('Could not add the store. Please pick one from the list.');
-            } finally {
-                this.addingStore = false;
-            }
-        },
-        async analyzeReceipt(event) {
-            const file = event.target.files[0];
-            if (!file) {
-                return;
-            }
-            this.analyzing = true;
-            const formData = new FormData();
-            formData.append('image', file);
-            try {
-                const {data} = await axios.post(route('order.receipt.analyze'), formData, {
-                    headers: {'Content-Type': 'multipart/form-data'},
-                });
-                this.receiptStore = data.store || {store_id: null, store_name: null};
-                const recognisedStoreId = (this.receiptStore.store_id && this.allStores.some(s => s.id === this.receiptStore.store_id))
-                    ? this.receiptStore.store_id
-                    : null;
-                let matched = 0;
-                (data.prices || []).forEach(p => {
-                    if (p.total === null || p.total === undefined) {
-                        return;
-                    }
-                    const order = this.deliveryOrders.find(o => o.id === p.order_id);
-                    if (!order || !order.product || recognisedStoreId === null || order.product.store_id !== recognisedStoreId) {
-                        return;
-                    }
-                    order.total = Number(p.total);
-                    matched++;
-                });
-                (data.extras || []).forEach(e => {
-                    this.extraItems.push({label: e.label, total: Number(e.total), user_id: null, store_id: recognisedStoreId});
-                });
-                const extraNote = (data.extras && data.extras.length)
-                    ? `, ${data.extras.length} extra item(s) found — assign them to a person`
-                    : '';
-                toast.success(`Ticket scanned — ${matched} price(s) filled in${extraNote}. Please review before confirming.`);
-            } catch (error) {
-                toast.error(error.response?.data?.message || 'Could not analyse the ticket. Please enter the prices manually.');
-            } finally {
-                this.analyzing = false;
-                event.target.value = '';
-            }
-        },
-        confirm() {
-            if (this.submitting) {
-                return;
-            }
-            const invalidOrders = this.deliveryOrders.filter(o => invalidPrice(o.total));
-            if (invalidOrders.length) {
-                toast.error(`Please fill in a valid price for: ${invalidOrders.map(o => o.product ? o.product.name : o.label).join(', ')}`);
-                return;
-            }
-            const invalidExtras = this.extraItems.filter(e => !e.label || !e.user_id || invalidPrice(e.total));
-            if (invalidExtras.length) {
-                toast.error('Each extra item needs a description, a price and a person to assign it to.');
-                return;
-            }
+const userId = page.props.auth.user?.id;
+deliveryOrders.value = props.orders
+    .filter(o => o.paid_by === userId && !o.delivered_at)
+    .map(o => ({...o, total: Number(o.total), originalTotal: Number(o.total)}));
 
-            const newItems = this.computeNewItems();
-            const priceChanges = this.computePriceChanges();
-            if (newItems.length || priceChanges.length) {
-                this.newProducts = newItems.map(e => ({name: e.label, price: Number(e.total), store_id: e.store_id, add: true}));
-                this.priceChanges = priceChanges;
-                this.showCatalogue = true;
+const deliveryTotal = computed(() => {
+    const orders = deliveryOrders.value.reduce((sum, o) => sum + (Number(o.total) || 0), 0);
+    const extras = extraItems.value.reduce((sum, e) => sum + (Number(e.total) || 0), 0);
+    return orders + extras;
+});
+
+const runStoreId = computed<number | null>(() => {
+    const ids = [...new Set(deliveryOrders.value.map(o => o.product ? o.product.store_id : null).filter((id): id is number => Boolean(id)))];
+    return ids.length === 1 ? ids[0] : null;
+});
+
+const allStores = computed<Store[]>(() => [...(props.stores || []), ...extraStores.value]);
+
+const detectedStoreName = computed<string | null>(() => {
+    const store = allStores.value.find(s => s.id === receiptStore.value.store_id);
+    return store ? store.name : null;
+});
+
+const storeById = (id: number | null): Store | null => {
+    return allStores.value.find(s => s.id === id) || null;
+};
+
+const productExistsInStore = (label: string, storeId: number | null): boolean => {
+    const store = storeById(storeId);
+    if (!store || !store.products) {
+        return false;
+    }
+    const needle = (label || '').trim().toLowerCase();
+    return store.products.some(p => (p.name || '').trim().toLowerCase() === needle);
+};
+
+const computeNewItems = (): ExtraItem[] => {
+    const seen = new Set<string>();
+    const result: ExtraItem[] = [];
+    for (const e of extraItems.value) {
+        if (!e.label || productExistsInStore(e.label, e.store_id)) {
+            continue;
+        }
+        const key = e.label.trim().toLowerCase() + '|' + e.store_id;
+        if (seen.has(key)) {
+            continue;
+        }
+        seen.add(key);
+        result.push(e);
+    }
+    return result;
+};
+
+const computePriceChanges = (): PriceChange[] => {
+    const cents = (value: number) => Math.round(Number(value) * 100);
+    const seen = new Set<number>();
+    const changes: PriceChange[] = [];
+    for (const order of deliveryOrders.value) {
+        if (!order.product || order.product.variable_price) {
+            continue;
+        }
+        if (cents(order.total) === cents(order.originalTotal) || seen.has(order.product.id)) {
+            continue;
+        }
+        seen.add(order.product.id);
+        const unit = order.quantity ? Number(order.total) / order.quantity : Number(order.total);
+        changes.push({
+            product_id:    order.product.id,
+            name:          order.product.name,
+            store_id:      order.product.store_id,
+            current_price: Number(order.product.price),
+            new_price:     Math.round(unit * 100) / 100,
+            apply:         true,
+        });
+    }
+    return changes;
+};
+
+const addExtraItem = (): void => {
+    extraItems.value.push({label: '', total: null, user_id: null, store_id: runStoreId.value});
+};
+
+const removeExtraItem = (index: number): void => {
+    extraItems.value.splice(index, 1);
+};
+
+const addDetectedStore = async (): Promise<void> => {
+    if (!receiptStore.value.store_name) {
+        return;
+    }
+    addingStore.value = true;
+    try {
+        const {data} = await axios.post(route('order.receipt.store'), {name: receiptStore.value.store_name});
+        extraStores.value.push({id: data.id, name: data.name, products: []});
+        receiptStore.value.store_id = data.id;
+        extraItems.value.forEach(e => { if (e.store_id === null) { e.store_id = data.id; } });
+        toast.success(`Store "${data.name}" added.`);
+    } catch (error) {
+        toast.error('Could not add the store. Please pick one from the list.');
+    } finally {
+        addingStore.value = false;
+    }
+};
+
+const analyzeReceipt = async (event: Event): Promise<void> => {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) {
+        return;
+    }
+    analyzing.value = true;
+    const formData = new FormData();
+    formData.append('image', file);
+    try {
+        const {data} = await axios.post(route('order.receipt.analyze'), formData, {
+            headers: {'Content-Type': 'multipart/form-data'},
+        });
+        receiptStore.value = data.store || {store_id: null, store_name: null};
+        const recognisedStoreId = (receiptStore.value.store_id && allStores.value.some(s => s.id === receiptStore.value.store_id))
+            ? receiptStore.value.store_id
+            : null;
+        let matched = 0;
+        (data.prices || []).forEach((p: { order_id: number; total: number | null }) => {
+            if (p.total === null || p.total === undefined) {
                 return;
             }
-
-            this.finalize();
-        },
-        skipCatalogueChanges() {
-            this.newProducts.forEach(p => { p.add = false; });
-            this.priceChanges.forEach(p => { p.apply = false; });
-            this.finalize();
-        },
-        finalize() {
-            if (this.submitting) {
+            const order = deliveryOrders.value.find(o => o.id === p.order_id);
+            if (!order || !order.product || recognisedStoreId === null || order.product.store_id !== recognisedStoreId) {
                 return;
             }
-            this.submitting = true;
+            order.total = Number(p.total);
+            matched++;
+        });
+        (data.extras || []).forEach((e: { label: string; total: number }) => {
+            extraItems.value.push({label: e.label, total: Number(e.total), user_id: null, store_id: recognisedStoreId});
+        });
+        const extraNote = (data.extras && data.extras.length)
+            ? `, ${data.extras.length} extra item(s) found — assign them to a person`
+            : '';
+        toast.success(`Ticket scanned — ${matched} price(s) filled in${extraNote}. Please review before confirming.`);
+    } catch (error: any) {
+        toast.error(error.response?.data?.message || 'Could not analyse the ticket. Please enter the prices manually.');
+    } finally {
+        analyzing.value = false;
+        input.value = '';
+    }
+};
 
-            router.post(route('order.confirm-delivery'), {
-                prices: this.deliveryOrders.map(o => ({order_id: o.id, total: Number(o.total)})),
-                extra_items: this.extraItems.map(e => ({label: e.label, total: Number(e.total), user_id: e.user_id, store_id: e.store_id})),
-                new_products: this.newProducts
-                    .filter(p => p.add && p.name && p.store_id && !invalidPrice(p.price))
-                    .map(p => ({name: p.name, price: Number(p.price), store_id: p.store_id})),
-                price_updates: this.priceChanges
-                    .filter(p => p.apply && p.product_id && !invalidPrice(p.new_price))
-                    .map(p => ({product_id: p.product_id, price: Number(p.new_price)})),
-            }, {
-                only: ['orders', 'totalPrice', 'flash', 'users'],
-                preserveScroll: true,
-                onSuccess: () => { this.$emit('close'); },
-                onError: () => { toast.error('Could not confirm the delivery. Please try again.'); },
-                onFinish: () => { this.submitting = false; },
-            });
-        },
-    },
-}
+const finalize = (): void => {
+    if (submitting.value) {
+        return;
+    }
+    submitting.value = true;
+
+    router.post(route('order.confirm-delivery'), {
+        prices: deliveryOrders.value.map(o => ({order_id: o.id, total: Number(o.total)})),
+        extra_items: extraItems.value.map(e => ({label: e.label, total: Number(e.total), user_id: e.user_id, store_id: e.store_id})),
+        new_products: newProducts.value
+            .filter(p => p.add && p.name && p.store_id && !invalidPrice(p.price))
+            .map(p => ({name: p.name, price: Number(p.price), store_id: p.store_id})),
+        price_updates: priceChanges.value
+            .filter(p => p.apply && p.product_id && !invalidPrice(p.new_price))
+            .map(p => ({product_id: p.product_id, price: Number(p.new_price)})),
+    }, {
+        only: ['orders', 'totalPrice', 'flash', 'users'],
+        preserveScroll: true,
+        onSuccess: () => { emit('close'); },
+        onError: () => { toast.error('Could not confirm the delivery. Please try again.'); },
+        onFinish: () => { submitting.value = false; },
+    });
+};
+
+const skipCatalogueChanges = (): void => {
+    newProducts.value.forEach(p => { p.add = false; });
+    priceChanges.value.forEach(p => { p.apply = false; });
+    finalize();
+};
+
+const confirm = (): void => {
+    if (submitting.value) {
+        return;
+    }
+    const invalidOrders = deliveryOrders.value.filter(o => invalidPrice(o.total));
+    if (invalidOrders.length) {
+        toast.error(`Please fill in a valid price for: ${invalidOrders.map(o => o.product ? o.product.name : o.label).join(', ')}`);
+        return;
+    }
+    const invalidExtras = extraItems.value.filter(e => !e.label || !e.user_id || invalidPrice(e.total));
+    if (invalidExtras.length) {
+        toast.error('Each extra item needs a description, a price and a person to assign it to.');
+        return;
+    }
+
+    const newItems = computeNewItems();
+    const priceChangesResult = computePriceChanges();
+    if (newItems.length || priceChangesResult.length) {
+        newProducts.value = newItems.map(e => ({name: e.label, price: Number(e.total), store_id: e.store_id, add: true}));
+        priceChanges.value = priceChangesResult;
+        showCatalogue.value = true;
+        return;
+    }
+
+    finalize();
+};
 </script>
 <template>
     <Teleport to="body">

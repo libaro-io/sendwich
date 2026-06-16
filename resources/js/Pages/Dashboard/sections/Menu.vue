@@ -1,30 +1,26 @@
-<script>
-import { debounce } from "lodash";
+<script setup lang="ts">
+import {ref, watch} from "vue";
+import {router} from "@inertiajs/vue3";
+import {debounce} from "lodash";
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
+import type {Store} from '@interfaces/dashboard';
 
-export default {
-    name: "Menu",
-    components: {
-        FontAwesomeIcon,
-    },
-    props: {
-        stores: Array,
-    },
-    watch: {
-        search: debounce(function(value){
-            this.$inertia.get('/dashboard',{ search : value},
-                {
-                    preserveState:true,
-                    replace :true,
-                })
-        },300)
-    },
-    data() {
-        return {
-            search: '',
-        };
-    },
-}
+defineProps<{
+    stores: Store[];
+}>();
+
+defineEmits<{
+    selectStore: [store: Store];
+}>();
+
+const search = ref('');
+
+watch(search, debounce((value: string) => {
+    router.get('/dashboard', {search: value}, {
+        preserveState: true,
+        replace: true,
+    });
+}, 300));
 </script>
 <template>
     <div class="panel">
