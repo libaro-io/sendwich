@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Order;
 
 use App\Actions\DeliverySchedule;
 use App\Http\Controllers\Controller;
-use App\Models\Order;
+use App\Models\DeliveryRun;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,8 +15,11 @@ class DepartAsRunnerController extends Controller
         $user = Auth::user();
         $deliveryDate = new DeliverySchedule()->deliveryDate();
 
-        Order::query()
-            ->where('paid_by', '=', $user->id)
+        DeliveryRun::syncDay($user->company->id, $deliveryDate);
+
+        DeliveryRun::query()
+            ->where('company_id', '=', $user->company->id)
+            ->where('runner_id', '=', $user->id)
             ->whereNull('departed_at')
             ->whereBetween('date', [
                 $deliveryDate->copy()->startOfDay(),

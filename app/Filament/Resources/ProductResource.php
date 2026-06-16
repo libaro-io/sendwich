@@ -34,7 +34,6 @@ class ProductResource extends Resource
                 TextInput::make('name')->required(),
                 Textarea::make('description'),
                 TextInput::make('price')->numeric()->minValue(0)->step(0.01)->required(),
-                Select::make('company_id')->relationship('company', 'name')->required(),
                 Select::make('store_id')->relationship('store', 'name')->required(),
 
                 Repeater::make('options')->relationship('options')
@@ -53,7 +52,6 @@ class ProductResource extends Resource
             ->columns([
                 TextColumn::make('name')->searchable()->sortable(),
                 TextColumn::make('price')->money('EUR')->searchable()->sortable(),
-                TextColumn::make('company.name')->searchable()->sortable(),
                 TextColumn::make('store.name')->searchable()->sortable(),
             ])
             ->filters([

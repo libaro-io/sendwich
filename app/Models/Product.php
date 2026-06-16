@@ -9,12 +9,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 
+
 /**
  * @property int $id
  * @property string $name
  * @property string $description
  * @property float $price
- * @property int $company_id
  * @property int $store_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
@@ -30,7 +30,6 @@ class Product extends Model
         'description',
         'price',
         'variable_price',
-        'company_id',
         'store_id',
     ];
 
@@ -46,11 +45,6 @@ class Product extends Model
     public function store(): BelongsTo
     {
         return $this->belongsTo(Store::class);
-    }
-
-    public function company(): BelongsTo
-    {
-        return $this->belongsTo(Company::class);
     }
 
     public function options(): HasMany

@@ -313,10 +313,7 @@ export default {
                             </td>
 
                             <td>
-                                <template v-if="item.product && item.product.variable_price">
-                                    <span class="text-gray-500">~ {{ money(item.product.price) }}</span>
-                                </template>
-                                <template v-else-if="item.product">{{ money(item.product.price) }}</template>
+                                <template v-if="item.quantity > 0">{{ money(item.total / item.quantity) }}</template>
                                 <span v-else class="text-gray-400">—</span>
                             </td>
 

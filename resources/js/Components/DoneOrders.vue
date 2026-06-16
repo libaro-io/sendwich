@@ -24,7 +24,7 @@ const props = defineProps(['orders']);
                 </thead>
                 <tbody>
                 <tr v-for="orderItem in orderGroup" class="text-sm">
-                    <td class="text-sm">{{ orderItem.product.name }} <span
+                    <td class="text-sm">{{ orderItem.product ? orderItem.product.name : orderItem.label }} <span
                         v-if="orderItem.comment">({{ orderItem.comment }})</span></td>
                     <td class="text-sm">{{orderItem.user.name }}</td>
                     <td class="text-sm">  <span class="badge badge-warning text-sm">{{ helper.formatMoney(orderItem.total) }}</span></td>
