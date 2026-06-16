@@ -1,0 +1,76 @@
+@reference "@css/app.css";
+
+.history__title {
+    @apply font-display font-bold text-3xl text-ink mb-6;
+}
+.history__group {
+    @apply mb-8;
+}
+.history__date {
+    @apply font-display font-bold text-xl text-ink mt-8 mb-4;
+}
+.history__scroll {
+    @apply overflow-x-auto;
+}
+.history__table {
+    @apply text-base;
+}
+.history__num {
+    @apply text-right;
+}
+.history__muted {
+    @apply text-ink-soft;
+}
+
+.history__cell-user {
+    @apply w-1/4 text-ink font-medium;
+}
+.history__cell-store {
+    @apply whitespace-nowrap;
+}
+.history__store-select {
+    @apply min-w-[130px];
+}
+.history__cell-qty {
+    @apply w-[8%] text-ink font-semibold;
+}
+.history__product-name {
+    @apply font-bold text-base text-ink;
+}
+.history__extra-tag {
+    @apply ml-2 align-middle;
+}
+.history__comment {
+    @apply text-ink-soft text-xs;
+}
+
+.history__inline-select,
+.history__inline-input {
+    @apply w-full max-w-xs py-1 px-2 text-sm;
+}
+.history__inline-spaced {
+    @apply mt-1;
+}
+.history__price-input {
+    @apply w-24 py-1 px-2 text-sm text-right;
+}
+.history__total-value {
+    @apply font-display font-bold text-ink;
+}
+
+.history__actions {
+    @apply whitespace-nowrap flex items-center justify-end gap-2;
+}
+
+.history__runner-row td {
+    @apply border-t-[3px] border-ink;
+}
+.history__runner-wrap {
+    @apply flex items-center gap-2;
+}
+.history__runner-label {
+    @apply text-sm font-display font-semibold text-ink;
+}
+.history__runner-select {
+    @apply w-auto min-w-[150px] py-1 px-2 text-sm;
+}

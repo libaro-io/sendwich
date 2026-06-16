@@ -1,0 +1,9 @@
+@reference "@css/app.css";
+
+.nav-link-mobile {
+    @apply block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-display font-semibold text-ink-soft transition duration-150 hover:text-ink hover:bg-cream hover:border-teal/40 focus:outline-none focus:text-ink focus:bg-cream focus:border-teal/40;
+}
+
+.nav-link-mobile-active {
+    @apply block pl-3 pr-4 py-2 border-l-4 border-teal text-base font-display font-bold text-ink bg-teal-soft transition duration-150 focus:outline-none focus:text-ink focus:bg-teal-soft focus:border-teal;
+}

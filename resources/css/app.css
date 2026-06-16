@@ -237,19 +237,9 @@ button:not(:disabled),
     @apply font-sans text-sm text-ink;
 }
 
-/* top navigation links (Authenticated layout) */
-.nav-link {
-    @apply inline-flex items-center px-1 pt-1 border-b-4 border-transparent text-sm font-display font-semibold leading-5 text-ink-soft transition duration-150 hover:text-ink hover:border-teal/40 focus:outline-none focus:text-ink focus:border-teal/40;
-}
-.nav-link-active {
-    @apply inline-flex items-center px-1 pt-1 border-b-4 border-teal text-sm font-display font-bold leading-5 text-ink transition duration-150 focus:outline-none focus:border-teal;
-}
-.nav-link-mobile {
-    @apply block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-display font-semibold text-ink-soft transition duration-150 hover:text-ink hover:bg-cream hover:border-teal/40 focus:outline-none focus:text-ink focus:bg-cream focus:border-teal/40;
-}
-.nav-link-mobile-active {
-    @apply block pl-3 pr-4 py-2 border-l-4 border-teal text-base font-display font-bold text-ink bg-teal-soft transition duration-150 focus:outline-none focus:text-ink focus:bg-teal-soft focus:border-teal;
-}
+/* navigation links live in their own component CSS:
+   desktop → components/layout/nav-link-component.css
+   mobile  → components/layout/responsive-nav-link-component.css */
 .dropdown-link {
     @apply block w-full px-4 py-2 text-left text-sm font-display font-semibold leading-5 text-ink transition duration-150 hover:bg-cream focus:outline-none focus:bg-cream;
 }

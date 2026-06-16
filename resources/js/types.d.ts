@@ -37,6 +37,7 @@ declare module '@inertiajs/core' {
 
 declare global {
     const Ziggy: ZiggyConfig;
+    const route: typeof ziggyRoute;
     interface Window {
         Ziggy: ZiggyConfig;
         Laravel: {

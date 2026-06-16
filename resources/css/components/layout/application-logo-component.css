@@ -1,0 +1,5 @@
+@reference "@css/app.css";
+
+.component-layout-application-logo-component img {
+    @apply h-full w-auto;
+}

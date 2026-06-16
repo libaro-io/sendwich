@@ -1,71 +1,39 @@
 @reference "@css/app.css";
 
-.products-page__title {
-    @apply font-display font-bold text-3xl text-ink mb-6;
+.store-products {
+    @apply flex flex-col gap-8;
+}
+.store-products__card {
+    @apply w-full;
 }
 
-/* desktop table */
-.products-page__desktop {
-    @apply hidden sm:block overflow-x-auto;
+/* store details form */
+.store-products__grid {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4;
 }
-.products-page__num {
-    @apply text-right;
+.store-products__field {
+    @apply flex flex-col;
 }
-.products-page__input {
-    @apply py-1 text-sm max-w-xs;
-}
-.products-page__actions {
-    @apply flex items-center justify-end gap-2;
-}
-.products-page__btn-sm {
-    @apply py-1 px-3;
-}
-.products-page__new-row {
-    @apply bg-paper/30;
+.store-products__full {
+    @apply md:col-span-2;
 }
 
-/* price + unit combo */
-.products-page__price-group {
+/* menu table */
+.store-products__scroll {
+    @apply overflow-x-auto;
+}
+.store-products__table {
+    @apply mt-4;
+}
+.store-products__price-group {
     @apply flex items-stretch;
 }
-.products-page__price-input {
-    @apply py-1 text-sm w-20 rounded-r-none border-r-0;
+.store-products__price-input {
+    @apply w-24 rounded-r-none border-r-0;
 }
-.products-page__price-unit {
-    @apply py-1 text-sm w-24 rounded-l-none;
+.store-products__price-type {
+    @apply w-28 rounded-l-none;
 }
-
-/* mobile cards */
-.products-page__mobile {
-    @apply sm:hidden space-y-4;
-}
-.products-page__card {
-    @apply border-2 border-ink rounded-xl bg-paper p-4 shadow-[3px_3px_0_var(--color-ink)] space-y-3;
-}
-.products-page__card--new {
-    @apply border-dashed bg-cream shadow-none;
-}
-.products-page__card-title {
-    @apply font-display font-semibold text-ink text-sm;
-}
-.products-page__label-sm {
-    @apply text-xs;
-}
-.products-page__input-mobile {
-    @apply py-2 text-sm w-full;
-}
-.products-page__price-input-mobile {
-    @apply py-2 text-sm flex-1 rounded-r-none border-r-0;
-}
-.products-page__price-unit-mobile {
-    @apply py-2 text-sm w-24 rounded-l-none;
-}
-.products-page__actions-mobile {
-    @apply flex items-center justify-end gap-2 pt-1;
-}
-.products-page__actions-mobile--single {
-    @apply flex justify-end pt-1;
-}
-.products-page__btn-mobile {
-    @apply py-1.5 px-4;
+.store-products__row-actions {
+    @apply flex items-center gap-2;
 }

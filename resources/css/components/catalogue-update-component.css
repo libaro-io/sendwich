@@ -1,0 +1,87 @@
+@reference "@css/app.css";
+
+.component-catalogue-update-component {
+    @apply contents;
+}
+
+.catalogue-update {
+    @apply fixed inset-0 z-50 flex items-end sm:items-center justify-center;
+}
+.catalogue-update__backdrop {
+    @apply absolute inset-0 bg-ink/40;
+}
+.catalogue-update__box {
+    @apply relative bg-paper border-[3px] border-ink shadow-[6px_6px_0_var(--color-ink)]
+    rounded-t-2xl sm:rounded-2xl w-full sm:max-w-3xl p-4 sm:p-6 max-h-[90vh] flex flex-col;
+}
+.catalogue-update__head {
+    @apply shrink-0;
+}
+.catalogue-update__title {
+    @apply font-display font-bold text-2xl text-ink mb-1;
+}
+.catalogue-update__sub {
+    @apply text-xs text-ink-soft mb-4;
+}
+.catalogue-update__body {
+    @apply grow overflow-y-auto pr-1;
+}
+
+.catalogue-update__section-title {
+    @apply font-display font-semibold text-lg text-ink;
+}
+.catalogue-update__section-sub {
+    @apply text-xs text-ink-soft mb-2;
+}
+
+.catalogue-update__desktop {
+    @apply hidden sm:block;
+}
+.catalogue-update__mobile {
+    @apply sm:hidden flex flex-col gap-2 mb-6;
+}
+
+.catalogue-update__table {
+    @apply w-full mb-5;
+}
+.catalogue-update__cell-right {
+    @apply text-right;
+}
+.catalogue-update__price-input {
+    @apply w-28 text-right;
+}
+.catalogue-update__old-price {
+    @apply text-ink-soft line-through;
+}
+
+.catalogue-update__card {
+    @apply bg-paper border-[3px] border-ink rounded-2xl shadow-[3px_3px_0_var(--color-ink)] p-4 flex flex-col gap-2;
+}
+.catalogue-update__check {
+    @apply flex items-center gap-2 cursor-pointer;
+}
+.catalogue-update__check-label {
+    @apply text-sm font-display font-bold text-ink;
+}
+.catalogue-update__check-label--off {
+    @apply text-ink-soft;
+}
+.catalogue-update__card-row {
+    @apply flex gap-2;
+}
+.catalogue-update__card-row--between {
+    @apply items-center justify-between;
+}
+.catalogue-update__grow {
+    @apply flex-1;
+}
+.catalogue-update__current {
+    @apply text-xs text-ink-soft;
+}
+
+.catalogue-update__actions {
+    @apply flex justify-end gap-2 shrink-0 mt-6;
+}
+.catalogue-update__confirm {
+    @apply flex-1 sm:flex-initial;
+}

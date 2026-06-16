@@ -3,7 +3,7 @@ import axios from "axios";
 import {reactive} from "vue";
 import {useToast} from "vue-toastification";
 import {router} from "@inertiajs/vue3";
-import Modal from "@/Components/ui/Modal.vue";
+import Modal from "@/Components/ui/modal-component.vue";
 
 const toast = useToast();
 

@@ -1,10 +1,10 @@
-<script setup>
-import BreezeCheckbox from '@/Components/ui/Checkbox.vue';
+<script setup lang="ts">
+import BreezeCheckbox from '@/Components/ui/checkbox-component.vue';
 import BreezeGuestLayout from '@/Layouts/Guest.vue';
-import BreezeInput from '@/Components/ui/Input.vue';
-import BreezeLabel from '@/Components/ui/Label.vue';
-import BreezeTitle from '@/Components/ui/Title.vue';
-import BreezeValidationErrors from '@/Components/ui/ValidationErrors.vue';
+import BreezeInput from '@/Components/ui/input-component.vue';
+import BreezeLabel from '@/Components/ui/label-component.vue';
+import BreezeTitle from '@/Components/ui/title-component.vue';
+import BreezeValidationErrors from '@/Components/ui/validation-errors-component.vue';
 import {Head, Link, useForm} from '@inertiajs/vue3';
 
 const form = useForm({

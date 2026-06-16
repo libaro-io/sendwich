@@ -1,8 +1,8 @@
 <script>
-import Checkbox from '@/Components/ui/Checkbox.vue';
+import Checkbox from '@/Components/ui/checkbox-component.vue';
 import {useToast} from "vue-toastification";
 import ProductCard from "@/Pages/Dashboard/sections/ProductCard.vue";
-import Modal from "@/Components/ui/Modal.vue";
+import Modal from "@/Components/ui/modal-component.vue";
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 import {Link} from "@inertiajs/vue3";
 

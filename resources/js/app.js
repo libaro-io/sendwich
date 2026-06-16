@@ -28,6 +28,8 @@ import {
     faBars,
     faStore,
     faPen,
+    faSpinner,
+    faReceipt,
 } from '@fortawesome/free-solid-svg-icons';
 
 /* Import permissions */
@@ -49,6 +51,8 @@ library.add(
     faBars,
     faStore,
     faPen,
+    faSpinner,
+    faReceipt,
 );
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
@@ -63,7 +67,16 @@ const toastPosition = window.matchMedia('(max-width: 600px)').matches
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
-    resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
+    resolve: (name) => {
+        const pages = import.meta.glob('./Pages/**/*.vue');
+        const direct = `./Pages/${name}.vue`;
+        if (pages[direct]) {
+            return resolvePageComponent(direct, pages);
+        }
+        // Pages moved into a feature folder resolve as ./Pages/Feature/Feature.vue
+        const segment = name.split('/').pop();
+        return resolvePageComponent(`./Pages/${name}/${segment}.vue`, pages);
+    },
     setup({ el, App, props, plugin }) {
         const VueApp = createApp({ render: () => h(App, props) })
             .use(plugin)

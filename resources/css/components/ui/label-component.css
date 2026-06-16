@@ -1,0 +1,5 @@
+@reference "@css/app.css";
+
+.component-ui-label-component {
+    @apply contents;
+}

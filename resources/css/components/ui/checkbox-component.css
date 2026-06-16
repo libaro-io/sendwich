@@ -1,0 +1,5 @@
+@reference "@css/app.css";
+
+.component-ui-checkbox-component {
+    @apply contents;
+}

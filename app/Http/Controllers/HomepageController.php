@@ -19,6 +19,6 @@ class HomepageController extends Controller
             return redirect()->to(route('dashboard'));
         }
 
-        return Inertia::render('Welcome');
+        return Inertia::render('Homepage');
     }
 }

@@ -1,14 +1,14 @@
 <script setup>
 import { ref, watch } from 'vue';
-import BreezeApplicationLogo from '@/Components/layout/ApplicationLogo.vue';
-import BreezeDropdown from '@/Components/ui/Dropdown.vue';
-import BreezeDropdownLink from '@/Components/ui/DropdownLink.vue';
-import BreezeNavLink from '@/Components/layout/NavLink.vue';
-import BreezeResponsiveNavLink from '@/Components/layout/ResponsiveNavLink.vue';
+import BreezeApplicationLogo from '@/Components/layout/application-logo-component.vue';
+import BreezeDropdown from '@/Components/ui/dropdown-component.vue';
+import BreezeDropdownLink from '@/Components/ui/dropdown-link-component.vue';
+import BreezeNavLink from '@/Components/layout/nav-link-component.vue';
+import BreezeResponsiveNavLink from '@/Components/layout/responsive-nav-link-component.vue';
 import { Link, usePage } from '@inertiajs/vue3';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import FlashMessages from "@/Components/layout/FlashMessages.vue";
-import Footer from "@/Components/frontend/Footer.vue";
+import FlashMessages from "@/Components/layout/flash-messages-component.vue";
+import Footer from "@/Components/frontend/footer-component.vue";
 
 const page = usePage();
 

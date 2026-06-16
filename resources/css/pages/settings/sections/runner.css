@@ -1,0 +1,32 @@
+@reference "@css/app.css";
+
+.settings__section-title {
+    @apply font-display font-bold text-xl text-ink mb-6;
+}
+
+.settings__runner-grid {
+    @apply grid grid-cols-1 md:grid-cols-5 gap-4 items-start;
+}
+.settings__time {
+    @apply max-w-xs;
+}
+.settings__hint {
+    @apply md:col-span-4 text-sm text-ink-soft;
+}
+.settings__error-wide {
+    @apply col-span-5;
+}
+
+.settings__row {
+    @apply flex items-center justify-between mt-6 border-t-2 border-ink pt-6;
+}
+.settings__label {
+    @apply font-display font-bold text-ink;
+}
+.settings__desc {
+    @apply text-ink-soft text-sm mt-1;
+}
+
+.settings__save {
+    @apply flex justify-end mt-6;
+}

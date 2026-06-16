@@ -1,7 +1,5 @@
 @reference "@css/app.css";
 
-/* flat classes — modal content is teleported to <body>, so descendant
-   selectors under a root would not reach it; keep each class top-level. */
 .product-card {
     @apply flex justify-between items-center w-full;
 }

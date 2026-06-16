@@ -1,0 +1,134 @@
+@reference "@css/app.css";
+
+.delivery-confirm {
+    @apply fixed inset-0 z-50 flex items-end sm:items-center justify-center;
+}
+.delivery-confirm__backdrop {
+    @apply absolute inset-0 bg-ink/40;
+}
+.delivery-confirm__box {
+    @apply relative bg-paper border-[3px] border-ink shadow-[6px_6px_0_var(--color-ink)]
+        rounded-t-2xl sm:rounded-2xl w-full sm:max-w-4xl p-4 sm:p-6 max-h-[90vh] flex flex-col;
+}
+.delivery-confirm__title {
+    @apply font-display font-bold text-2xl text-ink mb-4 shrink-0;
+}
+.delivery-confirm__body {
+    @apply flex-grow overflow-y-auto px-2 pt-1;
+}
+
+.delivery-confirm__upload {
+    @apply flex flex-col items-start gap-2 mb-4;
+}
+.delivery-confirm__scan {
+    @apply inline-flex items-center gap-2 self-start mt-1 ml-1 mb-1;
+}
+.delivery-confirm__scan--busy {
+    @apply opacity-70 cursor-wait pointer-events-none;
+}
+.delivery-confirm__file {
+    @apply sr-only;
+}
+.delivery-confirm__scan-hint {
+    @apply text-xs text-ink-soft;
+}
+
+.delivery-confirm__receipt-note {
+    @apply mb-4 text-xs;
+}
+.delivery-confirm__hint {
+    @apply text-ink-soft;
+}
+.delivery-confirm__hint-strong {
+    @apply font-semibold text-ink;
+}
+.delivery-confirm__store-add {
+    @apply flex flex-wrap items-center gap-2;
+}
+
+.delivery-confirm__section-title {
+    @apply font-display font-semibold text-lg text-ink;
+}
+.delivery-confirm__section-sub {
+    @apply text-xs text-ink-soft mb-2;
+}
+.delivery-confirm__section-head {
+    @apply flex items-center justify-between mt-2;
+}
+
+.delivery-confirm__desktop {
+    @apply hidden sm:block;
+}
+.delivery-confirm__mobile {
+    @apply sm:hidden flex flex-col gap-3 mb-6;
+}
+
+.delivery-confirm__table {
+    @apply w-full mb-5;
+}
+.delivery-confirm__cell-right {
+    @apply text-right;
+}
+.delivery-confirm__item-name {
+    @apply font-semibold text-ink;
+}
+.delivery-confirm__item-comment {
+    @apply text-ink-soft text-sm ml-1;
+}
+.delivery-confirm__indicative {
+    @apply text-xs text-coral font-semibold mt-1;
+}
+.delivery-confirm__muted {
+    @apply text-sm text-ink-soft;
+}
+.delivery-confirm__price-input {
+    @apply w-28 text-right;
+}
+
+.delivery-confirm__mobile-card {
+    @apply bg-paper border-[3px] border-ink rounded-2xl shadow-[3px_3px_0_var(--color-ink)] p-4 flex flex-col gap-2;
+}
+.delivery-confirm__mobile-head {
+    @apply flex justify-between items-start gap-2;
+}
+.delivery-confirm__mobile-meta {
+    @apply text-xs text-ink-soft mt-0.5;
+}
+.delivery-confirm__mobile-comment {
+    @apply text-xs text-ink-soft italic;
+}
+.delivery-confirm__mobile-grid {
+    @apply grid grid-cols-2 gap-2;
+}
+.delivery-confirm__extra-label {
+    @apply text-xs font-display font-bold text-ink uppercase tracking-tight;
+}
+.delivery-confirm__empty {
+    @apply text-xs text-ink-soft italic mb-4;
+}
+
+.delivery-confirm__price-field {
+    @apply relative w-28;
+}
+.delivery-confirm__price-symbol {
+    @apply absolute left-2 top-1/2 -translate-y-1/2 text-xs text-ink-soft z-10;
+}
+.delivery-confirm__price-input--padded {
+    @apply w-full pl-5 text-right;
+}
+
+.delivery-confirm__total {
+    @apply flex justify-between items-center border-t-[3px] border-ink pt-4 mt-2 shrink-0;
+}
+.delivery-confirm__total-label {
+    @apply font-display font-bold text-lg text-ink;
+}
+.delivery-confirm__total-value {
+    @apply font-display font-bold text-xl text-teal-deep;
+}
+.delivery-confirm__actions {
+    @apply flex gap-2 mt-6 shrink-0;
+}
+.delivery-confirm__confirm {
+    @apply flex-1;
+}

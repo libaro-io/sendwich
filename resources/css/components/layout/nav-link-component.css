@@ -1,0 +1,13 @@
+@reference "@css/app.css";
+
+.component-layout-nav-link-component {
+    @apply contents;
+}
+
+.nav-link {
+    @apply inline-flex items-center px-1 pt-1 border-b-4 border-transparent text-sm font-display font-semibold leading-5 text-ink-soft transition duration-150 hover:text-ink hover:border-teal/40 focus:outline-none focus:text-ink focus:border-teal/40;
+}
+
+.nav-link-active {
+    @apply inline-flex items-center px-1 pt-1 border-b-4 border-teal text-sm font-display font-bold leading-5 text-ink transition duration-150 focus:outline-none focus:border-teal;
+}

@@ -1,8 +1,8 @@
 <script>
 import axios from "axios";
 import {useToast} from "vue-toastification";
-import {useHelpers} from "@/Composables/helpers";
-import Modal from "@/Components/ui/Modal.vue";
+import {useHelpers} from "../../../Composables/helpers";
+import Modal from "@/Components/ui/modal-component.vue";
 import {router} from "@inertiajs/vue3";
 
 const helper = useHelpers();
@@ -112,5 +112,5 @@ export default {
 </template>
 
 <style scoped>
-@import "@css/pages/dashboard/sections/payback.css";
+@import "@css/pages/dashboard/sections/pay-back.css";
 </style>

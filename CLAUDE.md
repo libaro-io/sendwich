@@ -324,7 +324,7 @@ render Vue pages.
 - **Pages** → `resources/js/Pages/` (resolved by name from the controller's `Inertia::render('Dashboard')`). Subfolders mirror feature areas (`Pages/Store/`, `Pages/Auth/`, `Pages/Legal/`).
 - **Reusable components** → `resources/js/Components/`, grouped by role:
   - `Components/ui/` — design-system widgets reused across pages: `Modal` (Headless UI), `Dropdown`, `DropdownLink`, and the Breeze form primitives `Input`, `Label`, `Checkbox`, `InputError`, `ValidationErrors`, `Title`.
-  - `Components/layout/` — app-shell pieces used by the `Authenticated`/`Guest` layouts: `ApplicationLogo`, `NavLink`, `ResponsiveNavLink`, `FlashMessages`.
+  - `Components/layout/` — app-shell pieces used by the `Authenticated`/`Guest` layouts: `ApplicationLogo`, `NavLink`, `ResponsiveNavLink`, `flash-messages-component`.
   - `Components/frontend/` — shared marketing chrome: `Navigation`, `Footer` (Legal pages + `Authenticated` layout).
 - **Only genuinely reusable Vue files belong in `Components/`.** A Vue file that is merely a *section* of one page lives next to its page: `Pages/<Page>/sections/<Section>.vue` (+ matching CSS under `resources/css/pages/<page>/sections/`). This mirrors `libaro-create -s`. Current section sets: `Pages/Dashboard/sections/` (`Orders`, `Products`, `ProductCard`, `Menu`, `DeptList`, `PayBack`), `Pages/History/sections/HistoryTable.vue`, `Pages/Display/sections/` (`UsersWithOrders`, `SelectedRunner`), `Pages/Store/sections/` (`List`, `ListItem`), `Pages/Homepage/sections/`.
 - **Layouts** → `resources/js/Layouts/` (`Authenticated.vue`, `Guest.vue`, `Landing.vue` — the latter only used by the Legal pages).

@@ -1,8 +1,8 @@
-<script setup>
+<script setup lang="ts">
 import BreezeGuestLayout from '@/Layouts/Guest.vue';
-import BreezeInput from '@/Components/ui/Input.vue';
-import BreezeLabel from '@/Components/ui/Label.vue';
-import BreezeValidationErrors from '@/Components/ui/ValidationErrors.vue';
+import BreezeInput from '@/Components/ui/input-component.vue';
+import BreezeLabel from '@/Components/ui/label-component.vue';
+import BreezeValidationErrors from '@/Components/ui/validation-errors-component.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 
 const props = defineProps({

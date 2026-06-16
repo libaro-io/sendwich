@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import Navigation from '@/Components/frontend/Navigation.vue';
-import Footer from '@/Components/frontend/Footer.vue';
+import Navigation from '@/Components/frontend/navigation-component.vue';
+import Footer from '@/Components/frontend/footer-component.vue';
 import { Head } from '@inertiajs/vue3';
 </script>
 
