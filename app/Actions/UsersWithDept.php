@@ -90,12 +90,14 @@ class UsersWithDept
     }
 
     // Exclude orders that are in an active (not yet delivered) delivery run.
-    // Orders without a run (historical data) and orders in a delivered run are kept.
     private function excludeUndelivered(Builder $query): void
     {
         $query->where(function (Builder $query) {
             $query->whereNull('delivery_run_id')
-                ->orWhereHas('deliveryRun', fn (Builder $run) => $run->whereNotNull('delivered_at'));
+                ->orWhereHas('deliveryRun', function (Builder $run) {
+                    $run->whereNotNull('delivered_at')
+                        ->orWhere('date', '<', Carbon::now()->startOfDay());
+                });
         });
     }
 
