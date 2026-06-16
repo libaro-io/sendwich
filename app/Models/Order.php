@@ -137,6 +137,7 @@ class Order extends Model
             ->whereBetween('orders.date', [$from, $to])
             ->with([
                 'user:id,name',
+                'deliverer:id,name',
                 'product:id,name,price,variable_price,store_id',
                 'product.store:id,name',
                 'store:id,name',
