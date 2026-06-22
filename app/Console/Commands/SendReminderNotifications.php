@@ -2,12 +2,12 @@
 
 namespace App\Console\Commands;
 
+use App\Actions\DeliverySchedule;
 use App\Actions\NotifyCompany;
 use App\Models\Company;
 use App\Notifications\PlaceOrderReminder;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Log;
 
 class SendReminderNotifications extends Command
 {
@@ -18,6 +18,8 @@ class SendReminderNotifications extends Command
 
     public function handle(): int
     {
+        $deliveryDate = new DeliverySchedule()->deliveryDate();
+
         $companies = Company::query()
             ->whereHas('notificationChannels', fn ($q) => $q->where('enabled', true))
             ->when($this->option('test-for-company'), fn ($q, $id) => $q->where('id', $id))
@@ -25,6 +27,16 @@ class SendReminderNotifications extends Command
                 ->where('reminder_enabled', true)
                 ->where('reminder_time', now()->format('H:i'))
                 ->whereHas('reminderDays', fn (Builder $query) => $query->where('day', '=', now()->dayOfWeek))
+                // Once someone has placed the first order for the day, the reminder is redundant.
+                ->whereDoesntHave('orders', fn (Builder $query) => $query->whereBetween('date', [
+                    $deliveryDate->copy()->startOfDay(),
+                    $deliveryDate->copy()->endOfDay(),
+                ]))
+                // Max one notification per day: skip if the day's notification already went out
+                // (either this reminder or the first-order notification).
+                ->where(fn (Builder $query) => $query
+                    ->whereNull('daily_notification_sent_date')
+                    ->orWhereDate('daily_notification_sent_date', '!=', $deliveryDate->toDateString()))
             )
             ->get();
 
@@ -33,9 +45,17 @@ class SendReminderNotifications extends Command
             return self::SUCCESS;
         }
 
+        $isTest = (bool) $this->option('test-for-company');
+
         foreach ($companies as $company) {
             $this->info("Sending reminder to {$company->name}...");
-            (new NotifyCompany($company))->execute(new PlaceOrderReminder($company));
+            $channelsNotified = (new NotifyCompany($company))->execute(new PlaceOrderReminder($company));
+
+            // Record the send so the first-order notification stands down for the rest of the day.
+            if (!$isTest && $channelsNotified > 0) {
+                $company->daily_notification_sent_date = $deliveryDate->toDateString();
+                $company->save();
+            }
         }
 
         $this->info("Done — notified {$companies->count()} company(s).");

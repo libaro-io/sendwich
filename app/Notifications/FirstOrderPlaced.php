@@ -4,6 +4,7 @@ namespace App\Notifications;
 
 use App\Http\Controllers\DashboardController;
 use App\Models\Company;
+use App\Models\User;
 use App\Notifications\Channels\GoogleChatChannel;
 use App\Notifications\Messages\GoogleChatMessage;
 use Illuminate\Bus\Queueable;
@@ -11,12 +12,13 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 use Illuminate\Queue\SerializesModels;
 
-class PlaceOrderReminder extends Notification implements ShouldQueue
+class FirstOrderPlaced extends Notification implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
     public function __construct(
         private Company $company,
+        private User $orderer,
     ) {
     }
 
@@ -30,9 +32,9 @@ class PlaceOrderReminder extends Notification implements ShouldQueue
         $dashboardUrl = action([DashboardController::class, 'dashboard']);
 
         return GoogleChatMessage::create()
-            ->header('Sendwich', 'Order Reminder')
+            ->header('Sendwich', 'First order in!')
             ->icon('RESTAURANT_ICON')
-            ->text("Hey <b>{$this->company->name}</b> — it's time to place your sendwich orders!")
+            ->text("<b>{$this->orderer->name}</b> has placed the first order — who's next?")
             ->button('Place your order →', $dashboardUrl, [
                 'red' => 0.24,
                 'green' => 0.65,

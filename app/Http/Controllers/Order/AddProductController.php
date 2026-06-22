@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Order;
 
 use App\Actions\DeliverySchedule;
+use App\Actions\NotifyCompany;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Order\AddRequest;
 use App\Models\DeliveryRun;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductOption;
+use App\Notifications\FirstOrderPlaced;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Collection;
@@ -28,6 +30,7 @@ class AddProductController extends Controller
         }
 
         $deliveryDate = new DeliverySchedule()->deliveryDate();
+        $isFirstOrderToday = Order::isFirstForDay($user->company, $deliveryDate);
 
         $order = new Order();
         $order->user_id = $user->id;
@@ -55,6 +58,16 @@ class AddProductController extends Controller
         $order->save();
 
         DeliveryRun::syncDay($user->company->id, $deliveryDate);
+
+        $alreadyNotifiedToday = $user->company->daily_notification_sent_date?->toDateString() === $deliveryDate->toDateString();
+        if ($isFirstOrderToday && $user->company->reminder_enabled && !$alreadyNotifiedToday) {
+            $channelsNotified = new NotifyCompany($user->company)->execute(new FirstOrderPlaced($user->company, $user));
+
+            if ($channelsNotified > 0) {
+                $user->company->daily_notification_sent_date = $deliveryDate->toDateString();
+                $user->company->save();
+            }
+        }
 
         return redirect()->back()->with(['success' => 'Order placed!']);
     }

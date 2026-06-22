@@ -13,12 +13,16 @@ final class NotifyCompany
     ) {
     }
 
-    public function execute(Notification $notification): void
+    public function execute(Notification $notification): int
     {
-        foreach ($this->getEnabledChannels() as $channel) {
+        $channels = $this->getEnabledChannels();
+
+        foreach ($channels as $channel) {
             NotificationFacade::route($channel->driver->channelClass(), $channel->configuration)
                 ->notify($notification);
         }
+
+        return $channels->count();
     }
 
     private function getEnabledChannels()
