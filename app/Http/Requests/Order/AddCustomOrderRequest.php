@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Order;
 
+use App\Models\Product;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -21,7 +22,19 @@ class AddCustomOrderRequest extends FormRequest
             'user_id'  => ['required', 'integer', Rule::exists('users', 'id')->where('company_id', $companyId)],
             'paid_by'  => ['nullable', 'integer', Rule::exists('users', 'id')->where('company_id', $companyId)],
             'store_id' => ['nullable', 'integer', Rule::exists('stores', 'id')->where('company_id', $companyId)],
-            'product_id'       => ['nullable', 'integer', Rule::exists('products', 'id')->where('company_id', $companyId)],
+            'product_id'       => [
+                'nullable', 'integer',
+                function ($attribute, $value, $fail) use ($companyId) {
+                    $belongsToCompany = Product::query()
+                        ->where('id', '=', $value)
+                        ->whereHas('store', fn ($query) => $query->where('company_id', '=', $companyId))
+                        ->exists();
+
+                    if (!$belongsToCompany) {
+                        $fail('The selected product is not part of your company.');
+                    }
+                },
+            ],
             'label'            => ['required_without:product_id', 'nullable', 'string', 'max:255'],
             'total'            => ['required', 'numeric', 'min:0'],
             'add_to_catalogue' => ['sometimes', 'boolean'],
