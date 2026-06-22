@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref, watch } from 'vue';
 import BreezeApplicationLogo from '@/Components/layout/application-logo-component.vue';
 import BreezeDropdown from '@/Components/ui/dropdown-component.vue';
@@ -13,7 +13,7 @@ import Footer from "@/Components/frontend/footer-component.vue";
 const page = usePage();
 
 watch(page.props, (value) => {
-    window.Laravel.jsPermissions = JSON.parse(value.js_permissions ?? null);
+    window.Laravel.jsPermissions = JSON.parse((value.js_permissions ?? null) as string);
 }, {
     deep: true,
     immediate: true,
@@ -64,7 +64,7 @@ const showingNavigationDropdown = ref(false);
                                         <template #trigger>
                                             <span class="auth-nav__trigger-wrap">
                                                 <button type="button" class="auth-nav__trigger">
-                                                    {{ $page.props.auth.user.name }}
+                                                    {{ $page.props.auth.user?.name }}
                                                     <FontAwesomeIcon icon="fa-solid fa-chevron-down" class="auth-nav__trigger-icon" />
                                                 </button>
                                             </span>
@@ -108,8 +108,8 @@ const showingNavigationDropdown = ref(false);
                         <!-- Responsive Settings Options -->
                         <div class="auth-nav__mobile-user">
                             <div class="auth-nav__mobile-user-info">
-                                <div class="auth-nav__mobile-user-name">{{ $page.props.auth.user.name }}</div>
-                                <div class="auth-nav__mobile-user-email">{{ $page.props.auth.user.email }}</div>
+                                <div class="auth-nav__mobile-user-name">{{ $page.props.auth.user?.name }}</div>
+                                <div class="auth-nav__mobile-user-email">{{ $page.props.auth.user?.email }}</div>
                             </div>
 
                             <div class="auth-nav__mobile-actions">

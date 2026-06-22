@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
 import {Head} from '@inertiajs/vue3';
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
@@ -6,14 +6,15 @@ import List from "@/Pages/Store/sections/List.vue";
 import ListItem from "@/Pages/Store/sections/ListItem.vue";
 import NewStore from "@/Pages/Store/NewStore.vue";
 import {ref} from "vue";
+import type {Store} from '@interfaces/store';
+import type {Company} from '@interfaces/dashboard';
 
-const props = defineProps({
-    stores: Object,
-    company: Object,
-});
+defineProps<{
+    stores: Store[];
+    company?: Company;
+}>();
 
-let newStore = ref(false);
-
+const newStore = ref(false);
 </script>
 <template>
     <Head title="Stores"/>

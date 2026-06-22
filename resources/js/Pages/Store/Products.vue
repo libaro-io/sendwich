@@ -1,18 +1,20 @@
-<script setup>
+<script setup lang="ts">
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
 import {Head} from '@inertiajs/vue3';
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 import axios from "axios";
 import {useToast} from "vue-toastification";
 import {reactive} from "vue";
+import type {Product} from '@interfaces/dashboard';
+import type {Store, StoreForm, NewProductForm} from '@interfaces/store';
 
 const toast = useToast();
 
-const props = defineProps({
-    store: Object,
-});
+const props = defineProps<{
+    store: Store;
+}>();
 
-const storeForm = reactive({
+const storeForm = reactive<StoreForm>({
     name: props.store?.name || '',
     address: props.store?.address || '',
     zip: props.store?.zip || '',
@@ -22,12 +24,28 @@ const storeForm = reactive({
     website: props.store?.website || '',
 });
 
-const saveStore = () => {
+const newProduct = reactive<NewProductForm>({
+    name: '',
+    description: '',
+    price: 0,
+    variable_price: false,
+});
+
+const resetNewProduct = (): void => {
+    Object.assign(newProduct, {
+        name: '',
+        description: '',
+        price: 0,
+        variable_price: false,
+    });
+};
+
+const saveStore = (): void => {
     if (!storeForm.name) {
         toast.error('Fill in a name');
         return;
     }
-    axios.post('/api/store/' + props.store.id, {
+    axios.post(route('store.update', props.store.id), {
         store: storeForm,
     }).then(response => {
         toast.success(response.data.message);
@@ -38,54 +56,42 @@ const saveStore = () => {
     });
 };
 
-const resetNewProduct = () => {
-    newProduct = {
-        name: '',
-        description: '',
-        price: 0,
-        variable_price: false,
-    };
-}
-
-const save = (product) => {
-    axios.post('/api/store/product/' + product.id, {
+const save = (product: Product): void => {
+    axios.post(route('store.product.update', product.id), {
         product: product,
     }).then(response => {
         toast.success(response.data.message);
     }).catch(error => {
         console.error(error);
     });
-}
+};
 
-const remove = (product) => {
-    axios.delete('/api/store/product/' + product.id).then(response => {
+const remove = (product: Product): void => {
+    axios.delete(route('store.product.delete', product.id)).then(response => {
         console.log(response.data);
         props.store.products = response.data.products;
         toast.success(response.data.message);
     }).catch(error => {
         console.error(error);
     });
-}
+};
 
-const saveNew = (product) => {
-    axios.put('/api/store/product', {
+const saveNew = (product: NewProductForm): void => {
+    axios.put(route('store.product.add'), {
         product: product,
         store_id: props.store.id
     }).then(response => {
         props.store.products = response.data.products;
         toast.success(response.data.message);
-        resetNewProduct()
+        resetNewProduct();
     }).catch(error => {
         console.error(error);
     });
-}
-
-const preventNegative = (event) => {
-    if (event.key === '-') event.preventDefault();
 };
 
-let newProduct = reactive();
-resetNewProduct();
+const preventNegative = (event: KeyboardEvent): void => {
+    if (event.key === '-') event.preventDefault();
+};
 </script>
 <template>
     <Head title="Stores"/>

@@ -1,32 +1,32 @@
-<script setup>
-
+<script setup lang="ts">
 import Authenticated from "@/Layouts/Authenticated.vue";
-import {useForm} from '@inertiajs/vue3';
+import {useForm, router} from '@inertiajs/vue3';
 import {ref} from 'vue';
-import {router} from '@inertiajs/vue3';
 import Modal from '@/Components/ui/modal-component.vue';
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
+import type {Company} from '@interfaces/dashboard';
+import type {CompanyUser} from '@interfaces/company';
 
- const props = defineProps({
-    user: Object,
-    company: Object,
-    users: Array,
-});
+defineProps<{
+    user?: CompanyUser;
+    company?: Company;
+    users: CompanyUser[];
+}>();
 
 const toggle = ref(false);
 
-const form = useForm({
+const form = useForm<{ name: string | null; email: string | null }>({
     name: null,
     email: null,
-})
+});
 
-const invite = () => {
+const invite = (): void => {
     form.post(route('invite'), {
         onSuccess: () => toggle.value = false,
     });
-}
+};
 
-const togglePermission = (type, user) => {
+const togglePermission = (type: string, user: CompanyUser): void => {
     router.post(route('user.permissions'), {
         user_id: user.id,
         type: type,
@@ -37,7 +37,7 @@ const togglePermission = (type, user) => {
     });
 };
 
-const deleteUser = (user) => {
+const deleteUser = (user: CompanyUser): void => {
     if (confirm("Do you really want to delete this user?")) {
         router.post(route('user.delete'), {
             user_id: user.id,
@@ -47,8 +47,7 @@ const deleteUser = (user) => {
             only: ['users']
         });
     }
-}
-
+};
 </script>
 <template>
     <Authenticated>
@@ -91,7 +90,7 @@ const deleteUser = (user) => {
                                         </td>
                                         <td class="company__num">
                                             <div class="company__remove">
-                                                <button v-if="$page.props.auth.user.id !== user.id"
+                                                <button v-if="$page.props.auth.user?.id !== user.id"
                                                         type="button"
                                                         class="icon-btn icon-btn--danger"
                                                         @click="deleteUser(user)">

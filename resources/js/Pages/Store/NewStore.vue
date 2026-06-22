@@ -1,19 +1,22 @@
-<script setup>
+<script setup lang="ts">
 import axios from "axios";
 import {reactive} from "vue";
 import {useToast} from "vue-toastification";
 import {router} from "@inertiajs/vue3";
 import Modal from "@/Components/ui/modal-component.vue";
+import type {NewStoreForm} from '@interfaces/store';
 
 const toast = useToast();
 
-const props = defineProps({
-    open: Boolean,
-});
+defineProps<{
+    open: boolean;
+}>();
 
-const emit = defineEmits(["close"]);
+const emit = defineEmits<{
+    close: [];
+}>();
 
-let NewStore = reactive({
+const NewStore = reactive<NewStoreForm>({
     name: '',
     address: '',
     zip: '',
@@ -24,15 +27,14 @@ let NewStore = reactive({
     template: '',
 });
 
-const submit = () => {
+const submit = (): void => {
     if(NewStore.name){
-        axios.put('/api/store/add', {
+        axios.put(route('store.add'), {
             store: NewStore,
         }).then(response => {
             toast.success(response.data.message);
             emit('close');
-            router.get('/store/'+response.data.store.id,{
-            }, {});
+            router.get(route('store.show', response.data.store.id), {}, {});
         }).catch(error => {
             console.error(error);
         });

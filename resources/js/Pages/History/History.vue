@@ -1,15 +1,16 @@
-<script setup>
+<script setup lang="ts">
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
 import {Head} from '@inertiajs/vue3';
 import History from '@/Pages/History/sections/HistoryTable.vue'
+import type {Product, User, Store, Company} from '@interfaces/dashboard';
 
-const props = defineProps({
-    deliveryMoment: String,
-    company: Object,
-    products: Array,
-    users: Array,
-    stores: Array,
-});
+defineProps<{
+    deliveryMoment?: string;
+    company?: Company;
+    products: Product[];
+    users: User[];
+    stores: Store[];
+}>();
 </script>
 
 <template>

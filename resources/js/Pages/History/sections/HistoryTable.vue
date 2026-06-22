@@ -1,296 +1,329 @@
-<script>
+<script setup lang="ts">
 import axios from "axios";
+import {ref, computed, onMounted} from "vue";
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 import {useToast} from "vue-toastification";
 import moment from "moment"
 import CatalogueUpdate from "@/Components/catalogue-update-component.vue";
+import type {Product, User, Store} from '@interfaces/dashboard';
+
+interface NewItem {
+    user_id: number | null;
+    store_id: number | null;
+    product_id: number | null;
+    label: string;
+    total: number | string | null;
+}
+
+interface EditBackup {
+    product_id: number | null;
+    label: string | null;
+    total: number | string | null;
+}
+
+type PendingSave =
+    | { type: 'edit'; item: any }
+    | { type: 'new'; group: any };
+
+const props = defineProps<{
+    products: Product[];
+    users: User[];
+    stores: Store[];
+}>();
 
 const toast = useToast();
 
-export default {
-    name: "History",
-    components: {
-        FontAwesomeIcon, CatalogueUpdate,
-    },
-    mounted() {
-        this.getData()
-    },
-    props: {
-        products: Array,
-        users: Array,
-        stores: Array,
-    },
-    data() {
-        return {
-            orders: [],
-            editingId: null,
-            editBackup: null,
-            addingDate: null,
-            newItem: {user_id: null, store_id: null, product_id: null, label: '', total: null},
-            catalogueProducts: [],
-            pendingSave: null,
-        };
-    },
-    computed: {
-        newItemProducts() {
-            if (!this.newItem.store_id) {
-                return [];
-            }
-            return this.products.filter(p => p.store_id === this.newItem.store_id);
-        },
-    },
-    methods: {
-        getData() {
-            axios.post(route('orders.by-date'), {}).then(response => {
-                this.orders = response.data;
-            }).catch(error => {
-                console.log(error);
-            });
-        },
-        currentDateTime(orderByDate) {
-            return moment(orderByDate, "YYYYMMDD").format('dddd - DD/MM/YYYY');
-        },
-        money(value) {
-            return new Intl.NumberFormat('nl-BE', {style: 'currency', currency: 'EUR'}).format(value || 0);
-        },
-        totalOrders(orders) {
-            return orders.reduce((sum, order) => sum + (Number(order.total) || 0), 0);
-        },
-        sortedGroup(orderGroup) {
-            // Order items (with a product) first, then the extra items.
-            return [...orderGroup].sort((a, b) => (a.product ? 0 : 1) - (b.product ? 0 : 1));
-        },
-        updateRunner(orderGroup, runnerId, event) {
-            const runnerName = runnerId
-                ? (this.users.find(u => u.id === parseInt(runnerId))?.name || 'deze persoon')
-                : 'geen runner';
+const orders = ref<any[]>([]);
+const editingId = ref<number | null>(null);
+const editBackup = ref<EditBackup | null>(null);
+const addingDate = ref<string | null>(null);
+const newItem = ref<NewItem>({user_id: null, store_id: null, product_id: null, label: '', total: null});
+const catalogueProducts = ref<any[]>([]);
+const pendingSave = ref<PendingSave | null>(null);
 
-            const message = runnerId
-                ? `Weet je zeker dat je de runner wilt aanpassen naar ${runnerName}?`
-                : 'Weet je zeker dat je de runner wilt verwijderen?';
-
-            if (!confirm(message)) {
-                if (event) {
-                    event.target.value = orderGroup[0] ? orderGroup[0].paid_by : '';
-                }
-                return;
-            }
-
-            const orderIds = orderGroup.map(order => order.id);
-            const parsedRunnerId = runnerId ? parseInt(runnerId) : null;
-            axios.post(route('history.update-runner'), {
-                order_ids: orderIds,
-                runner_id: parsedRunnerId,
-            }).then(() => {
-                // Update in place so the order stays in its group — only the runner label changes.
-                const runner = parsedRunnerId ? (this.users.find(u => u.id === parsedRunnerId) || {id: parsedRunnerId}) : null;
-                orderGroup.forEach(order => {
-                    order.paid_by = parsedRunnerId;
-                    order.deliverer = runner;
-                });
-                toast.success('Runner updated');
-            }).catch(error => {
-                toast.error('Failed to update runner');
-                console.log(error);
-            });
-        },
-        startEdit(item) {
-            this.editingId = item.id;
-            item.editProductId = item.product ? item.product.id : null; // null = custom item
-            item.editStoreId = item.product ? item.product.store_id : (item.store_id ?? null);
-            this.editBackup = {
-                product_id: item.product ? item.product.id : null,
-                label: item.label,
-                total: item.total,
-            };
-        },
-        cancelEdit(item) {
-            if (this.editBackup) {
-                item.label = this.editBackup.label;
-                item.total = this.editBackup.total;
-            }
-            this.editingId = null;
-            this.editBackup = null;
-        },
-        onEditProductChange(item) {
-            if (item.editProductId == null) {
-                // Switched to a custom item — prefill the name from the current product, if any.
-                if (!item.label && item.product) {
-                    item.label = item.product.name;
-                }
-                return;
-            }
-            const product = this.products.find(p => p.id === item.editProductId);
-            if (product && product.price != null) {
-                item.total = product.price;
-            }
-        },
-        productExistsInStore(label, storeId) {
-            const needle = (label || '').trim().toLowerCase();
-            return this.products.some(p => p.store_id === storeId && (p.name || '').trim().toLowerCase() === needle);
-        },
-        filteredProducts(item) {
-            if (!item.editStoreId) {
-                return this.products;
-            }
-            return this.products.filter(p => p.store_id === item.editStoreId);
-        },
-        onStoreChange(item) {
-            const available = this.filteredProducts(item);
-            if (item.editProductId != null && !available.some(p => p.id === item.editProductId)) {
-                // The selected product isn't in the chosen store — switch to its first product, or custom.
-                const first = available[0];
-                item.editProductId = first ? first.id : null;
-                if (first && first.price != null) {
-                    item.total = first.price;
-                }
-            }
-        },
-        saveEdit(item) {
-            if (item.total === null || item.total === '' || isNaN(parseFloat(item.total)) || parseFloat(item.total) < 0) {
-                toast.error('Please enter a valid price');
-                return;
-            }
-            const productId = item.editProductId ?? null;
-            if (!productId && !item.label) {
-                toast.error('Please enter a name or pick a product');
-                return;
-            }
-
-            // A custom item that doesn't exist in the chosen store yet → ask via the catalogue pop-up.
-            if (!productId && item.label && item.editStoreId && !this.productExistsInStore(item.label, item.editStoreId)) {
-                this.catalogueProducts = [{add: true, name: item.label, store_id: item.editStoreId, price: parseFloat(item.total)}];
-                this.pendingSave = {type: 'edit', item: item};
-                return;
-            }
-
-            this.performSaveEdit(item, false, null);
-        },
-        performSaveEdit(item, addToCatalogue, catalogueRow) {
-            axios.patch(route('order.edit'), {
-                order_id: item.id,
-                product_id: item.editProductId ?? null,
-                label: addToCatalogue && catalogueRow ? catalogueRow.name : item.label,
-                store_id: addToCatalogue && catalogueRow ? catalogueRow.store_id : (item.editStoreId ?? null),
-                total: parseFloat(item.total),
-                add_to_catalogue: addToCatalogue,
-                catalogue_price: addToCatalogue && catalogueRow ? Number(catalogueRow.price) : null,
-            }).then(() => {
-                this.editingId = null;
-                this.editBackup = null;
-                this.getData();
-                toast.success('Updated');
-            }).catch(() => {
-                toast.error('Failed to update');
-            });
-        },
-        deleteItem(item) {
-            if (!window.confirm('Delete this item?')) {
-                return;
-            }
-            axios.delete(route('order.delete', item.id)).then(() => {
-                this.getData();
-                toast.success('Deleted');
-            }).catch(() => {
-                toast.error('Failed to delete');
-            });
-        },
-        startAdd(group) {
-            this.addingDate = group.date;
-            this.newItem = {user_id: null, store_id: null, product_id: null, label: '', total: null};
-        },
-        cancelAdd() {
-            this.addingDate = null;
-        },
-        onNewStoreChange() {
-            // The product list depends on the store — drop the selection back to a custom item.
-            this.newItem.product_id = null;
-        },
-        onNewProductChange() {
-            if (this.newItem.product_id == null) {
-                return;
-            }
-            const product = this.products.find(p => p.id === this.newItem.product_id);
-            if (product) {
-                this.newItem.label = product.name;
-                if (product.price != null) {
-                    this.newItem.total = product.price;
-                }
-            }
-        },
-        saveNew(group) {
-            if (!this.newItem.user_id) {
-                toast.error('Please choose a person');
-                return;
-            }
-            if (this.newItem.total === null || this.newItem.total === '' || isNaN(parseFloat(this.newItem.total)) || parseFloat(this.newItem.total) < 0) {
-                toast.error('Please enter a valid price');
-                return;
-            }
-
-            // An existing product was picked from the store — add it directly, no catalogue pop-up.
-            if (this.newItem.product_id != null) {
-                this.performSaveNew(group, false, null);
-                return;
-            }
-
-            if (!this.newItem.label) {
-                toast.error('Please enter a name or pick a product');
-                return;
-            }
-            // A custom item that doesn't exist in the chosen store yet → ask via the catalogue pop-up.
-            if (this.newItem.store_id && !this.productExistsInStore(this.newItem.label, this.newItem.store_id)) {
-                this.catalogueProducts = [{add: true, name: this.newItem.label, store_id: this.newItem.store_id, price: parseFloat(this.newItem.total)}];
-                this.pendingSave = {type: 'new', group: group};
-                return;
-            }
-
-            this.performSaveNew(group, false, null);
-        },
-        performSaveNew(group, addToCatalogue, catalogueRow) {
-            axios.post(route('order.custom.add'), {
-                date: group.date,
-                user_id: this.newItem.user_id,
-                product_id: this.newItem.product_id ?? null,
-                store_id: addToCatalogue && catalogueRow ? catalogueRow.store_id : this.newItem.store_id,
-                label: addToCatalogue && catalogueRow ? catalogueRow.name : this.newItem.label,
-                total: parseFloat(this.newItem.total),
-                paid_by: group.data[0] ? group.data[0].paid_by : null,
-                add_to_catalogue: addToCatalogue,
-                catalogue_price: addToCatalogue && catalogueRow ? Number(catalogueRow.price) : null,
-            }).then(() => {
-                this.addingDate = null;
-                this.getData();
-                toast.success('Item added');
-            }).catch(() => {
-                toast.error('Failed to add item');
-            });
-        },
-        onCatalogueSkip() {
-            this.resolveCatalogue(false);
-        },
-        onCatalogueConfirm() {
-            const row = this.catalogueProducts[0];
-            const valid = row && row.add && row.name && row.store_id && !isNaN(Number(row.price)) && Number(row.price) >= 0;
-            this.resolveCatalogue(Boolean(valid));
-        },
-        resolveCatalogue(addToCatalogue) {
-            const catalogueRow = this.catalogueProducts[0] ?? null;
-            const pending = this.pendingSave;
-            this.pendingSave = null;
-            this.catalogueProducts = [];
-
-            if (!pending) {
-                return;
-            }
-            if (pending.type === 'edit') {
-                this.performSaveEdit(pending.item, addToCatalogue, catalogueRow);
-                return;
-            }
-            this.performSaveNew(pending.group, addToCatalogue, catalogueRow);
-        },
+const newItemProducts = computed<Product[]>(() => {
+    if (!newItem.value.store_id) {
+        return [];
     }
-}
+    return props.products.filter(product => product.store_id === newItem.value.store_id);
+});
+
+const getData = (): void => {
+    axios.post(route('orders.by-date'), {}).then(response => {
+        orders.value = response.data;
+    }).catch(error => {
+        console.log(error);
+    });
+};
+
+const currentDateTime = (orderByDate: string): string => {
+    return moment(orderByDate, "YYYYMMDD").format('dddd - DD/MM/YYYY');
+};
+
+const money = (value: number | string | null): string => {
+    return new Intl.NumberFormat('nl-BE', {style: 'currency', currency: 'EUR'}).format(Number(value) || 0);
+};
+
+const totalOrders = (orderGroup: any[]): number => {
+    return orderGroup.reduce((sum, order) => sum + (Number(order.total) || 0), 0);
+};
+
+const sortedGroup = (orderGroup: any[]): any[] => {
+    // Order items (with a product) first, then the extra items.
+    return [...orderGroup].sort((a, b) => (a.product ? 0 : 1) - (b.product ? 0 : 1));
+};
+
+const updateRunner = (orderGroup: any[], runnerId: string | number | null, event: Event): void => {
+    const runnerName = runnerId
+        ? (props.users.find(user => user.id === parseInt(String(runnerId)))?.name || 'deze persoon')
+        : 'geen runner';
+
+    const message = runnerId
+        ? `Weet je zeker dat je de runner wilt aanpassen naar ${runnerName}?`
+        : 'Weet je zeker dat je de runner wilt verwijderen?';
+
+    if (!confirm(message)) {
+        if (event) {
+            (event.target as HTMLSelectElement).value = orderGroup[0] ? orderGroup[0].paid_by : '';
+        }
+        return;
+    }
+
+    const orderIds = orderGroup.map(order => order.id);
+    const parsedRunnerId = runnerId ? parseInt(String(runnerId)) : null;
+    axios.post(route('history.update-runner'), {
+        order_ids: orderIds,
+        runner_id: parsedRunnerId,
+    }).then(() => {
+        // Update in place so the order stays in its group — only the runner label changes.
+        const runner = parsedRunnerId ? (props.users.find(user => user.id === parsedRunnerId) || {id: parsedRunnerId}) : null;
+        orderGroup.forEach(order => {
+            order.paid_by = parsedRunnerId;
+            order.deliverer = runner;
+        });
+        toast.success('Runner updated');
+    }).catch(error => {
+        toast.error('Failed to update runner');
+        console.log(error);
+    });
+};
+
+const startEdit = (item: any): void => {
+    editingId.value = item.id;
+    item.editProductId = item.product ? item.product.id : null; // null = custom item
+    item.editStoreId = item.product ? item.product.store_id : (item.store_id ?? null);
+    editBackup.value = {
+        product_id: item.product ? item.product.id : null,
+        label: item.label,
+        total: item.total,
+    };
+};
+
+const cancelEdit = (item: any): void => {
+    if (editBackup.value) {
+        item.label = editBackup.value.label;
+        item.total = editBackup.value.total;
+    }
+    editingId.value = null;
+    editBackup.value = null;
+};
+
+const onEditProductChange = (item: any): void => {
+    if (item.editProductId == null) {
+        // Switched to a custom item — prefill the name from the current product, if any.
+        if (!item.label && item.product) {
+            item.label = item.product.name;
+        }
+        return;
+    }
+    const product = props.products.find(product => product.id === item.editProductId);
+    if (product && product.price != null) {
+        item.total = product.price;
+    }
+};
+
+const productExistsInStore = (label: string, storeId: number): boolean => {
+    const needle = (label || '').trim().toLowerCase();
+    return props.products.some(product => product.store_id === storeId && (product.name || '').trim().toLowerCase() === needle);
+};
+
+const filteredProducts = (item: any): Product[] => {
+    if (!item.editStoreId) {
+        return props.products;
+    }
+    return props.products.filter(product => product.store_id === item.editStoreId);
+};
+
+const onStoreChange = (item: any): void => {
+    const available = filteredProducts(item);
+    if (item.editProductId != null && !available.some(product => product.id === item.editProductId)) {
+        // The selected product isn't in the chosen store — switch to its first product, or custom.
+        const first = available[0];
+        item.editProductId = first ? first.id : null;
+        if (first && first.price != null) {
+            item.total = first.price;
+        }
+    }
+};
+
+const performSaveEdit = (item: any, addToCatalogue: boolean, catalogueRow: any): void => {
+    axios.patch(route('order.edit'), {
+        order_id: item.id,
+        product_id: item.editProductId ?? null,
+        label: addToCatalogue && catalogueRow ? catalogueRow.name : item.label,
+        store_id: addToCatalogue && catalogueRow ? catalogueRow.store_id : (item.editStoreId ?? null),
+        total: parseFloat(item.total),
+        add_to_catalogue: addToCatalogue,
+        catalogue_price: addToCatalogue && catalogueRow ? Number(catalogueRow.price) : null,
+    }).then(() => {
+        editingId.value = null;
+        editBackup.value = null;
+        getData();
+        toast.success('Updated');
+    }).catch(() => {
+        toast.error('Failed to update');
+    });
+};
+
+const saveEdit = (item: any): void => {
+    if (item.total === null || item.total === '' || isNaN(parseFloat(item.total)) || parseFloat(item.total) < 0) {
+        toast.error('Please enter a valid price');
+        return;
+    }
+    const productId = item.editProductId ?? null;
+    if (!productId && !item.label) {
+        toast.error('Please enter a name or pick a product');
+        return;
+    }
+
+    // A custom item that doesn't exist in the chosen store yet → ask via the catalogue pop-up.
+    if (!productId && item.label && item.editStoreId && !productExistsInStore(item.label, item.editStoreId)) {
+        catalogueProducts.value = [{add: true, name: item.label, store_id: item.editStoreId, price: parseFloat(item.total)}];
+        pendingSave.value = {type: 'edit', item: item};
+        return;
+    }
+
+    performSaveEdit(item, false, null);
+};
+
+const deleteItem = (item: any): void => {
+    if (!window.confirm('Delete this item?')) {
+        return;
+    }
+    axios.delete(route('order.delete', item.id)).then(() => {
+        getData();
+        toast.success('Deleted');
+    }).catch(() => {
+        toast.error('Failed to delete');
+    });
+};
+
+const startAdd = (group: any): void => {
+    addingDate.value = group.date;
+    newItem.value = {user_id: null, store_id: null, product_id: null, label: '', total: null};
+};
+
+const cancelAdd = (): void => {
+    addingDate.value = null;
+};
+
+const onNewStoreChange = (): void => {
+    // The product list depends on the store — drop the selection back to a custom item.
+    newItem.value.product_id = null;
+};
+
+const onNewProductChange = (): void => {
+    if (newItem.value.product_id == null) {
+        return;
+    }
+    const product = props.products.find(product => product.id === newItem.value.product_id);
+    if (product) {
+        newItem.value.label = product.name;
+        if (product.price != null) {
+            newItem.value.total = product.price;
+        }
+    }
+};
+
+const performSaveNew = (group: any, addToCatalogue: boolean, catalogueRow: any): void => {
+    axios.post(route('order.custom.add'), {
+        date: group.date,
+        user_id: newItem.value.user_id,
+        product_id: newItem.value.product_id ?? null,
+        store_id: addToCatalogue && catalogueRow ? catalogueRow.store_id : newItem.value.store_id,
+        label: addToCatalogue && catalogueRow ? catalogueRow.name : newItem.value.label,
+        total: parseFloat(String(newItem.value.total)),
+        paid_by: group.data[0] ? group.data[0].paid_by : null,
+        add_to_catalogue: addToCatalogue,
+        catalogue_price: addToCatalogue && catalogueRow ? Number(catalogueRow.price) : null,
+    }).then(() => {
+        addingDate.value = null;
+        getData();
+        toast.success('Item added');
+    }).catch(() => {
+        toast.error('Failed to add item');
+    });
+};
+
+const saveNew = (group: any): void => {
+    if (!newItem.value.user_id) {
+        toast.error('Please choose a person');
+        return;
+    }
+    if (newItem.value.total === null || newItem.value.total === '' || isNaN(parseFloat(String(newItem.value.total))) || parseFloat(String(newItem.value.total)) < 0) {
+        toast.error('Please enter a valid price');
+        return;
+    }
+
+    // An existing product was picked from the store — add it directly, no catalogue pop-up.
+    if (newItem.value.product_id != null) {
+        performSaveNew(group, false, null);
+        return;
+    }
+
+    if (!newItem.value.label) {
+        toast.error('Please enter a name or pick a product');
+        return;
+    }
+    // A custom item that doesn't exist in the chosen store yet → ask via the catalogue pop-up.
+    if (newItem.value.store_id && !productExistsInStore(newItem.value.label, newItem.value.store_id)) {
+        catalogueProducts.value = [{add: true, name: newItem.value.label, store_id: newItem.value.store_id, price: parseFloat(String(newItem.value.total))}];
+        pendingSave.value = {type: 'new', group: group};
+        return;
+    }
+
+    performSaveNew(group, false, null);
+};
+
+const resolveCatalogue = (addToCatalogue: boolean): void => {
+    const catalogueRow = catalogueProducts.value[0] ?? null;
+    const pending = pendingSave.value;
+    pendingSave.value = null;
+    catalogueProducts.value = [];
+
+    if (!pending) {
+        return;
+    }
+    if (pending.type === 'edit') {
+        performSaveEdit(pending.item, addToCatalogue, catalogueRow);
+        return;
+    }
+    performSaveNew(pending.group, addToCatalogue, catalogueRow);
+};
+
+const onCatalogueSkip = (): void => {
+    resolveCatalogue(false);
+};
+
+const onCatalogueConfirm = (): void => {
+    const row = catalogueProducts.value[0];
+    const valid = row && row.add && row.name && row.store_id && !isNaN(Number(row.price)) && Number(row.price) >= 0;
+    resolveCatalogue(Boolean(valid));
+};
+
+onMounted(() => {
+    getData();
+});
 </script>
 <template>
     <div class="panel history">
@@ -418,7 +451,7 @@ export default {
                                         @change="updateRunner(group.data, $event.target.value, $event)">
                                     <option :value="null">No runner</option>
                                     <option v-for="user in users" :key="user.id" :value="user.id">
-                                        {{ user.id === $page.props.auth.user.id ? 'You (' + user.name + ')' : user.name }}
+                                        {{ user.id === $page.props.auth.user?.id ? 'You (' + user.name + ')' : user.name }}
                                     </option>
                                 </select>
                             </div>

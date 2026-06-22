@@ -5,7 +5,7 @@ import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from 'ziggy-js';
-import mitt from 'mitt'
+import { emitter } from './Composables/emitter';
 import Toast, { POSITION } from "vue-toastification";
 import "vue-toastification/dist/index.css";
 
@@ -56,7 +56,6 @@ library.add(
 );
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
-const emitter = mitt()
 
 // On mobile most action buttons sit at the bottom of the screen, so show toasts
 // at the top there to avoid covering them. (Matches vue-toastification's 600px

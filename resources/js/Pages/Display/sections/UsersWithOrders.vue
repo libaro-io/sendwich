@@ -1,42 +1,37 @@
-<script>
+<script setup lang="ts">
+import {ref, onMounted, onUnmounted} from "vue";
 import axios from "axios";
+import {emitter} from "@/Composables/emitter";
+import type {DisplayCompany} from '@interfaces/display';
 
+const props = defineProps<{
+    deliveryMoment?: string;
+    company: DisplayCompany;
+}>();
 
-export default {
-    name: "Orders",
-    components: {},
-    mounted() {
-        this.request = setInterval(() => {
-            this.getUsersWithOrders(this.company);
-        }, 60 * 1000);
-        this.getUsersWithOrders(this.company);
-        this.emitter.on("updateOrders", this.getUsersWithOrders(this.company));
-    },
-    unmounted() {
-        clearInterval(this.request)
-    },
-    data() {
-        return {
-            users: [],
-            request: null
-        };
-    },
-    props: {
-        deliveryMoment: String,
-        company: Object,
-    },
-    methods: {
-        getUsersWithOrders(company) {
-            const app = this;
-            let company_token = company.token
-            axios.post('/api/orders?company_token=' + company_token, {}).then(response => {
-                app.users = response.data.orders.map(x => x.user.name).filter((v, i, s) => s.indexOf(v) === i);
-            }).catch(error => {
-                console.log(error);
-            });
-        }
-    }
-}
+const users = ref<string[]>([]);
+let request: ReturnType<typeof setInterval>;
+
+const getUsersWithOrders = (): void => {
+    const company_token = props.company.token;
+    axios.post(route('orders.index', {company_token}), {}).then(response => {
+        users.value = response.data.orders
+            .map((order: { user: { name: string } }) => order.user.name)
+            .filter((name: string, index: number, names: string[]) => names.indexOf(name) === index);
+    }).catch(error => {
+        console.log(error);
+    });
+};
+
+onMounted(() => {
+    request = setInterval(() => {
+        getUsersWithOrders();
+    }, 60 * 1000);
+    getUsersWithOrders();
+    emitter.on("updateOrders", getUsersWithOrders);
+});
+
+onUnmounted(() => clearInterval(request));
 </script>
 <template>
     <div class="panel">

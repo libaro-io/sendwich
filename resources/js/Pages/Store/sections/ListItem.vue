@@ -1,12 +1,9 @@
-<script>
-export default {
-    name: "ListItem",
-    props: {
-        item: Object,
-        editable: Boolean,
-        type: String
-    },
-}
+<script setup lang="ts">
+defineProps<{
+    item: { id: number; name: string };
+    editable?: boolean;
+    type: string;
+}>();
 </script>
 <template>
     <div class="panel panel--flat list-row">

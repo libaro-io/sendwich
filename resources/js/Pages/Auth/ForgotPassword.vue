@@ -1,19 +1,19 @@
-<script setup>
+<script setup lang="ts">
 import BreezeGuestLayout from '@/Layouts/Guest.vue';
 import BreezeInput from '@/Components/ui/input-component.vue';
 import BreezeLabel from '@/Components/ui/label-component.vue';
 import BreezeValidationErrors from '@/Components/ui/validation-errors-component.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 
-defineProps({
-    status: String,
-});
+defineProps<{
+    status?: string;
+}>();
 
 const form = useForm({
     email: '',
 });
 
-const submit = () => {
+const submit = (): void => {
     form.post(route('password.email'));
 };
 </script>

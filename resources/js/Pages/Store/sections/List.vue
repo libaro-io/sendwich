@@ -1,11 +1,8 @@
-<script>
-export default {
-    name: "List",
-    props: {
-        items: Object,
-        title: String
-    },
-}
+<script setup lang="ts">
+defineProps<{
+    items?: unknown[];
+    title: string;
+}>();
 </script>
 <template>
     <div class="panel">

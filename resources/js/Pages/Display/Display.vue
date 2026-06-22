@@ -1,11 +1,12 @@
-<script setup>
+<script setup lang="ts">
 import UsersWithOrders from "@/Pages/Display/sections/UsersWithOrders.vue";
 import SelectedRunner from "@/Pages/Display/sections/SelectedRunner.vue";
+import type {DisplayCompany} from '@interfaces/display';
 
-const props = defineProps({
-    deliveryMoment: String,
-    company: Object
-});
+defineProps<{
+    deliveryMoment?: string;
+    company: DisplayCompany;
+}>();
 </script>
 
 <template>

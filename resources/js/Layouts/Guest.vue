@@ -1,11 +1,11 @@
-<script setup>
+<script setup lang="ts">
 import BreezeApplicationLogo from '@/Components/layout/application-logo-component.vue';
 import { Link } from '@inertiajs/vue3';
 </script>
 
 <template>
     <div class="guest-layout brand-canvas">
-        <Link href="/" class="guest-layout__brand">
+        <Link :href="route('home')" class="guest-layout__brand">
             <BreezeApplicationLogo class="guest-layout__logo" />
         </Link>
 

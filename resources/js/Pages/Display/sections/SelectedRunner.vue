@@ -1,49 +1,44 @@
-<script>
+<script setup lang="ts">
+import {ref, onMounted} from "vue";
 import axios from "axios";
+import {emitter} from "@/Composables/emitter";
+import type {DisplayCompany, Runner} from '@interfaces/display';
 
-export default {
-    name: "Selected runner",
-    components: {},
-    mounted() {
-        setInterval(() => {
-            this.getSelectedRunner(this.company);
-        }, 60 * 1000);
-        this.getSelectedRunner(this.company);
-        this.emitter.on("updateSelectedRunner", this.getSelectedRunner)
-    },
-    data() {
-        return {
-            runner: null,
-            simulatedRunner: null
-        };
-    },
-    props: {
-        company: Object,
-    },
-    methods: {
-        getSelectedRunner(company) {
-            const app = this;
-            let company_token = company.token
-            axios.post('/api/selected-runner?company_token=' + company_token, {}).then(response => {
-                app.runner = response.data.runner;
-                if (!app.runner) {
-                    app.getSimulatedRunner(this.company);
-                }
-            }).catch(error => {
-                console.log(error);
-            });
-        },
-        getSimulatedRunner(company) {
-            const app = this;
-            let company_token = company.token
-            axios.post('/api/simulated-runner?company_token=' + company_token, {}).then(response => {
-                app.simulatedRunner = response.data.runner;
-            }).catch(error => {
-                console.log(error);
-            });
+const props = defineProps<{
+    company: DisplayCompany;
+}>();
+
+const runner = ref<Runner | null>(null);
+const simulatedRunner = ref<Runner | null>(null);
+
+const getSimulatedRunner = (): void => {
+    const company_token = props.company.token;
+    axios.post(route('order.simulated-runner', {company_token}), {}).then(response => {
+        simulatedRunner.value = response.data.runner;
+    }).catch(error => {
+        console.log(error);
+    });
+};
+
+const getSelectedRunner = (): void => {
+    const company_token = props.company.token;
+    axios.post(route('order.selected-runner', {company_token}), {}).then(response => {
+        runner.value = response.data.runner;
+        if (!runner.value) {
+            getSimulatedRunner();
         }
-    }
-}
+    }).catch(error => {
+        console.log(error);
+    });
+};
+
+onMounted(() => {
+    setInterval(() => {
+        getSelectedRunner();
+    }, 60 * 1000);
+    getSelectedRunner();
+    emitter.on("updateSelectedRunner", getSelectedRunner);
+});
 </script>
 <template>
     <div class="panel selected-runner selected-runner--muted" v-if="runner">
