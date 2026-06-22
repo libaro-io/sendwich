@@ -52,10 +52,10 @@
     @apply mt-1;
 }
 .history__price-input {
-    @apply w-24 py-1 px-2 text-sm text-right;
+    @apply w-24 py-1 px-2 text-base text-right;
 }
 .history__total-value {
-    @apply font-display font-bold text-ink;
+    @apply font-display font-bold text-lg text-ink;
 }
 
 .history__actions {

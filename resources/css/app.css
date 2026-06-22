@@ -45,6 +45,10 @@
    (no white showing beyond the page bounds). */
 html {
     background-color: var(--color-cream);
+    /* App-wide base type size. The whole design system is rem-based, so bumping
+       this scales all text, prices and spacing proportionally. Dial this single
+       value to make everything larger/smaller. */
+    font-size: 105%; /* 18px */
 }
 
 /* =============================================================================
@@ -158,7 +162,7 @@ button:not(:disabled),
 
 /* status tag (daisyUI `badge` replacement) */
 .tag {
-    @apply inline-flex items-center gap-1 font-display text-[0.85rem] border-2 border-ink rounded-full px-3 py-0.5 bg-paper text-ink;
+    @apply inline-flex items-center gap-1 font-display text-[0.95rem] border-2 border-ink rounded-full px-3 py-0.5 bg-paper text-ink;
 }
 .tag--teal {
     @apply bg-teal-soft;
