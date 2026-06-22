@@ -16,7 +16,7 @@ defineEmits<{
 const search = ref('');
 
 watch(search, debounce((value: string) => {
-    router.get('/dashboard', {search: value}, {
+    router.get(route('dashboard'), {search: value}, {
         preserveState: true,
         replace: true,
     });

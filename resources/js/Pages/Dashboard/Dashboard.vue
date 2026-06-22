@@ -37,7 +37,7 @@ const unsetStore = (): void => {
 
 onMounted(() => {
     interval = setInterval(() => {
-        router.get('/dashboard', {},
+        router.get(route('dashboard'), {},
             {
                 preserveState: true,
                 preserveScroll: true,

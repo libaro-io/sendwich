@@ -52,7 +52,7 @@ Route::post('/simulated-runner', GetSimulatedRunnerController::class)->name('ord
 Route::post('/getAllOrdersByDateAndUser', GetOrdersByDateController::class)->name('orders.by-date');
 Route::post('/updateOrderRunner', UpdateRunnerController::class)->name('history.update-runner');
 
-Route::post('/payouts/handle', [PayoutController::class, 'payout']);
+Route::post('/payouts/handle', [PayoutController::class, 'payout'])->name('payouts.handle');
 
 Route::middleware(['auth', 'verified', 'can:edit-store'])->group(function () {
     Route::put('/store/add', AddStoreController::class)->name('store.add');

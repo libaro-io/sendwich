@@ -55,7 +55,7 @@ const buildPayBackList = (): void => {
 };
 
 const handlePayouts = (): void => {
-    axios.post('/api/payouts/handle', {
+    axios.post(route('payouts.handle'), {
         payouts: payBackList.value,
     }).then(response => {
         emit('close');
