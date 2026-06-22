@@ -4,7 +4,7 @@ import Authenticated from "@/Layouts/Authenticated.vue";
 import {useForm} from '@inertiajs/vue3';
 import {ref} from 'vue';
 import {router} from '@inertiajs/vue3';
-import { Modal } from '@/Components/ui/modal-component.vue';
+import Modal from '@/Components/ui/modal-component.vue';
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 
  const props = defineProps({

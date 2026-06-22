@@ -384,7 +384,7 @@ const confirm = (): void => {
                                         <select v-model="extra.user_id" class="field-select">
                                             <option :value="null" disabled>Choose person…</option>
                                             <option v-for="person in companyUsers" :key="person.id" :value="person.id">
-                                                {{ person.id === $page.props.auth.user.id ? 'You (' + person.name + ')' : person.name }}
+                                                {{ person.id === $page.props.auth.user?.id ? 'You (' + person.name + ')' : person.name }}
                                             </option>
                                         </select>
                                     </td>
@@ -421,7 +421,7 @@ const confirm = (): void => {
                                 <select v-model="extra.user_id" class="field-select">
                                     <option :value="null" disabled>For who?</option>
                                     <option v-for="person in companyUsers" :key="person.id" :value="person.id">
-                                        {{ person.id === $page.props.auth.user.id ? 'You' : person.name }}
+                                        {{ person.id === $page.props.auth.user?.id ? 'You' : person.name }}
                                     </option>
                                 </select>
                             </div>

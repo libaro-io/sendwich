@@ -5,11 +5,10 @@ import Orders from "@/Pages/Dashboard/sections/Orders.vue";
 import Products from "@/Pages/Dashboard/sections/Products.vue";
 import Menu from "@/Pages/Dashboard/sections/Menu.vue";
 import DeptList from "@/Pages/Dashboard/sections/DeptList.vue";
-import type {Order, Product, Store, User, Company, DashboardFilters} from '@interfaces/dashboard';
+import type {Order, Store, User, Company, DashboardFilters} from '@interfaces/dashboard';
 
 const props = defineProps<{
     selectedRunner?: User | null;
-    products: Product[];
     stores: Store[];
     users: User[];
     companyUsers: User[];
