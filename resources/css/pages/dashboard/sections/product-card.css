@@ -7,13 +7,13 @@
     @apply flex-1;
 }
 .product-card__name {
-    @apply text-sm font-display font-semibold text-ink;
+    @apply text-base font-display font-semibold text-ink;
 }
 .product-card__per-kg {
     @apply mt-1;
 }
 .product-card__per-kg-label {
-    @apply text-xs text-ink-soft;
+    @apply text-sm text-ink-soft;
 }
 .product-card__btn {
     @apply flex items-center gap-2;

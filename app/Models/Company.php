@@ -17,6 +17,7 @@ class Company extends Model
     protected $casts = [
         'reminder_enabled' => 'boolean',
         'auto_assign_runner' => 'boolean',
+        'daily_notification_sent_date' => 'date',
     ];
 
     public function reminderDays(): HasMany

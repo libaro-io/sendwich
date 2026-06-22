@@ -1,14 +1,17 @@
 <script setup lang="ts">
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
-import {Head} from '@inertiajs/vue3';
+import Modal from '@/Components/ui/modal-component.vue';
+import {Head, router} from '@inertiajs/vue3';
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 import axios from "axios";
 import {useToast} from "vue-toastification";
-import {reactive} from "vue";
+import {reactive, ref} from "vue";
 import type {Product} from '@interfaces/dashboard';
 import type {Store, StoreForm, NewProductForm} from '@interfaces/store';
 
 const toast = useToast();
+const showDeleteModal = ref(false);
+const deletingStore = ref(false);
 
 const props = defineProps<{
     store: Store;
@@ -53,6 +56,19 @@ const saveStore = (): void => {
     }).catch(error => {
         console.error(error);
         toast.error('Failed to update store details');
+    });
+};
+
+const deleteStore = (): void => {
+    deletingStore.value = true;
+
+    axios.delete(route('store.delete', props.store.id)).then(response => {
+        toast.success(response.data.message);
+        router.visit(route('store.index'));
+    }).catch(error => {
+        console.error(error);
+        toast.error('Failed to delete store');
+        deletingStore.value = false;
     });
 };
 
@@ -131,7 +147,8 @@ const preventNegative = (event: KeyboardEvent): void => {
                             <input type="text" placeholder="Website" class="field-input" v-model="storeForm.website"/>
                         </div>
                     </div>
-                    <div class="form-actions form-actions--end">
+                    <div class="form-actions form-actions--end store-products__detail-actions">
+                        <button class="chunk chunk--coral" @click="showDeleteModal = true">Delete Store</button>
                         <button class="chunk chunk--teal" @click="saveStore">Save Store Details</button>
                     </div>
                 </div>
@@ -200,6 +217,18 @@ const preventNegative = (event: KeyboardEvent): void => {
                 </div>
             </div>
         </div>
+
+        <Modal :open="showDeleteModal" title="Delete store?" @close="showDeleteModal = false">
+            <p class="store-products__delete-warning">
+                Are you sure you want to delete {{ store.name }}? This will also delete all products in this store and cannot be undone.
+            </p>
+            <template #actions>
+                <button class="chunk chunk--coral" :disabled="deletingStore" @click="deleteStore">
+                    {{ deletingStore ? 'Deleting...' : 'Delete Store' }}
+                </button>
+                <button class="chunk chunk--ghost" :disabled="deletingStore" @click="showDeleteModal = false">Cancel</button>
+            </template>
+        </Modal>
     </BreezeAuthenticatedLayout>
 </template>
 

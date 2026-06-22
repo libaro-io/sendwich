@@ -152,6 +152,17 @@ class Order extends Model
         return $query;
     }
 
+    public static function isFirstForDay(Company $company, Carbon $deliveryDate): bool
+    {
+        return self::query()
+            ->where('company_id', '=', $company->id)
+            ->whereBetween('date', [
+                $deliveryDate->copy()->startOfDay(),
+                $deliveryDate->copy()->endOfDay(),
+            ])
+            ->doesntExist();
+    }
+
     public static function assignedRunnerId(Company $company, Carbon $deliveryDate): ?int
     {
         return DeliveryRun::query()
