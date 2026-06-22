@@ -6,6 +6,7 @@ use App\Actions\DeliverySchedule;
 use App\Actions\NotifyCompany;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Order\AddRequest;
+use App\Models\Company;
 use App\Models\DeliveryRun;
 use App\Models\Order;
 use App\Models\Product;
@@ -59,13 +60,20 @@ class AddProductController extends Controller
 
         DeliveryRun::syncDay($user->company->id, $deliveryDate);
 
-        $alreadyNotifiedToday = $user->company->daily_notification_sent_date?->toDateString() === $deliveryDate->toDateString();
-        if ($isFirstOrderToday && $user->company->reminder_enabled && !$alreadyNotifiedToday) {
-            $channelsNotified = new NotifyCompany($user->company)->execute(new FirstOrderPlaced($user->company, $user));
+        // First order of the day nudges the team. Atomically claim the day's single
+        // notification slot — gated on having an enabled channel — so two concurrent
+        // first orders can never both notify. Only send when we won the claim.
+        if ($isFirstOrderToday && $user->company->reminder_enabled) {
+            $claimed = Company::query()
+                ->where('id', '=', $user->company->id)
+                ->whereHas('notificationChannels', fn ($query) => $query->where('enabled', '=', true))
+                ->where(fn ($query) => $query
+                    ->whereNull('daily_notification_sent_date')
+                    ->orWhereDate('daily_notification_sent_date', '!=', $deliveryDate->toDateString()))
+                ->update(['daily_notification_sent_date' => $deliveryDate->toDateString()]);
 
-            if ($channelsNotified > 0) {
-                $user->company->daily_notification_sent_date = $deliveryDate->toDateString();
-                $user->company->save();
+            if ($claimed === 1) {
+                new NotifyCompany($user->company)->execute(new FirstOrderPlaced($user->company, $user));
             }
         }
 

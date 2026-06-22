@@ -49,10 +49,10 @@ class SendReminderNotifications extends Command
 
         foreach ($companies as $company) {
             $this->info("Sending reminder to {$company->name}...");
-            $channelsNotified = (new NotifyCompany($company))->execute(new PlaceOrderReminder($company));
+            $enabledChannelCount = (new NotifyCompany($company))->execute(new PlaceOrderReminder($company));
 
             // Record the send so the first-order notification stands down for the rest of the day.
-            if (!$isTest && $channelsNotified > 0) {
+            if (!$isTest && $enabledChannelCount > 0) {
                 $company->daily_notification_sent_date = $deliveryDate->toDateString();
                 $company->save();
             }

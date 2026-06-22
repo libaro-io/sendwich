@@ -13,6 +13,13 @@ final class NotifyCompany
     ) {
     }
 
+    /**
+     * Dispatch the notification to each of the company's enabled channels.
+     *
+     * @return int Number of enabled channels the notification was dispatched to.
+     *             With queued notifications this reflects "we had somewhere to
+     *             send to", not confirmed delivery.
+     */
     public function execute(Notification $notification): int
     {
         $channels = $this->getEnabledChannels();

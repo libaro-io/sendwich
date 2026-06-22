@@ -48,7 +48,7 @@ watch(search, debounce((value: string) => {
             <div v-if="can('edit-store')" class="empty-action">
                 <a :href="route('store.index')" class="chunk chunk--teal">
                     <FontAwesomeIcon icon="fa-solid fa-store" class="menu__icon" />
-                    Create here your first store
+                    Create your first store here
                 </a>
             </div>
             <div v-else class="callout callout--info">
