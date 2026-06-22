@@ -20,6 +20,7 @@ use App\Http\Controllers\Order\StoreReceiptStoreController;
 use App\Http\Controllers\PayoutController;
 use App\Http\Controllers\Store\AddStoreController;
 use App\Http\Controllers\Store\DeleteProductController;
+use App\Http\Controllers\Store\DeleteStoreController;
 use App\Http\Controllers\Store\StoreProductController;
 use App\Http\Controllers\Store\UpdateProductController;
 use App\Http\Controllers\Store\UpdateStoreController;
@@ -57,6 +58,7 @@ Route::post('/payouts/handle', [PayoutController::class, 'payout'])->name('payou
 Route::middleware(['auth', 'verified', 'can:edit-store'])->group(function () {
     Route::put('/store/add', AddStoreController::class)->name('store.add');
     Route::post('/store/{id}', UpdateStoreController::class)->name('store.update');
+    Route::delete('/store/{id}', DeleteStoreController::class)->name('store.delete');
     Route::post('/store/product/{product}', UpdateProductController::class)->name('store.product.update');
     Route::put('/store/product', StoreProductController::class)->name('store.product.add');
     Route::delete('/store/product/{product}', DeleteProductController::class)->name('store.product.delete');

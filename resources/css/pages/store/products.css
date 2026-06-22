@@ -17,6 +17,9 @@
 .store-products__full {
     @apply md:col-span-2;
 }
+.store-products__detail-actions {
+    @apply gap-3;
+}
 
 /* menu table */
 .store-products__scroll {
@@ -36,4 +39,7 @@
 }
 .store-products__row-actions {
     @apply flex items-center gap-2;
+}
+.store-products__delete-warning {
+    @apply text-ink-soft leading-relaxed;
 }
