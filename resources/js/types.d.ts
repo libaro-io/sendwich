@@ -7,11 +7,14 @@ declare module '*.vue' {
     export default component;
 }
 
-// Ziggy's route() is registered globally through the ZiggyVue plugin in app.js;
-// expose it to template type-checking in <script setup lang="ts"> components.
+// Ziggy's route() and laravel-permission-to-vuejs's can()/is() are registered
+// globally through plugins in app.js; expose them to template type-checking in
+// <script setup lang="ts"> components.
 declare module 'vue' {
     interface ComponentCustomProperties {
         route: typeof ziggyRoute;
+        can: (permission: string) => boolean;
+        is: (role: string) => boolean;
     }
 }
 
