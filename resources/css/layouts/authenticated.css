@@ -1,0 +1,90 @@
+@reference "@css/app.css";
+
+.auth-layout {
+    @apply min-h-screen flex flex-col justify-between;
+}
+
+.auth-nav {
+    @apply bg-paper border-b-[3px] border-ink;
+}
+.auth-nav__container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+.auth-nav__row {
+    @apply flex justify-between h-16;
+}
+.auth-nav__left {
+    @apply flex;
+}
+.auth-nav__brand {
+    @apply shrink-0 flex items-center;
+}
+.auth-nav__logo {
+    @apply block h-9 w-auto;
+}
+.auth-nav__links {
+    @apply hidden space-x-8 sm:-my-px sm:ml-10 sm:flex;
+}
+
+.auth-nav__user {
+    @apply hidden sm:flex sm:items-center sm:ml-6;
+}
+.auth-nav__dropdown {
+    @apply ml-3 relative;
+}
+.auth-nav__trigger-wrap {
+    @apply inline-flex rounded-md;
+}
+.auth-nav__trigger {
+    @apply inline-flex items-center px-3 py-2 border-2 border-ink text-sm font-display font-semibold rounded-lg
+        text-ink bg-paper shadow-[2px_2px_0_var(--color-ink)] transition-all
+        hover:-translate-y-0.5 hover:shadow-[3px_3px_0_var(--color-ink)] focus:outline-none;
+}
+.auth-nav__trigger-icon {
+    @apply ml-2 h-4 w-4;
+}
+
+.auth-nav__hamburger {
+    @apply -mr-2 flex items-center sm:hidden;
+}
+.auth-nav__icon-btn {
+    @apply inline-flex items-center justify-center p-2 rounded-lg text-ink bg-paper border-2 border-ink transition duration-150 hover:bg-cream focus:outline-none;
+}
+.auth-nav__icon {
+    @apply h-6 w-6;
+}
+
+.auth-nav__mobile {
+    @apply sm:hidden;
+}
+.auth-nav__mobile--open {
+    @apply block;
+}
+.auth-nav__mobile--closed {
+    @apply hidden;
+}
+.auth-nav__mobile-links {
+    @apply pt-2 pb-3 space-y-1;
+}
+.auth-nav__mobile-user {
+    @apply pt-4 pb-1 border-t-2 border-ink;
+}
+.auth-nav__mobile-user-info {
+    @apply px-4;
+}
+.auth-nav__mobile-user-name {
+    @apply font-display font-semibold text-base text-ink;
+}
+.auth-nav__mobile-user-email {
+    @apply font-sans text-sm text-ink-soft;
+}
+.auth-nav__mobile-actions {
+    @apply mt-3 space-y-1;
+}
+
+.auth-header {
+    @apply bg-paper border-b-[3px] border-ink py-6;
+}
+.auth-header__container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}

@@ -1,0 +1,13 @@
+@reference "@css/app.css";
+
+/* NB: avoid the class name `list-item` — it collides with Tailwind's
+   `display: list-item` utility (renders a bullet marker). */
+.list-row {
+    @apply mb-4;
+}
+.list-row__main {
+    @apply flex justify-between items-center;
+}
+.list-row__name {
+    @apply text-lg font-display font-bold text-ink;
+}

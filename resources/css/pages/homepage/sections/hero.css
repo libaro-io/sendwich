@@ -1,0 +1,97 @@
+@reference "@css/app.css";
+
+.homepage-hero {
+    @apply max-w-[76rem] mx-auto px-6 pt-8;
+
+    .hero-grid {
+        @apply grid grid-cols-[1.05fr_0.95fr] gap-8 items-center pt-10 pb-12 max-[860px]:grid-cols-1 max-[860px]:text-center;
+    }
+    .kicker {
+        @apply inline-block font-extrabold uppercase tracking-[0.12em] text-[0.72rem] text-teal-deep border-2 border-teal rounded-full px-[0.9rem] py-[0.35rem] bg-paper;
+    }
+    .script {
+        @apply block font-script text-coral text-[clamp(1.6rem,4vw,2.4rem)] leading-none mt-4 mb-[-0.3rem] -rotate-3 origin-left max-[860px]:origin-center;
+    }
+    .title {
+        @apply font-display font-bold text-ink text-[clamp(3rem,8vw,5.4rem)] leading-[0.98] mt-[0.4rem] mb-0;
+    }
+    .sub {
+        @apply max-w-[31rem] mt-[1.6rem] text-[1.12rem] leading-[1.7] text-ink-soft font-semibold max-[860px]:mx-auto;
+    }
+    .cta {
+        @apply flex gap-[1.2rem] items-center mt-8 flex-wrap max-[860px]:justify-center;
+    }
+    .ghost {
+        @apply no-underline font-display font-semibold text-ink border-b-[3px] border-sun pb-[2px] hover:text-teal-deep hover:border-teal;
+    }
+
+    /* hero art — `animation:` declarations stay raw CSS so Vue's scoped
+       compiler can rewrite the keyframe names consistently */
+    .hero-art {
+        @apply relative grid place-items-center min-h-[20rem];
+    }
+    .cloche-wrap {
+        @apply relative w-[min(24rem,84vw)];
+    }
+    .cloche {
+        @apply w-full h-auto drop-shadow-[0_14px_0_rgba(42,39,36,0.08)];
+        animation: bob 4.5s ease-in-out infinite;
+    }
+    .cloche-shadow {
+        @apply absolute left-1/2 -bottom-2 -translate-x-1/2 w-[60%] h-[1.4rem] bg-[radial-gradient(closest-side,rgba(42,39,36,0.18),transparent)];
+    }
+    .steam {
+        @apply absolute top-[2%] left-1/2 -translate-x-1/2 flex gap-[1.2rem] z-3;
+
+        i {
+            @apply w-[7px] h-10 rounded-lg bg-linear-to-t from-white/0 to-white/70 blur-[1.5px];
+            animation: steam 3s ease-in-out infinite;
+        }
+        i:nth-child(2) {
+            @apply [animation-delay:0.5s] h-[54px];
+        }
+        i:nth-child(3) {
+            @apply [animation-delay:1s];
+        }
+    }
+
+    /* checker strip — position/size shorthand keeps the repeating pattern raw CSS */
+    .checker {
+        @apply h-[1.4rem] mt-2 opacity-16;
+        background: repeating-conic-gradient(
+                var(--color-ink) 0% 25%,
+                transparent 0% 50%
+            )
+            0 / 1.4rem 1.4rem;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .cloche,
+        .steam i {
+            @apply animate-none!;
+        }
+    }
+}
+
+@keyframes bob {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-9px);
+    }
+}
+@keyframes steam {
+    0% {
+        opacity: 0;
+        transform: translateY(6px) scaleY(0.7);
+    }
+    40% {
+        opacity: 0.7;
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-24px) scaleY(1.2);
+    }
+}

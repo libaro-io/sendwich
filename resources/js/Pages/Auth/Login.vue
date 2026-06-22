@@ -1,10 +1,8 @@
-<script setup>
-import BreezeButton from '@/Components/Button.vue';
-import BreezeCheckbox from '@/Components/Checkbox.vue';
+<script setup lang="ts">
 import BreezeGuestLayout from '@/Layouts/Guest.vue';
-import BreezeInput from '@/Components/Input.vue';
-import BreezeLabel from '@/Components/Label.vue';
-import BreezeValidationErrors from '@/Components/ValidationErrors.vue';
+import BreezeInput from '@/Components/ui/input-component.vue';
+import BreezeLabel from '@/Components/ui/label-component.vue';
+import BreezeValidationErrors from '@/Components/ui/validation-errors-component.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 
 defineProps({
@@ -29,31 +27,31 @@ const submit = () => {
     <BreezeGuestLayout>
         <Head title="Log in" />
 
-        <BreezeValidationErrors class="mb-4" />
+        <BreezeValidationErrors />
 
-        <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
+        <div v-if="status" class="form-status">
             {{ status }}
         </div>
 
         <form @submit.prevent="submit">
-            <div>
+            <div class="form-field">
                 <BreezeLabel for="email" value="Email" />
-                <BreezeInput id="email" type="email" class="mt-1 block w-full" v-model="form.email" required autofocus autocomplete="username" />
+                <BreezeInput id="email" type="email" v-model="form.email" required autofocus autocomplete="username" />
             </div>
 
-            <div class="mt-4">
+            <div class="form-field">
                 <BreezeLabel for="password" value="Password" />
-                <BreezeInput id="password" type="password" class="mt-1 block w-full" v-model="form.password" required autocomplete="current-password" />
+                <BreezeInput id="password" type="password" v-model="form.password" required autocomplete="current-password" />
             </div>
 
-            <div class="flex items-center justify-end mt-4">
-                <Link v-if="canResetPassword" :href="route('password.request')" class="underline text-sm text-gray-600 hover:text-gray-900">
+            <div class="form-actions">
+                <Link v-if="canResetPassword" :href="route('password.request')" class="form-link">
                     Forgot your password?
                 </Link>
 
-                <BreezeButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                <button type="submit" class="chunk chunk--teal" :disabled="form.processing">
                     Log in
-                </BreezeButton>
+                </button>
             </div>
         </form>
     </BreezeGuestLayout>

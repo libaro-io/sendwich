@@ -1,0 +1,25 @@
+@reference "@css/app.css";
+
+.site-footer {
+    @apply w-full bg-ink text-paper p-10 flex flex-col md:flex-row justify-between items-start gap-8 font-sans;
+
+    .site-footer__logo {
+        @apply w-48;
+    }
+    .site-footer__cols {
+        @apply flex flex-wrap gap-8 md:gap-16;
+    }
+    .site-footer__list {
+        @apply space-y-2;
+    }
+    .site-footer__list--muted {
+        @apply text-ink-soft;
+    }
+    .site-footer__label {
+        @apply font-display font-semibold text-ink-soft;
+    }
+
+    a {
+        @apply font-display font-semibold text-paper transition-colors hover:text-teal;
+    }
+}

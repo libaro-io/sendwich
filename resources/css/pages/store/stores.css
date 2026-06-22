@@ -1,0 +1,8 @@
+@reference "@css/app.css";
+
+.stores__grid {
+    @apply grid grid-cols-1 gap-4;
+}
+.stores__btn-icon {
+    @apply mr-2;
+}

@@ -11,13 +11,14 @@ use App\Http\Controllers\Company\ShowCompanyController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DisplayController;
 use App\Http\Controllers\History\ShowHistoryController;
-use App\Http\Controllers\HomeController;
+use App\Http\Controllers\HomepageController;
 use App\Http\Controllers\LegalController;
 use App\Http\Controllers\Store\ListStoresController;
 use App\Http\Controllers\Store\ShowStoreController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [HomeController::class, 'index'])->name('home');
+// Marketing landing page — reference design for the app-wide restyle.
+Route::get('/', [HomepageController::class, 'show'])->name('home');
 
 Route::get('/dashboard', [DashboardController::class, 'dashboard'])->middleware(['auth', 'verified'])->name('dashboard');
 Route::get('/display', [DisplayController::class, 'showDisplayPrivate'])->middleware(['auth', 'verified'])->name('displays.private.show');

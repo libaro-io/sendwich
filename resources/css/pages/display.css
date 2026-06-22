@@ -1,0 +1,12 @@
+@reference "@css/app.css";
+
+.display-page {
+    @apply min-h-screen;
+
+    .display-page__body {
+        @apply font-sans text-ink;
+    }
+    .display-page__grid {
+        @apply grid grid-cols-2 gap-4;
+    }
+}

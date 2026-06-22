@@ -1,0 +1,28 @@
+@reference "@css/app.css";
+
+.homepage-perks {
+    @apply max-w-6xl mx-auto;
+
+    .menu-grid {
+        @apply grid grid-cols-3 gap-[1.6rem] max-w-[70rem] mx-auto px-6 py-4 max-[820px]:grid-cols-1 max-[820px]:max-w-[26rem];
+    }
+    .perk {
+        @apply border-[3px] border-ink rounded-[1.4rem] p-8 shadow-[8px_8px_0_var(--color-ink)] transition duration-200;
+
+        &:hover {
+            @apply -translate-x-[3px] -translate-y-[3px] shadow-[11px_11px_0_var(--color-ink)];
+        }
+    }
+    .perk-icon {
+        @apply grid place-items-center w-[3.6rem] h-[3.6rem] text-[2rem] text-ink bg-paper border-[3px] border-ink rounded-2xl shadow-[3px_3px_0_var(--color-ink)];
+    }
+    .perk-tag {
+        @apply inline-block mt-[1.1rem] font-script text-[1.3rem] text-teal-deep;
+    }
+    .perk-title {
+        @apply font-display font-bold text-ink text-[1.5rem] leading-normal mt-[0.1rem] mb-0;
+    }
+    .perk-desc {
+        @apply mt-[0.6rem] leading-[1.6] text-ink-soft;
+    }
+}

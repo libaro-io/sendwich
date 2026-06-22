@@ -1,0 +1,20 @@
+@reference "@css/app.css";
+
+.selected-runner {
+    @apply flex flex-col justify-center items-center py-12;
+}
+.selected-runner--muted {
+    @apply bg-paper/70;
+}
+.selected-runner__name {
+    @apply font-display font-bold text-3xl text-ink text-center mb-2;
+}
+.selected-runner__role {
+    @apply font-display font-bold text-xl text-center;
+}
+.selected-runner__role--accent {
+    @apply text-teal-deep;
+}
+.selected-runner__role--muted {
+    @apply text-ink-soft;
+}

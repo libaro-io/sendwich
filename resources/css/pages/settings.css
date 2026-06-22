@@ -1,0 +1,8 @@
+@reference "@css/app.css";
+
+.settings__grid {
+    @apply grid grid-cols-1 gap-6;
+}
+.settings__title {
+    @apply font-display font-bold text-3xl text-ink m-0;
+}

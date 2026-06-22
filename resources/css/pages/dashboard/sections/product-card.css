@@ -1,0 +1,39 @@
+@reference "@css/app.css";
+
+.product-card {
+    @apply flex justify-between items-center w-full;
+}
+.product-card__info {
+    @apply flex-1;
+}
+.product-card__name {
+    @apply text-sm font-display font-semibold text-ink;
+}
+.product-card__per-kg {
+    @apply mt-1;
+}
+.product-card__per-kg-label {
+    @apply text-xs text-ink-soft;
+}
+.product-card__btn {
+    @apply flex items-center gap-2;
+}
+
+.product-card__price-row {
+    @apply flex items-center gap-2 mb-4;
+}
+.product-card__note {
+    @apply text-sm font-semibold mb-4;
+}
+.product-card__options {
+    @apply mb-4;
+}
+.product-card__options-title {
+    @apply font-display font-semibold text-ink mb-2;
+}
+.product-card__options-grid {
+    @apply flex flex-wrap gap-2;
+}
+.product-card__comments {
+    @apply mt-4;
+}

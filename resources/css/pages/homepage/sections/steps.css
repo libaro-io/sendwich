@@ -1,0 +1,24 @@
+@reference "@css/app.css";
+
+.homepage-steps {
+    @apply max-w-6xl mx-auto;
+
+    .step-row {
+        @apply flex flex-col items-center gap-6 px-6 pt-4 pb-8 min-[820px]:flex-row min-[820px]:items-stretch min-[820px]:justify-center min-[820px]:gap-2;
+    }
+    .step-card {
+        @apply w-[16rem] max-w-[84vw] border-[3px] border-ink rounded-[1.4rem] p-[1.8rem] shadow-[7px_7px_0_var(--color-ink)] text-center;
+    }
+    .step-n {
+        @apply inline-grid place-items-center w-12 h-12 bg-paper border-[3px] border-ink rounded-full font-display font-bold text-[1.5rem] shadow-[3px_3px_0_var(--color-ink)];
+    }
+    .step-title {
+        @apply font-display font-bold text-ink text-[1.4rem] leading-normal mt-[0.8rem] mb-0;
+    }
+    .step-desc {
+        @apply mt-2 leading-[1.5] text-ink-soft;
+    }
+    .arrow {
+        @apply text-3xl text-ink rotate-90 min-[820px]:rotate-0 min-[820px]:self-center;
+    }
+}

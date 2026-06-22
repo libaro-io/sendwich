@@ -1,0 +1,14 @@
+@reference "@css/app.css";
+
+.users-orders__title {
+    @apply font-display font-bold text-xl text-ink mb-4;
+}
+.users-orders__list {
+    @apply mt-5 flex flex-col gap-2;
+}
+.users-orders__row {
+    @apply flex items-center justify-between py-4;
+}
+.users-orders__name {
+    @apply text-sm font-display font-semibold text-ink;
+}

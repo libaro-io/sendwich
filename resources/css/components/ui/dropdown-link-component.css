@@ -1,0 +1,5 @@
+@reference "@css/app.css";
+
+.component-ui-dropdown-link-component {
+    @apply contents;
+}

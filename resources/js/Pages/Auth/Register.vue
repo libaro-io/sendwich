@@ -1,13 +1,10 @@
-<script setup>
-import BreezeButton from '@/Components/Button.vue';
+<script setup lang="ts">
 import BreezeGuestLayout from '@/Layouts/Guest.vue';
-import BreezeInput from '@/Components/Input.vue';
-import BreezeLabel from '@/Components/Label.vue';
-import BreezeTitle from '@/Components/Title.vue';
-import BreezeValidationErrors from '@/Components/ValidationErrors.vue';
+import BreezeInput from '@/Components/ui/input-component.vue';
+import BreezeLabel from '@/Components/ui/label-component.vue';
+import BreezeTitle from '@/Components/ui/title-component.vue';
+import BreezeValidationErrors from '@/Components/ui/validation-errors-component.vue';
 import {Head, Link, useForm} from '@inertiajs/vue3';
-
-
 
 const props = defineProps({
     companyLink: String,
@@ -23,10 +20,7 @@ const form = useForm({
     terms: false,
 });
 
-
-
 const submit = () => {
-    console.log('Form data',form.data);
     form.post(route('register.store'), {
         onFinish: () => form.reset('password', 'password_confirmation'),
     });
@@ -37,41 +31,36 @@ const submit = () => {
     <BreezeGuestLayout>
         <Head title="Register"/>
 
-        <BreezeValidationErrors class="mb-4"/>
-        <BreezeTitle :value="companyName"></BreezeTitle>
+        <BreezeValidationErrors />
+        <BreezeTitle :value="companyName" />
         <form @submit.prevent="submit">
-            <div>
+            <div class="form-field">
                 <BreezeLabel for="name" value="Name"/>
-                <BreezeInput id="name" type="text" class="mt-1 block w-full" v-model="form.name" required autofocus
-                             autocomplete="name"/>
+                <BreezeInput id="name" type="text" v-model="form.name" required autofocus autocomplete="name"/>
             </div>
 
-            <div class="mt-4">
+            <div class="form-field">
                 <BreezeLabel for="email" value="Email"/>
-                <BreezeInput id="email" type="email" class="mt-1 block w-full" v-model="form.email" required
-                             autocomplete="username"/>
+                <BreezeInput id="email" type="email" v-model="form.email" required autocomplete="username"/>
             </div>
 
-            <div class="mt-4">
+            <div class="form-field">
                 <BreezeLabel for="password" value="Password"/>
-                <BreezeInput id="password" type="password" class="mt-1 block w-full" v-model="form.password" required
-                             autocomplete="new-password"/>
+                <BreezeInput id="password" type="password" v-model="form.password" required autocomplete="new-password"/>
             </div>
 
-            <div class="mt-4">
+            <div class="form-field">
                 <BreezeLabel for="password_confirmation" value="Confirm Password"/>
-                <BreezeInput id="password_confirmation" type="password" class="mt-1 block w-full"
-                             v-model="form.password_confirmation" required autocomplete="new-password"/>
+                <BreezeInput id="password_confirmation" type="password" v-model="form.password_confirmation" required autocomplete="new-password"/>
             </div>
 
-            <div class="flex items-center justify-end mt-4">
-                <Link :href="route('login')" class="underline text-sm text-gray-600 hover:text-gray-900">
+            <div class="form-actions">
+                <Link :href="route('login')" class="form-link">
                     Already registered?
                 </Link>
-                <BreezeLabel/>
-                <BreezeButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                <button type="submit" class="chunk chunk--teal" :disabled="form.processing">
                     Register
-                </BreezeButton>
+                </button>
             </div>
         </form>
     </BreezeGuestLayout>

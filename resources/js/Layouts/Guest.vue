@@ -1,18 +1,20 @@
-<script setup>
-import BreezeApplicationLogo from '@/Components/ApplicationLogo.vue';
+<script setup lang="ts">
+import BreezeApplicationLogo from '@/Components/layout/application-logo-component.vue';
 import { Link } from '@inertiajs/vue3';
 </script>
 
 <template>
-    <div class="min-h-screen flex flex-col sm:justify-center items-center sm:pt-0 bg-rainbow">
-        <div>
-            <Link href="/">
-                <BreezeApplicationLogo class="h-20 fill-current text-gray-500" />
-            </Link>
-        </div>
+    <div class="guest-layout brand-canvas">
+        <Link :href="route('home')" class="guest-layout__brand">
+            <BreezeApplicationLogo class="guest-layout__logo" />
+        </Link>
 
-        <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
+        <div class="guest-layout__card panel">
             <slot />
         </div>
     </div>
 </template>
+
+<style scoped>
+@import "@css/layouts/guest.css";
+</style>

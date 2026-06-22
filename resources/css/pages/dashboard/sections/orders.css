@@ -1,0 +1,47 @@
+@reference "@css/app.css";
+
+.orders__header {
+    @apply flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6;
+}
+.orders__title {
+    @apply font-display font-bold text-2xl text-ink;
+}
+.orders__actions {
+    @apply flex gap-2;
+}
+.orders__list {
+    @apply mb-5 flex flex-col gap-4;
+}
+.orders__row {
+    @apply flex flex-col sm:flex-row sm:items-center justify-between gap-4;
+}
+.orders__row-main {
+    @apply flex-1;
+}
+.orders__product {
+    @apply text-sm font-medium text-ink;
+}
+.orders__store {
+    @apply text-ink-soft font-semibold inline-block mr-4;
+}
+.orders__comment {
+    @apply text-ink-soft;
+}
+.orders__meta {
+    @apply mt-2 text-sm text-ink-soft flex items-center gap-2 flex-wrap;
+}
+.orders__sep {
+    @apply hidden sm:inline;
+}
+.orders__row-actions {
+    @apply flex items-center justify-end;
+}
+.orders__delete {
+    @apply text-coral transition-colors hover:text-coral/80;
+}
+.orders__empty {
+    @apply font-display font-semibold text-ink-soft text-center py-4;
+}
+.orders__total {
+    @apply font-display font-bold text-xl text-ink pl-4 mt-6;
+}

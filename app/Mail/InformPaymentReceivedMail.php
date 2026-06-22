@@ -35,7 +35,7 @@ class InformPaymentReceivedMail extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.paymentReceivedMail')
+        return $this->markdown('emails.paymentReceivedMail')
             ->subject("Er is een Sendwich uitbetaling gebeurd")
             ->with([
                 'receiverName' => $this->receiver->name,

@@ -1,0 +1,29 @@
+@reference "@css/app.css";
+
+.dept-list__table {
+    @apply mt-5;
+}
+.dept-list__row {
+    @apply text-sm;
+}
+.dept-list__name {
+    @apply text-sm text-ink font-medium;
+}
+.dept-list__runner-cell {
+    @apply w-12 text-center;
+}
+.dept-list__runner-icon {
+    @apply w-5 h-5;
+}
+.dept-list__runner-icon--simulated {
+    @apply text-ink-soft;
+}
+.dept-list__runner-icon--selected {
+    @apply text-teal;
+}
+.dept-list__dept-cell {
+    @apply text-right w-28;
+}
+.dept-list__cta-icon {
+    @apply mr-2 text-lg;
+}

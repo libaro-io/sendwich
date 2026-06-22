@@ -1,20 +1,19 @@
-<script setup>
-import BreezeButton from '@/Components/Button.vue';
+<script setup lang="ts">
 import BreezeGuestLayout from '@/Layouts/Guest.vue';
-import BreezeInput from '@/Components/Input.vue';
-import BreezeLabel from '@/Components/Label.vue';
-import BreezeValidationErrors from '@/Components/ValidationErrors.vue';
+import BreezeInput from '@/Components/ui/input-component.vue';
+import BreezeLabel from '@/Components/ui/label-component.vue';
+import BreezeValidationErrors from '@/Components/ui/validation-errors-component.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 
-defineProps({
-    status: String,
-});
+defineProps<{
+    status?: string;
+}>();
 
 const form = useForm({
     email: '',
 });
 
-const submit = () => {
+const submit = (): void => {
     form.post(route('password.email'));
 };
 </script>
@@ -23,26 +22,26 @@ const submit = () => {
     <BreezeGuestLayout>
         <Head title="Forgot Password" />
 
-        <div class="mb-4 text-sm text-gray-600">
+        <div class="form-hint">
             Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.
         </div>
 
-        <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
+        <div v-if="status" class="form-status">
             {{ status }}
         </div>
 
-        <BreezeValidationErrors class="mb-4" />
+        <BreezeValidationErrors />
 
         <form @submit.prevent="submit">
-            <div>
+            <div class="form-field">
                 <BreezeLabel for="email" value="Email" />
-                <BreezeInput id="email" type="email" class="mt-1 block w-full" v-model="form.email" required autofocus autocomplete="username" />
+                <BreezeInput id="email" type="email" v-model="form.email" required autofocus autocomplete="username" />
             </div>
 
-            <div class="flex items-center justify-end mt-4">
-                <BreezeButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+            <div class="form-actions form-actions--end">
+                <button type="submit" class="chunk chunk--teal" :disabled="form.processing">
                     Email Password Reset Link
-                </BreezeButton>
+                </button>
             </div>
         </form>
     </BreezeGuestLayout>

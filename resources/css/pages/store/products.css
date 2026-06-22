@@ -1,0 +1,39 @@
+@reference "@css/app.css";
+
+.store-products {
+    @apply flex flex-col gap-8;
+}
+.store-products__card {
+    @apply w-full;
+}
+
+/* store details form */
+.store-products__grid {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4;
+}
+.store-products__field {
+    @apply flex flex-col;
+}
+.store-products__full {
+    @apply md:col-span-2;
+}
+
+/* menu table */
+.store-products__scroll {
+    @apply overflow-x-auto;
+}
+.store-products__table {
+    @apply mt-4;
+}
+.store-products__price-group {
+    @apply flex items-stretch;
+}
+.store-products__price-input {
+    @apply w-24 rounded-r-none border-r-0;
+}
+.store-products__price-type {
+    @apply w-28 rounded-l-none;
+}
+.store-products__row-actions {
+    @apply flex items-center gap-2;
+}

@@ -1,9 +1,8 @@
-<script setup>
-import BreezeButton from '@/Components/Button.vue';
+<script setup lang="ts">
 import BreezeGuestLayout from '@/Layouts/Guest.vue';
-import BreezeInput from '@/Components/Input.vue';
-import BreezeLabel from '@/Components/Label.vue';
-import BreezeValidationErrors from '@/Components/ValidationErrors.vue';
+import BreezeInput from '@/Components/ui/input-component.vue';
+import BreezeLabel from '@/Components/ui/label-component.vue';
+import BreezeValidationErrors from '@/Components/ui/validation-errors-component.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 
 const props = defineProps({
@@ -29,28 +28,28 @@ const submit = () => {
     <BreezeGuestLayout>
         <Head title="Reset Password" />
 
-        <BreezeValidationErrors class="mb-4" />
+        <BreezeValidationErrors />
 
         <form @submit.prevent="submit">
-            <div>
+            <div class="form-field">
                 <BreezeLabel for="email" value="Email" />
-                <BreezeInput id="email" type="email" class="mt-1 block w-full" v-model="form.email" required autofocus autocomplete="username" />
+                <BreezeInput id="email" type="email" v-model="form.email" required autofocus autocomplete="username" />
             </div>
 
-            <div class="mt-4">
+            <div class="form-field">
                 <BreezeLabel for="password" value="Password" />
-                <BreezeInput id="password" type="password" class="mt-1 block w-full" v-model="form.password" required autocomplete="new-password" />
+                <BreezeInput id="password" type="password" v-model="form.password" required autocomplete="new-password" />
             </div>
 
-            <div class="mt-4">
+            <div class="form-field">
                 <BreezeLabel for="password_confirmation" value="Confirm Password" />
-                <BreezeInput id="password_confirmation" type="password" class="mt-1 block w-full" v-model="form.password_confirmation" required autocomplete="new-password" />
+                <BreezeInput id="password_confirmation" type="password" v-model="form.password_confirmation" required autocomplete="new-password" />
             </div>
 
-            <div class="flex items-center justify-end mt-4">
-                <BreezeButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+            <div class="form-actions form-actions--end">
+                <button type="submit" class="chunk chunk--teal" :disabled="form.processing">
                     Reset Password
-                </BreezeButton>
+                </button>
             </div>
         </form>
     </BreezeGuestLayout>

@@ -1,0 +1,17 @@
+@reference "@css/app.css";
+
+.dashboard__grid {
+    @apply grid grid-cols-2 gap-4;
+}
+.dashboard__left {
+    @apply col-span-2 md:col-span-1;
+}
+.dashboard__stack {
+    @apply grid grid-cols-3 gap-4;
+}
+.dashboard__full {
+    @apply col-span-3;
+}
+.dashboard__side {
+    @apply col-span-2 md:col-span-1;
+}

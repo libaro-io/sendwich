@@ -1,0 +1,31 @@
+@reference "@css/app.css";
+
+.homepage-cta {
+    @apply max-w-[60rem] mx-auto px-6 pt-16 pb-20;
+
+    .cta-band {
+        @apply relative text-center bg-teal text-teal-ink border-[3px] border-ink rounded-[1.8rem]
+            px-6 py-[clamp(2.5rem,6vw,4rem)] shadow-[10px_10px_0_var(--color-ink)] overflow-hidden;
+
+        &::before {
+            @apply content-[''] absolute inset-0 opacity-50 pointer-events-none
+                [background-image:radial-gradient(rgba(6,37,30,0.14)_22%,transparent_23%)] [background-size:16px_16px];
+        }
+
+        .chunk {
+            @apply relative;
+        }
+    }
+    .cta-spark {
+        @apply relative text-paper text-[1.6rem];
+    }
+    .cta-eyebrow {
+        @apply relative block font-script text-[1.6rem];
+    }
+    .cta-title {
+        @apply relative font-display font-bold text-teal-ink text-[clamp(2rem,6vw,3.4rem)] leading-none mt-[0.1rem] mb-0;
+    }
+    .cta-sub {
+        @apply relative max-w-[28rem] mx-auto mt-[0.9rem] mb-[1.8rem] font-bold;
+    }
+}

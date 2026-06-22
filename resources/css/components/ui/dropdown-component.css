@@ -1,0 +1,43 @@
+@reference "@css/app.css";
+
+.dropdown {
+    @apply relative;
+
+    .dropdown__overlay {
+        @apply fixed inset-0 z-40;
+    }
+    .dropdown__menu {
+        @apply absolute z-50 mt-2;
+    }
+    .dropdown__menu--w48 {
+        @apply w-48;
+    }
+    .dropdown__menu--right {
+        @apply origin-top-right right-0;
+    }
+    .dropdown__menu--left {
+        @apply origin-top-left left-0;
+    }
+    .dropdown__menu--top {
+        @apply origin-top;
+    }
+    .dropdown__panel {
+        @apply py-1 bg-paper rounded-xl border-2 border-ink shadow-[4px_4px_0_var(--color-ink)] overflow-hidden;
+    }
+}
+
+/* dropdown open/close transition */
+.dropdown-enter-active {
+    @apply transition ease-out duration-200;
+}
+.dropdown-leave-active {
+    @apply transition ease-in duration-75;
+}
+.dropdown-enter-from,
+.dropdown-leave-to {
+    @apply opacity-0 scale-95;
+}
+.dropdown-enter-to,
+.dropdown-leave-from {
+    @apply opacity-100 scale-100;
+}

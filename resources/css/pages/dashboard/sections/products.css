@@ -1,0 +1,34 @@
+@reference "@css/app.css";
+
+.products__search-row {
+    @apply flex items-center gap-2 mb-4;
+}
+.products__back-btn {
+    @apply w-10 h-10 rounded-full border-[3px] border-ink bg-paper shadow-[3px_3px_0_var(--color-ink)]
+        flex items-center justify-center transition duration-150 focus:outline-none
+        hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[4px_4px_0_var(--color-ink)]
+        active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0_var(--color-ink)];
+}
+.products__back-icon {
+    @apply text-ink text-base;
+}
+.products__notice {
+    @apply mt-4 text-sm font-semibold;
+}
+.products__list {
+    @apply mt-5 flex flex-col gap-4;
+}
+.products__empty {
+    @apply block mt-5 cursor-pointer transition-all hover:translate-x-0.5 hover:translate-y-0.5;
+}
+.products__empty-title {
+    @apply font-display font-bold text-ink;
+}
+.products__empty-desc {
+    @apply text-ink-soft text-sm mt-1;
+}
+
+/* flat — modal content is teleported to <body> */
+.products__modal-text {
+    @apply py-4 text-ink-soft;
+}

@@ -2,6 +2,8 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+> Last verified against the codebase: 2026-06-05.
+
 # Sendwich — Development Conventions
 
 These are the shared PHP & Laravel house rules. They are project-agnostic coding
@@ -16,6 +18,10 @@ and modified code.
 # Frontend (run on the host)
 npm run dev          # Vite dev server
 npm run build        # Production build
+
+# Vue scaffolding — @libaro-io/laravel-frontend-conventions (run on the host)
+npx libaro-create -c -n order-card   # new component + matching CSS file (-p page, -s section, -l layout)
+npx libaro-rename                    # interactive rename: renames the Vue + CSS pair and updates selectors/imports
 
 # PHP / Artisan (always via the Docker `php` service)
 docker compose exec php php artisan migrate
@@ -36,9 +42,13 @@ docker compose exec php composer xdebug:disable
 - **Stack:** Laravel 13 (PHP 8.4) + Filament 5 (admin panel) + Inertia 3 + Vue 3 + Tailwind CSS v4 + Vite. Auth scaffolding via Laravel Breeze (Inertia/Vue stack). Authorization via `spatie/laravel-permission`.
 - **PHP runs in Docker** — always prefix Artisan/Composer with `docker compose exec php`. The container runs as user `dev` with the project mounted at `/var/www`.
 - **Services** (`docker-compose.yml`): `php` (host port `DOCKER_PHP_PORT`, default `80`) and `mysql` (MySQL 8.4, host port `DOCKER_MYSQL_PORT`, default `3306`).
-- **Database:** MySQL, `DB_HOST=mysql`; database/user/password all default to `dev` locally.
+- **Database:** MySQL; database/user/password all default to `dev` locally. Inside the Docker network the host is the service name `mysql` (`.env.example` ships `DB_HOST=127.0.0.1` for host-side access).
 - **Queue:** `QUEUE_CONNECTION=sync` locally (jobs run synchronously).
-- The **Filament admin panel** lives at `/admin` (panel id `admin`), runs in SPA mode, and auto-discovers Resources, Pages, and Widgets under `app/Filament/`.
+- The **Filament admin panel** lives at `/admin` (panel id `admin`), runs in SPA mode (brand colour orange), and auto-discovers Resources, Pages, and Widgets under `app/Filament/` (Resources exist for Order, User, Store, Product, Company).
+- **TypeScript is being introduced on the frontend**: strict `tsconfig.json` with `allowJs` (existing `.js`/JS-SFCs stay as they are), shared Inertia page-prop types in `resources/js/types.d.ts`, and newly scaffolded Vue files use `<script setup lang="ts">`.
+- **Vite/TS aliases**: `@` → `resources/js` (jsconfig + tsconfig), `@css` → `resources/css`, `@components` and `@layouts` (vite.config.js). `tsconfig.json` declares more (`@composables`, `@interfaces`, `@actions`, `@pages`, `@enums`) — those extra ones are TS-only, so use them for **type-only imports** unless they are added to vite.config.js. NB: the alias targets are **lowercase** (`resources/js/layouts`) while the existing folders are capitalised (`resources/js/Layouts`) — identical on macOS, different on case-sensitive filesystems.
+- **Libaro tooling**: `libaro-io.config.ts` (project root) configures `@libaro-io/laravel-frontend-conventions`; `tailwindReferencePlugin()` from `@libaro-io/libaro-utilities` is registered in `vite.config.js` and auto-injects `@reference "@css/app.css";` into every SFC `<style>` block. `package.json` carries an `overrides` block that maps `@libaro-io/libaro-utilities`'s vite peer to the project's Vite 8 — don't remove it, or `npm install` fails with ERESOLVE.
+- **Backend layout**: besides the usual Laravel dirs, `app/` holds `Actions/`, `Casts/`, `DataObjects/`, `Enums/`, `Exceptions/`, `Jobs/`, `Mail/`, `Notifications/`, `Policies/`, `Templates/`, and `View/`. Controllers are single-action and grouped per feature (`Controllers/Company/`, `Controllers/History/`, `Controllers/Order/`, `Controllers/Store/`).
 
 ---
 
@@ -312,16 +322,50 @@ render Vue pages.
 
 ### Structure
 - **Pages** → `resources/js/Pages/` (resolved by name from the controller's `Inertia::render('Dashboard')`). Subfolders mirror feature areas (`Pages/Store/`, `Pages/Auth/`, `Pages/Legal/`).
-- **Reusable components** → `resources/js/Components/`.
-- **Layouts** → `resources/js/Layouts/` (`Authenticated.vue`, `Guest.vue`, `Landing.vue`).
-- **Composables** → `resources/js/Composables/`.
+- **Reusable components** → `resources/js/Components/`, grouped by role:
+  - `Components/ui/` — design-system widgets reused across pages: `Modal` (Headless UI), `Dropdown`, `DropdownLink`, and the Breeze form primitives `Input`, `Label`, `Checkbox`, `InputError`, `ValidationErrors`, `Title`.
+  - `Components/layout/` — app-shell pieces used by the `Authenticated`/`Guest` layouts: `ApplicationLogo`, `NavLink`, `ResponsiveNavLink`, `flash-messages-component`.
+  - `Components/frontend/` — shared marketing chrome: `Navigation`, `Footer` (Legal pages + `Authenticated` layout).
+- **Only genuinely reusable Vue files belong in `Components/`.** A Vue file that is merely a *section* of one page lives next to its page: `Pages/<Page>/sections/<Section>.vue` (+ matching CSS under `resources/css/pages/<page>/sections/`). This mirrors `libaro-create -s`. Current section sets: `Pages/Dashboard/sections/` (`Orders`, `Products`, `ProductCard`, `Menu`, `DeptList`, `PayBack`), `Pages/History/sections/HistoryTable.vue`, `Pages/Display/sections/` (`UsersWithOrders`, `SelectedRunner`), `Pages/Store/sections/` (`List`, `ListItem`), `Pages/Homepage/sections/`.
+- **Layouts** → `resources/js/Layouts/` (`Authenticated.vue`, `Guest.vue`, `Landing.vue` — the latter only used by the Legal pages).
+- **Composables** → `resources/js/Composables/`; **directives** → `resources/js/Directives/` (e.g. the `v-reveal` scroll-reveal in `reveal.ts`).
+- **Shared Inertia prop types** → `resources/js/types.d.ts` (augments `@inertiajs/core` `PageProps` and exposes Ziggy's `route()` to TS templates); page-specific interfaces under `resources/js/interfaces/` (e.g. `homepage.ts`).
+- **Marketing landing page** → `Pages/Welcome.vue` (thin composition page + `resources/css/pages/homepage.css` shell), served by `HomepageController` at `/` (route name `home`; authenticated users are redirected to the dashboard). Its sections live under `Pages/Homepage/sections/` (`Navigation`, `Hero`, `Complaints`, `OrderTicket`, `Perks`, `Steps`, `CallToAction`, `Footer`), each with a matching stylesheet under `resources/css/pages/homepage/sections/`.
+
+### Scaffolding Vue files — `@libaro-io/laravel-frontend-conventions`
+
+New Vue files are scaffolded with the `libaro-create` CLI — don't hand-roll the file pair. Renaming goes through `libaro-rename`, never by hand.
+
+- `npx libaro-create -c|-p|-s|-l -n <name>` creates a **c**omponent, **p**age, **s**ection or **l**ayout. Anything not passed as a flag is asked interactively; the target-folder picker is *always* interactive, so the user has to run this command in a terminal themselves (Claude: ask the user to run it, e.g. via the `!` prefix, then build on the generated files).
+- Each run generates a **pair of files**: a kebab-case `.vue` file under `resources/js/<type>/…` and a matching kebab-case stylesheet under `resources/css/<same path>/…`, imported in the SFC's `<style scoped>` via the `@css` alias (Tailwind v4) or `@scss` (v3).
+- The generated root element carries a selector derived from type + folder path + name — keep it on the root element and put the styles inside that block in the matching CSS file:
+  - components & sections → `<section class="component-<path>-<name>-component">` + a `.class` block;
+  - pages & layouts → `<div id="page-<path>-<name>">` + an `#id` block.
+- Config lives in **`libaro-io.config.ts`** at the project root: `tailwindVersion: 4`, `componentSuffix: '-component'`, `useLibaroVitePlugin: true`.
+- The supporting Vite wiring is in place in `vite.config.js`: the `@css` → `resources/css` alias, and `tailwindReferencePlugin()` from `@libaro-io/libaro-utilities`, which auto-injects `@reference "@css/app.css";` into every SFC `<style>` block — so `@apply` works in scoped styles **without** adding a manual `@reference` line. (`@libaro-io/libaro-utilities` also ships a `translationEnforcer()` Vite plugin for typed `getTrans` helpers from `lang/`; it is not registered yet.)
 
 ### Conventions
 - Controllers return **`Inertia::render('PageName', [...])`** — prepare all data server-side and pass it as props. Apply the same "no logic in the view" rule to Vue templates: keep computation in the controller or in `computed`/composables, not inline in the template.
 - Use **Ziggy** for route URLs in JS — call `route('store.show', id)` instead of hardcoding paths. Route names must stay in sync with `routes/web.php`.
 - Use **`laravel-permission-to-vuejs`** for permission checks in Vue (`can`/`is`) instead of duplicating permission logic. Server-side authorization still goes through `can:` middleware / Policies — the frontend check is UX only.
 - Use the shared `Toast` (vue-toastification) and the global `emitter` (mitt, available as `this.emitter` / `globalProperties.emitter`) that are already registered in `app.js` — don't spin up new instances.
-- Tailwind CSS v4 (via `@tailwindcss/vite`) + daisyUI. Style with utility classes; reach for daisyUI components before writing custom CSS.
+- Icons come from **Font Awesome** (`@fortawesome/vue-fontawesome`): register icons in the `library` in `app.js`, import `FontAwesomeIcon` locally, and use string names (`icon="fa-solid fa-trash"`). Never hand-roll inline SVGs.
+- Tailwind CSS v4 (via `@tailwindcss/vite`). **daisyUI has been completely removed and uninstalled** — the app is entirely custom-styled.
+- **Styling lives in CSS, not in templates.** A `.vue` file's markup carries **only defined class names** (design-system classes or per-file semantic classes) — never bare Tailwind utilities like `flex`, `mt-4`, `text-ink`. Every utility is defined inside a class via `@apply`, in one of:
+  - the **design system** in `resources/css/app.css` (shared, app-wide primitives), or
+  - a **per-file CSS pair** co-located by path and imported in the SFC's `<style scoped>` via `@import "@css/<same path>.css";` — e.g. `Components/Orders.vue` ↔ `resources/css/components/orders.css`, `Pages/Settings.vue` ↔ `resources/css/pages/settings.css`. (`tailwindReferencePlugin` auto-injects `@reference`, so `@apply` works; standalone CSS files still start with `@reference "@css/app.css";`.)
+  - **Gotcha:** content rendered through a teleport/portal (e.g. inside `ui/Modal.vue`) is not reached by descendant selectors — use **flat** BEM classes (`.orders__weight-input`, not `.orders .weight-input`) so scoped styling still applies.
+- **Reference design:** `Pages/Homepage.vue` (+ `Pages/Homepage/sections/*`) and the design-system block of `app.css`. Brand tokens live in the `@theme` block (`cream`, `paper`, `ink`, `ink-soft`, `teal(-deep/-soft/-ink)`, `coral(-soft)`, `sun(-soft)`, `font-display` Fredoka, `font-script` Caveat) and are available as utilities (`bg-cream`, `text-ink`, `font-display`, …) — use those inside `@apply`, never raw hex.
+- **App-wide primitives in `app.css`** (the daisyUI replacements):
+  - buttons → `.chunk` (+ `--teal`/`--cream`/`--coral`/`--sun`/`--ghost`/`--sm`/`--lg`, `:disabled`)
+  - surface → `.panel` (+ `--flat`); section headers → `.sec-head`/`.sec-tab(--teal)`/`.sec-title`/`.sec-sub`; `.panel-title`
+  - status → `.tag` (+ `--teal`/`--coral`/`--sun`/`--ink`/`--bold`/`--semibold`); tints → `.tint-teal`/`-coral`/`-sun`
+  - forms → `.field-label`/`.field-input`/`.field-select`/`.field-textarea`/`.field-error`/`.field-checkbox`; form scaffolding → `.form-field`/`.form-actions(--end)`/`.form-link(--danger)`/`.form-status`/`.form-hint`/`.form-prose`/`.form-check(-label)`/`.form-title(--spaced)`
+  - toggle → `.switch`; table → `.table-brut`; inline notice → `.callout` (+ `--warning`/`--error`/`--info`)
+  - nav → `.nav-link(-active)`/`.nav-link-mobile(-active)`/`.dropdown-link`
+  - page shell → `.app-page`/`.page`/`.page-container`; helpers → `.icon-btn`(`--danger`/`__icon`), `.empty-action`, `.reveal` (paired with the `v-reveal` directive)
+  - behavioural components → `ui/Modal.vue` (Headless UI dialog), `Components/Dropdown.vue`
+  - toast styling → the `.Vue-Toastification__toast*` overrides in `app.css`
 
 ### Routes & middleware (Inertia side)
 - Page routes live in `routes/web.php`, API/JSON endpoints in `routes/api.php`.
