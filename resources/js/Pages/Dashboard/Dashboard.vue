@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import {Head, router} from '@inertiajs/vue3';
-import {onMounted, onUnmounted, ref, computed} from "vue";
+import {Head, router, usePage} from '@inertiajs/vue3';
+import {onMounted, onUnmounted, computed} from "vue";
 import Orders from "@/Pages/Dashboard/sections/Orders.vue";
 import Products from "@/Pages/Dashboard/sections/Products.vue";
 import Menu from "@/Pages/Dashboard/sections/Menu.vue";
@@ -23,27 +23,38 @@ const props = defineProps<{
 
 let interval: ReturnType<typeof setInterval>;
 
-const selectedStore = ref<Store | null>();
+const page = usePage();
+
+// The selected store lives in the URL (?store={id}) so the browser back button
+// returns to the store selection instead of leaving the dashboard.
+const selectedStore = computed<Store | null>(() => {
+    const queryString = page.url.split('?')[1] ?? '';
+    const storeId = Number(new URLSearchParams(queryString).get('store'));
+    if (!storeId) {
+        return null;
+    }
+    return props.stores.find((store) => store.id === storeId) ?? null;
+});
 
 const orderingBlocked = computed(() => props.orders.some(o => o.departed_at !== null && o.delivered_at === null));
 
 const selectStore = (store: Store): void => {
-    selectedStore.value = store;
+    router.get(route('dashboard'), {store: store.id}, {
+        preserveState: true,
+        preserveScroll: true,
+    });
 };
 
 const unsetStore = (): void => {
-    selectedStore.value = null;
+    router.get(route('dashboard'), {}, {
+        preserveState: true,
+        preserveScroll: true,
+    });
 };
 
 onMounted(() => {
     interval = setInterval(() => {
-        router.get(route('dashboard'), {},
-            {
-                preserveState: true,
-                preserveScroll: true,
-                replace: true,
-                only: ['orders', 'selectedRunner', 'deliveryMoment', 'flash', 'totalPrice']
-            })
+        router.reload({only: ['orders', 'selectedRunner', 'deliveryMoment', 'flash', 'totalPrice']});
     }, 60 * 1000);
 });
 onUnmounted(() => clearInterval(interval));
