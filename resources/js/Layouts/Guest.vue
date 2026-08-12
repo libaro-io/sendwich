@@ -1,6 +1,19 @@
 <script setup lang="ts">
 import BreezeApplicationLogo from '@/Components/layout/application-logo-component.vue';
 import { Link } from '@inertiajs/vue3';
+import { onMounted, onUnmounted } from 'vue';
+
+// Safari keeps pages in the back/forward cache even with Cache-Control:
+// no-store, so a restored guest page must revalidate against the server —
+// the guest middleware then redirects authenticated users away.
+const reloadWhenRestoredFromBackForwardCache = (event: PageTransitionEvent): void => {
+    if (event.persisted) {
+        window.location.reload();
+    }
+};
+
+onMounted(() => window.addEventListener('pageshow', reloadWhenRestoredFromBackForwardCache));
+onUnmounted(() => window.removeEventListener('pageshow', reloadWhenRestoredFromBackForwardCache));
 </script>
 
 <template>
