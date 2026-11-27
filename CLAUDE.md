@@ -39,8 +39,8 @@ docker compose exec php composer xdebug:disable
 
 ## Project setup
 
-- **Stack:** Laravel 13 (PHP 8.4) + Filament 5 (admin panel) + Inertia 3 + Vue 3 + Tailwind CSS v4 + Vite. Auth scaffolding via Laravel Breeze (Inertia/Vue stack). Authorization via `spatie/laravel-permission`.
-- **PHP runs in Docker** — always prefix Artisan/Composer with `docker compose exec php`. The container runs as user `dev` with the project mounted at `/var/www`.
+- **Stack:** Laravel 13 (PHP 8.6) + Filament 5 (admin panel) + Inertia 3 + Vue 3 + Tailwind CSS v4 + Vite. Auth scaffolding via Laravel Breeze (Inertia/Vue stack). Authorization via `spatie/laravel-permission`.
+- **PHP runs in Docker or Laravel Herd** — Docker users prefix Artisan/Composer with `docker compose exec php`; Herd users isolate the site on PHP 8.6 (`herd isolate 8.6`) and use `herd php` / `herd composer`. The container runs as user `dev` with the project mounted at `/var/www`.
 - **Services** (`docker-compose.yml`): `php` (host port `DOCKER_PHP_PORT`, default `80`) and `mysql` (MySQL 8.4, host port `DOCKER_MYSQL_PORT`, default `3306`).
 - **Database:** MySQL; database/user/password all default to `dev` locally. Inside the Docker network the host is the service name `mysql` (`.env.example` ships `DB_HOST=127.0.0.1` for host-side access).
 - **Queue:** `QUEUE_CONNECTION=sync` locally (jobs run synchronously).
