@@ -62,7 +62,7 @@ class Company extends Model
         return $this->hasMany(Order::class);
     }
 
-    public function getProducts(Carbon $tresHoldDate = null)
+    public function getProducts(?Carbon $tresHoldDate = null)
     {
         $products = $this->products()
             ->with('options')
