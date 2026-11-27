@@ -23,6 +23,8 @@ services:
         MYSQL_DATABASE: dev
         MYSQL_USER: dev
         MYSQL_PASSWORD: dev
+    volumes:
+        - ./.docker/mysql/initdb:/docker-entrypoint-initdb.d:ro
     ports:
         - "${DOCKER_MYSQL_PORT:-3306}:3306"
     networks:
